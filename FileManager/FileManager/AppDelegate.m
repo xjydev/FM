@@ -53,7 +53,7 @@
 }
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-    
+    //可以转屏的方向
     return XTOOLS.orientationMask;
 }
 

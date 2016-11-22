@@ -42,12 +42,9 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fIM-vL-BwJ" id="Mk6-eu-YFg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="wIf-vt-OZl" kind="show" identifier="WebDetailViewController" trigger="accessoryAction" id="y57-oa-Oyd"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -255,7 +252,7 @@
         <image name="tab_flie_s" width="30" height="30"/>
         <image name="tab_set" width="30" height="30"/>
         <image name="tab_set_s" width="30" height="30"/>
-        <image name="tab_web" width="15" height="15"/>
-        <image name="tab_web_s" width="15" height="15"/>
+        <image name="tab_web" width="30" height="30"/>
+        <image name="tab_web_s" width="30" height="30"/>
     </resources>
 </document>

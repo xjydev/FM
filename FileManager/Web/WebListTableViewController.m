@@ -7,12 +7,18 @@
 //
 
 #import "WebListTableViewController.h"
-#import "WebDetailViewController.h"
+//#import "WebDetailViewController.h"
+#import "SVWebViewController.h"
 #import "XTools.h"
-@interface WebListTableViewController ()<UITextFieldDelegate>
+#import "UIColor+Hex.h"
+@interface WebListTableViewController ()<UITextFieldDelegate,UISearchBarDelegate>
 {
     NSMutableArray   *_webArray;
-    UITextField      *_searchField;
+//    UITextField      *_searchField;
+    
+    NSMutableArray   *_searchArray;
+    UISearchController *_searchController;
+    UISearchBar        *_searchBar;
 }
 @end
 
@@ -24,26 +30,29 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
     self.navigationItem.leftBarButtonItem = leftBarButton;
-    
-    _searchField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width - 80, 30)];
-    _searchField.backgroundColor = [UIColor whiteColor];
-    _searchField.placeholder = @"网址";
-    _searchField.leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 10, 30)];
-    _searchField.leftViewMode = UITextFieldViewModeAlways;
-    _searchField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _searchField.returnKeyType = UIReturnKeySearch;
-    _searchField.delegate = self;
-    self.navigationItem.titleView = _searchField;
+    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width - 80, 30)];
+    _searchBar.barTintColor = kNavCOLOR;
+    _searchBar.placeholder = @"网址";
+    _searchBar.returnKeyType = UIReturnKeySearch;
+    _searchBar.delegate = self;
+    self.navigationItem.titleView = _searchBar;
     
 }
 - (void)leftScanButtonAction:(UIBarButtonItem *)item {
     
 }
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self performSegueWithIdentifier:@"WebDetailViewController" sender:textField.text];
-    
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
     return YES;
 }
+- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSLog(@"===%@",text);
+    if ([text isEqualToString:@"\n"]&&searchBar.text.length>0) {
+        
+        [self gotoWebWithSearchText:_searchBar.text];
+    }
+    return YES;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -70,7 +79,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:@"WebDetailViewController" sender:@""];
+    [self gotoWebWithSearchText:@""];
 }
 
 // Override to support conditional editing of the table view.
@@ -97,13 +106,27 @@
     // Return NO if you do not want the item to be re-orderable.
     return YES;
 }
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [_searchField resignFirstResponder];
-    if ([segue.identifier isEqualToString:@"WebDetailViewController"]) {
-        WebDetailViewController *detail = segue.destinationViewController;
-        detail.webUrlStr = sender;
+-(void)gotoWebWithSearchText:(NSString *)text {
+    if (text.length == 0) {
+        return;
     }
+    [_searchBar resignFirstResponder];
+    if (![text hasPrefix:@"http"]) {
+        text =[NSString stringWithFormat:@"https://www.baidu.com/s?wd=%@",text];
+    }
+    SVWebViewController *webViewController = [[SVWebViewController alloc] initWithAddress:text];
+    webViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:webViewController animated:YES];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [_searchBar resignFirstResponder];
+}
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    [_searchBar resignFirstResponder];
+//    if ([segue.identifier isEqualToString:@"WebDetailViewController"]) {
+//        WebDetailViewController *detail = segue.destinationViewController;
+//        detail.webUrlStr = sender;
+//    }
     
 }
 
