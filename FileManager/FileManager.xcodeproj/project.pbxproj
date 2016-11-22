@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		6C26CF851DE14B0800742666 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D91B31DDEA6F900023AF8 /* Main.storyboard */; };
 		6C26CF861DE14B1300742666 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D91B81DDEA6F900023AF8 /* LaunchScreen.storyboard */; };
+		6C47DEC41DE3DCF200FA7364 /* MobileVLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C47DEC31DE3DCF200FA7364 /* MobileVLCKit.framework */; };
+		6C47DEC51DE3DD0300FA7364 /* MobileVLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C47DEC31DE3DCF200FA7364 /* MobileVLCKit.framework */; };
+		6C47DEC61DE3DD0400FA7364 /* MobileVLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C47DEC31DE3DCF200FA7364 /* MobileVLCKit.framework */; };
 		6C4D91A91DDEA6F900023AF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91A81DDEA6F900023AF8 /* main.m */; };
 		6C4D91AC1DDEA6F900023AF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91AB1DDEA6F900023AF8 /* AppDelegate.m */; };
 		6C4D91B71DDEA6F900023AF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D91B61DDEA6F900023AF8 /* Assets.xcassets */; };
@@ -80,6 +83,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6C47DEC31DE3DCF200FA7364 /* MobileVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileVLCKit.framework; path = ../../../MobileVLCKit.framework; sourceTree = "<group>"; };
 		6C4D91A41DDEA6F900023AF8 /* FileManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FileManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C4D91A81DDEA6F900023AF8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6C4D91AA1DDEA6F900023AF8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -160,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C4D92111DDED25B00023AF8 /* AudioToolbox.framework in Frameworks */,
+				6C47DEC41DE3DCF200FA7364 /* MobileVLCKit.framework in Frameworks */,
 				6C4D920F1DDED25300023AF8 /* VideoToolbox.framework in Frameworks */,
 				6C4D920D1DDED24B00023AF8 /* CoreMedia.framework in Frameworks */,
 				6C4D920B1DDED24200023AF8 /* CoreVideo.framework in Frameworks */,
@@ -178,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C47DEC51DE3DD0300FA7364 /* MobileVLCKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C47DEC61DE3DD0400FA7364 /* MobileVLCKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +330,7 @@
 		6C4D91F61DDED15F00023AF8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				6C47DEC31DE3DCF200FA7364 /* MobileVLCKit.framework */,
 			);
 			path = lib;
 			sourceTree = "<group>";
