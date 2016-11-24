@@ -262,9 +262,9 @@
 }
 
 - (void)actionButtonClicked:(id)sender {
+    
     NSArray *activities = @[[SVWebViewControllerActivitySafari new]];
     //, [SVWebViewControllerActivityChrome new]
-    
     
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[self.webView.request.URL] applicationActivities:activities];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){

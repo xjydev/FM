@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger , FileType) {
     FileTypeAudio,
     FileTypeImage,
     FileTypeDocument,
+    FileTypeCompress,
+    FileTypeDefault,
     
 };
 #define XTOOLS [XTools shareXTools]
@@ -58,14 +60,6 @@ typedef NS_ENUM(NSInteger , FileType) {
 + (instancetype)shareXTools;
 
 /**
- 播放视频
-
- @param filePath 文件的本地路径，或者视频的网络地址。
- @return 是否播放
- */
-- (BOOL)playWithFilePath:(NSString *)filePath;
-
-/**
  屏幕旋转方向
  */
 @property (nonatomic, assign)UIInterfaceOrientationMask orientationMask;
@@ -76,6 +70,22 @@ typedef NS_ENUM(NSInteger , FileType) {
 @property (nonatomic, strong)NSArray * imageFormatArray;
 @property (nonatomic, strong)NSArray * documentFormatArray;
 @property (nonatomic, strong)NSArray * compressFormatArray;
-+ (FileType)fileFormatWithPath:(NSString *)path;
+
+/**
+ 播放文件
+
+ @param path 文件路径
+ @param origionalWiewController 开始播放前的界面
+ @return 是否播放成功
+ */
+- (BOOL)playFileWithPath:(NSString *)path OrigionalWiewController:(UIViewController *)origionalWiewController;
+
+/**
+ 判断文件类型
+
+ @param path 文件路径
+ @return 文件类型
+ */
+- (FileType)fileFormatWithPath:(NSString *)path;
 
 @end

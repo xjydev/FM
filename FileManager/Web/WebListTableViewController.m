@@ -7,7 +7,7 @@
 //
 
 #import "WebListTableViewController.h"
-//#import "WebDetailViewController.h"
+#import "ScanViewController.h"
 #import "SVWebViewController.h"
 #import "XTools.h"
 #import "UIColor+Hex.h"
@@ -39,7 +39,9 @@
     
 }
 - (void)leftScanButtonAction:(UIBarButtonItem *)item {
-    
+    ScanViewController *scan = [self.storyboard instantiateViewControllerWithIdentifier:@"ScanViewController"];
+    scan.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:scan animated:YES];
 }
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
     return YES;

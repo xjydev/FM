@@ -19,27 +19,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-   }
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    XTOOLS.isCanRotation = !XTOOLS.isCanRotation;
     if (!_player) {
         _player = [[MRVLCPlayer alloc] init];
         
         _player.bounds = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         _player.center = self.view.center;
         //    player.mediaURL = [[NSBundle mainBundle] URLForResource:@"1" withExtension:@"wmv"];
-        _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
+        
         //    [NSURL URLWithString:self.videoPath];
         //    player.mediaURL = [NSURL fileURLWithPath:@"/Users/Maru/Documents/Media/Movie/1.mkv"];
         
-        [_player showInView:self.view];
+//        [_player showInView:self.view];
+        self.view = _player;
     }
+    _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
     
-
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
+    if (_player) {
+        [_player play];
+    }
 }
 - (BOOL)shouldAutorotate {
     

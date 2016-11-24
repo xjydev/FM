@@ -22,7 +22,6 @@
 		6C4D91E41DDEA95400023AF8 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91E31DDEA95400023AF8 /* SettingsTableViewController.m */; };
 		6C4D91E91DDEAB2E00023AF8 /* FilesListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91E81DDEAB2E00023AF8 /* FilesListTableViewController.m */; };
 		6C4D91ED1DDEBB8200023AF8 /* WebListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91EC1DDEBB8200023AF8 /* WebListTableViewController.m */; };
-		6C4D91F01DDECB5C00023AF8 /* WebDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91EF1DDECB5C00023AF8 /* WebDetailViewController.m */; };
 		6C4D91F41DDECBB700023AF8 /* UIView+xiao.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4D91F31DDECBB700023AF8 /* UIView+xiao.m */; };
 		6C4D91FB1DDED1D700023AF8 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C4D91FA1DDED1D700023AF8 /* libbz2.1.0.tbd */; };
 		6C4D91FD1DDED1E100023AF8 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C4D91FC1DDED1E100023AF8 /* libz.1.tbd */; };
@@ -64,6 +63,9 @@
 		6C5FA1F31DE2CBE400DDEB75 /* Video Bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C5FA1DC1DE2CBE400DDEB75 /* Video Bg.png */; };
 		6C5FA1F41DE2CBE400DDEB75 /* Video Bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C5FA1DD1DE2CBE400DDEB75 /* Video Bg@2x.png */; };
 		6C5FA1F51DE2CBE400DDEB75 /* Video Bg@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C5FA1DE1DE2CBE400DDEB75 /* Video Bg@3x.png */; };
+		6C76D5561DE544510085AE3D /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C76D5551DE544510085AE3D /* ScanViewController.m */; };
+		6C76D5591DE545C40085AE3D /* QRCodeReaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C76D5581DE545C40085AE3D /* QRCodeReaderView.m */; };
+		6C76D55B1DE564160085AE3D /* noticeMusic.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6C76D55A1DE564160085AE3D /* noticeMusic.wav */; };
 		6C79470F1DE44A51002A7083 /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C7947061DE44A51002A7083 /* SVModalWebViewController.m */; };
 		6C7947101DE44A51002A7083 /* SVWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C7947081DE44A51002A7083 /* SVWebViewController.m */; };
 		6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470A1DE44A51002A7083 /* SVWebViewControllerActivity.m */; };
@@ -116,8 +118,6 @@
 		6C4D91E81DDEAB2E00023AF8 /* FilesListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilesListTableViewController.m; sourceTree = "<group>"; };
 		6C4D91EB1DDEBB8200023AF8 /* WebListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebListTableViewController.h; sourceTree = "<group>"; };
 		6C4D91EC1DDEBB8200023AF8 /* WebListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebListTableViewController.m; sourceTree = "<group>"; };
-		6C4D91EE1DDECB5C00023AF8 /* WebDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebDetailViewController.h; sourceTree = "<group>"; };
-		6C4D91EF1DDECB5C00023AF8 /* WebDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebDetailViewController.m; sourceTree = "<group>"; };
 		6C4D91F21DDECBB700023AF8 /* UIView+xiao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+xiao.h"; sourceTree = "<group>"; };
 		6C4D91F31DDECBB700023AF8 /* UIView+xiao.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+xiao.m"; sourceTree = "<group>"; };
 		6C4D91FA1DDED1D700023AF8 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
@@ -166,6 +166,11 @@
 		6C5FA1DC1DE2CBE400DDEB75 /* Video Bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Video Bg.png"; sourceTree = "<group>"; };
 		6C5FA1DD1DE2CBE400DDEB75 /* Video Bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Video Bg@2x.png"; sourceTree = "<group>"; };
 		6C5FA1DE1DE2CBE400DDEB75 /* Video Bg@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Video Bg@3x.png"; sourceTree = "<group>"; };
+		6C76D5541DE544510085AE3D /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
+		6C76D5551DE544510085AE3D /* ScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanViewController.m; sourceTree = "<group>"; };
+		6C76D5571DE545C40085AE3D /* QRCodeReaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeReaderView.h; sourceTree = "<group>"; };
+		6C76D5581DE545C40085AE3D /* QRCodeReaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeReaderView.m; sourceTree = "<group>"; };
+		6C76D55A1DE564160085AE3D /* noticeMusic.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = noticeMusic.wav; sourceTree = "<group>"; };
 		6C7947051DE44A51002A7083 /* SVModalWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVModalWebViewController.h; sourceTree = "<group>"; };
 		6C7947061DE44A51002A7083 /* SVModalWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVModalWebViewController.m; sourceTree = "<group>"; };
 		6C7947071DE44A51002A7083 /* SVWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewController.h; sourceTree = "<group>"; };
@@ -329,11 +334,10 @@
 		6C4D91EA1DDEBB7300023AF8 /* Web */ = {
 			isa = PBXGroup;
 			children = (
+				6C76D5531DE544230085AE3D /* Scan */,
 				6C7947041DE44A3B002A7083 /* webDetail */,
 				6C4D91EB1DDEBB8200023AF8 /* WebListTableViewController.h */,
 				6C4D91EC1DDEBB8200023AF8 /* WebListTableViewController.m */,
-				6C4D91EE1DDECB5C00023AF8 /* WebDetailViewController.h */,
-				6C4D91EF1DDECB5C00023AF8 /* WebDetailViewController.m */,
 			);
 			path = Web;
 			sourceTree = SOURCE_ROOT;
@@ -435,6 +439,19 @@
 			name = Asset;
 			path = File/Asset;
 			sourceTree = SOURCE_ROOT;
+		};
+		6C76D5531DE544230085AE3D /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				6C76D55A1DE564160085AE3D /* noticeMusic.wav */,
+				6C76D5571DE545C40085AE3D /* QRCodeReaderView.h */,
+				6C76D5581DE545C40085AE3D /* QRCodeReaderView.m */,
+				6C76D5541DE544510085AE3D /* ScanViewController.h */,
+				6C76D5551DE544510085AE3D /* ScanViewController.m */,
+			);
+			name = Scan;
+			path = webDetail;
+			sourceTree = "<group>";
 		};
 		6C7947041DE44A3B002A7083 /* webDetail */ = {
 			isa = PBXGroup;
@@ -586,6 +603,7 @@
 				6C5FA1F41DE2CBE400DDEB75 /* Video Bg@2x.png in Resources */,
 				6C4D91B71DDEA6F900023AF8 /* Assets.xcassets in Resources */,
 				6C5FA1E01DE2CBE400DDEB75 /* Full Screen Icon@2x.png in Resources */,
+				6C76D55B1DE564160085AE3D /* noticeMusic.wav in Resources */,
 				6C5FA1E41DE2CBE400DDEB75 /* Min. Icon@3x.png in Resources */,
 				6C5FA1E71DE2CBE400DDEB75 /* Pause Icon@3x.png in Resources */,
 				6C5FA1DF1DE2CBE400DDEB75 /* Full Screen Icon.png in Resources */,
@@ -672,12 +690,13 @@
 				6C4D921D1DDED41300023AF8 /* MRVLCPlayer.mm in Sources */,
 				6C4D92261DDEF04700023AF8 /* XTools.m in Sources */,
 				6C4D91ED1DDEBB8200023AF8 /* WebListTableViewController.m in Sources */,
+				6C76D5561DE544510085AE3D /* ScanViewController.m in Sources */,
 				6C4D91F41DDECBB700023AF8 /* UIView+xiao.m in Sources */,
 				6C47DECF1DE3EDD700FA7364 /* UIColor+Hex.m in Sources */,
 				6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */,
-				6C4D91F01DDECB5C00023AF8 /* WebDetailViewController.m in Sources */,
 				6C7947131DE44A51002A7083 /* SVWebViewControllerActivitySafari.m in Sources */,
 				6C79470F1DE44A51002A7083 /* SVModalWebViewController.m in Sources */,
+				6C76D5591DE545C40085AE3D /* QRCodeReaderView.m in Sources */,
 				6C4D91E11DDEA93E00023AF8 /* FilesTableViewController.m in Sources */,
 				6C7947121DE44A51002A7083 /* SVWebViewControllerActivityChrome.m in Sources */,
 			);

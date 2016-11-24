@@ -8,6 +8,7 @@
 
 #import "FilesTableViewController.h"
 #import "FilesListTableViewController.h"
+#import "ScanViewController.h"
 @interface FilesTableViewController ()
 {
     NSArray        *_tableArray;
@@ -56,9 +57,12 @@
     [aler addAction:cancleAction];
     [aler addAction:addAction];
     [self presentViewController:aler animated:YES completion:nil];
+    
 }
 - (void)leftScanButtonAction:(UIBarButtonItem *)button {
-    
+    ScanViewController *scan = [self.storyboard instantiateViewControllerWithIdentifier:@"ScanViewController"];
+    scan.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:scan animated:YES];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -83,9 +83,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
      NSString *path = [NSString stringWithFormat:@"%@/%@",KDocumentP,_filesArray[indexPath.row]];
     NSLog(@"path==%@",path);
-    NSDictionary *fileDict = [kFileM attributesOfItemAtPath:path error:nil];
+//    NSDictionary *fileDict = [kFileM attributesOfItemAtPath:path error:nil];
+//    
+//    NSLog(@"type == %@",fileDict[NSFileType]);
+    [XTOOLS playFileWithPath:path OrigionalWiewController:self];
     
-    NSLog(@"type == %@",fileDict[NSFileType]);
 //    VideoViewController *video = [[VideoViewController alloc]init];
    
 //    video.videoPath =path;

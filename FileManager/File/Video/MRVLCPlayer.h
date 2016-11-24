@@ -17,7 +17,7 @@
 
 
 - (void)showInView:(UIView * _Nonnull)view;
-
+- (void)play;
 @end
 
 

@@ -42,7 +42,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fIM-vL-BwJ" id="Mk6-eu-YFg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -58,10 +58,10 @@
             </objects>
             <point key="canvasLocation" x="1696" y="13"/>
         </scene>
-        <!--Web Detail View Controller-->
+        <!--Scan View Controller-->
         <scene sceneID="kep-go-jMp">
             <objects>
-                <viewController storyboardIdentifier="WebDetailViewController" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wIf-vt-OZl" customClass="WebDetailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScanViewController" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wIf-vt-OZl" customClass="ScanViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Bq5-HW-jn2"/>
                         <viewControllerLayoutGuide type="bottom" id="X8i-CN-zKs"/>
@@ -74,7 +74,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kcH-Q1-gJU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2487" y="11"/>
+            <point key="canvasLocation" x="724" y="-1496"/>
+        </scene>
+        <!--Video View Controller-->
+        <scene sceneID="khM-DO-cEu">
+            <objects>
+                <viewController storyboardIdentifier="VideoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x0H-ga-vQs" customClass="VideoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hIX-ge-DPV"/>
+                        <viewControllerLayoutGuide type="bottom" id="skR-BI-rWH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dv3-fh-QIw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mOa-AR-7IO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1664" y="-1474"/>
         </scene>
         <!--网页-->
         <scene sceneID="hiz-GB-Wz9">
