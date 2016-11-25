@@ -20,9 +20,9 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     if (!_player) {
-        _player = [[MRVLCPlayer alloc] init];
+        _player = [[MRVLCPlayer alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         
-        _player.bounds = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//        _player.bounds = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         _player.center = self.view.center;
         _player.delegate = self;
         self.view = _player;
@@ -47,12 +47,17 @@
 }
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+//    XTOOLS.isCanRotation = YES;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 
 }
 - (BOOL)shouldAutorotate {
     
     return XTOOLS.isCanRotation;
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//    XTOOLS.isCanRotation = NO;
 }
 
 /*

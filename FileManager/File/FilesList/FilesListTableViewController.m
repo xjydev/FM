@@ -86,8 +86,10 @@
 //    NSDictionary *fileDict = [kFileM attributesOfItemAtPath:path error:nil];
 //    
 //    NSLog(@"type == %@",fileDict[NSFileType]);
-    [XTOOLS playFileWithPath:path OrigionalWiewController:self];
-    
+  BOOL isPlay = [XTOOLS playFileWithPath:path OrigionalWiewController:self];
+    if (!isPlay) {
+
+    }
 //    VideoViewController *video = [[VideoViewController alloc]init];
    
 //    video.videoPath =path;

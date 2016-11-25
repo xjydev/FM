@@ -1,26 +1,21 @@
 //
-//  SettingsTableViewController.m
+//  PreferencesTableViewController.m
 //  FileManager
 //
-//  Created by xiaodev on Nov/18/16.
+//  Created by xiaodev on Nov/25/16.
 //  Copyright © 2016 xiaodev. All rights reserved.
 //
 
-#import "SettingsTableViewController.h"
+#import "PreferencesTableViewController.h"
 
-@interface SettingsTableViewController ()
-{
-    NSArray        *_tableArray;
-}
+@interface PreferencesTableViewController ()
+
 @end
 
-@implementation SettingsTableViewController
+@implementation PreferencesTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _tableArray = @[@{@"title":@"意见和建议",@"class":@""},@{@"title":@"偏好设置",@"class":@"PreferencesTableViewController"},@{@"title":@"关于我",@"class":@""},@{@"title":@"应用介绍",@"class":@""},@{@"title":@"鼓励",@"class":@""},];
-    self.tableView.tableFooterView = [[UIView alloc]init];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -37,27 +32,24 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+#warning Incomplete implementation, return the number of sections
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-     return _tableArray.count;
+#warning Incomplete implementation, return the number of rows
+    return 0;
 }
 
-
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsCell" forIndexPath:indexPath];
-    
-    cell.textLabel.text = _tableArray[indexPath.row][@"title"];
+    // Configure the cell...
     
     return cell;
-
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:_tableArray[indexPath.row][@"class"] sender:nil];
-}
+*/
 
 /*
 // Override to support conditional editing of the table view.

@@ -23,7 +23,7 @@ static XTools *tools = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         tools = [[XTools alloc] init];
-        tools.isCanRotation = NO;
+        tools.isCanRotation = YES;
     });
     return tools;
 }
@@ -128,32 +128,35 @@ static XTools *tools = nil;
 - (UIInterfaceOrientationMask)orientationMask {
     
     if (self.isCanRotation) {
+        
         return UIInterfaceOrientationMaskAll;
     }
     else
     {
-        switch ([UIApplication sharedApplication].statusBarOrientation) {
-            case UIInterfaceOrientationUnknown:
-                return UIInterfaceOrientationMaskAll;
-                break;
-            case UIInterfaceOrientationPortrait:
-                return UIInterfaceOrientationMaskPortrait;
-                break;
-            case UIInterfaceOrientationPortraitUpsideDown:
-                return UIInterfaceOrientationMaskPortraitUpsideDown;
-                break;
-            case UIInterfaceOrientationLandscapeLeft:
-                return UIInterfaceOrientationMaskLandscapeLeft;
-                break;
-            case UIInterfaceOrientationLandscapeRight:
-                return UIInterfaceOrientationMaskLandscapeRight;
-                break;
-                
-            default:
-                return UIInterfaceOrientationMaskAll;
-                break;
-        }
+        return UIInterfaceOrientationMaskPortrait;
+//        switch ([UIDevice currentDevice].orientation) {
+//            case UIDeviceOrientationUnknown:
+//                return UIInterfaceOrientationMaskAll;
+//                break;
+//            case UIDeviceOrientationPortrait:
+//                return UIInterfaceOrientationMaskPortrait;
+//                break;
+//            case UIDeviceOrientationPortraitUpsideDown:
+//                return UIInterfaceOrientationMaskPortraitUpsideDown;
+//                break;
+//            case UIDeviceOrientationLandscapeLeft:
+//                return UIInterfaceOrientationMaskLandscapeLeft;
+//                break;
+//            case UIDeviceOrientationLandscapeRight:
+//                return UIInterfaceOrientationMaskLandscapeRight;
+//                break;
+//                
+//            default:
+//                return UIInterfaceOrientationMaskAll;
+//                break;
+//        }
     }
+    
     
 }
 @end

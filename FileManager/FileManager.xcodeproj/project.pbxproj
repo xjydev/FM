@@ -71,6 +71,8 @@
 		6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470A1DE44A51002A7083 /* SVWebViewControllerActivity.m */; };
 		6C7947121DE44A51002A7083 /* SVWebViewControllerActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470C1DE44A51002A7083 /* SVWebViewControllerActivityChrome.m */; };
 		6C7947131DE44A51002A7083 /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470E1DE44A51002A7083 /* SVWebViewControllerActivitySafari.m */; };
+		6CB29CED1DE7E38A00C2FC2C /* XTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */; };
+		6CB29CF31DE7EC8700C2FC2C /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB29CF21DE7EC8700C2FC2C /* PreferencesTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,6 +183,10 @@
 		6C79470C1DE44A51002A7083 /* SVWebViewControllerActivityChrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivityChrome.m; sourceTree = "<group>"; };
 		6C79470D1DE44A51002A7083 /* SVWebViewControllerActivitySafari.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewControllerActivitySafari.h; sourceTree = "<group>"; };
 		6C79470E1DE44A51002A7083 /* SVWebViewControllerActivitySafari.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivitySafari.m; sourceTree = "<group>"; };
+		6CB29CEB1DE7E38A00C2FC2C /* XTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XTabBarViewController.h; sourceTree = "<group>"; };
+		6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XTabBarViewController.m; sourceTree = "<group>"; };
+		6CB29CF11DE7EC8700C2FC2C /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
+		6CB29CF21DE7EC8700C2FC2C /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
 		C4F31E74A1933BC1B38B7D36 /* Pods_FileManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FileManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C668736248FAD4E8ABF04076 /* Pods-FileManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FileManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-FileManager/Pods-FileManager.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -318,6 +324,8 @@
 			children = (
 				6C4D91E21DDEA95400023AF8 /* SettingsTableViewController.h */,
 				6C4D91E31DDEA95400023AF8 /* SettingsTableViewController.m */,
+				6CB29CF11DE7EC8700C2FC2C /* PreferencesTableViewController.h */,
+				6CB29CF21DE7EC8700C2FC2C /* PreferencesTableViewController.m */,
 			);
 			path = Settings;
 			sourceTree = SOURCE_ROOT;
@@ -351,6 +359,8 @@
 				6C4D91F31DDECBB700023AF8 /* UIView+xiao.m */,
 				6C4D92241DDEF04700023AF8 /* XTools.h */,
 				6C4D92251DDEF04700023AF8 /* XTools.m */,
+				6CB29CEB1DE7E38A00C2FC2C /* XTabBarViewController.h */,
+				6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */,
 			);
 			path = Category;
 			sourceTree = SOURCE_ROOT;
@@ -693,11 +703,13 @@
 				6C76D5561DE544510085AE3D /* ScanViewController.m in Sources */,
 				6C4D91F41DDECBB700023AF8 /* UIView+xiao.m in Sources */,
 				6C47DECF1DE3EDD700FA7364 /* UIColor+Hex.m in Sources */,
+				6CB29CF31DE7EC8700C2FC2C /* PreferencesTableViewController.m in Sources */,
 				6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */,
 				6C7947131DE44A51002A7083 /* SVWebViewControllerActivitySafari.m in Sources */,
 				6C79470F1DE44A51002A7083 /* SVModalWebViewController.m in Sources */,
 				6C76D5591DE545C40085AE3D /* QRCodeReaderView.m in Sources */,
 				6C4D91E11DDEA93E00023AF8 /* FilesTableViewController.m in Sources */,
+				6CB29CED1DE7E38A00C2FC2C /* XTabBarViewController.m in Sources */,
 				6C7947121DE44A51002A7083 /* SVWebViewControllerActivityChrome.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -25,9 +25,9 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 @implementation MRVLCPlayer
 
 #pragma mark - Life Cycle
-- (instancetype)init {
-    if (self = [super init]) {
-        
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        _originFrame = frame;
         [self setupNotification];
         
     }
@@ -92,6 +92,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     [self.controlView.pauseButton addTarget:self action:@selector(pauseButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.closeButton addTarget:self action:@selector(closeButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.fullScreenButton addTarget:self action:@selector(fullScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.controlView.shrinkScreenButton addTarget:self action:@selector(shrinkScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressChange) forControlEvents:UIControlEventValueChanged];
@@ -101,18 +102,19 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 - (void)setupNotification {
     
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    
+//    [UIApplication sharedApplication].statusBarOrientation
+    //监听转屏
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(orientationHandler)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil
      ];
-    
+    //回到前台
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillEnterForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-    
+    //进入后台
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillResignActive)
                                                  name:UIApplicationWillResignActiveNotification
@@ -142,13 +144,15 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
  *    屏幕旋转处理
  */
 - (void)orientationHandler {
-    
-    if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+    NSLog(@"0==%@",@([UIDevice currentDevice].orientation));
+    if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ) {
         self.isFullscreenModel = YES;
         
-    }else {
-        self.isFullscreenModel = NO;
-    }
+    }else
+        if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+            self.isFullscreenModel = NO;
+        }
+
     [self.controlView autoFadeOutControlBar];
 }
 
@@ -156,6 +160,10 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
  *    即将进入后台的处理
  */
 - (void)applicationWillEnterForeground {
+    
+    VLCTime *targetTime = [[VLCTime alloc] initWithInt:[self.player.time.value floatValue]-2];
+    [self.player setTime:targetTime];
+    
     [self play];
 }
 
@@ -263,7 +271,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
         return;
     }
     
-    float precentValue = ([self.player.time.numberValue floatValue]) / ([kMediaLength.numberValue floatValue]);
+    float precentValue = ([self.player.time.value floatValue]) / ([kMediaLength.value floatValue]);
     
     [self.controlView.progressSlider setValue:precentValue animated:YES];
     
@@ -320,7 +328,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     _isFullscreenModel = isFullscreenModel;
     
     if (isFullscreenModel) {
-        _originFrame = self.frame;
+//        _originFrame = self.frame;
         CGFloat height = kMRSCREEN_BOUNDS.size.width;
         CGFloat width = kMRSCREEN_BOUNDS.size.height;
         CGRect frame = CGRectMake((height - width) / 2, (width - height) / 2, width, height);
@@ -328,17 +336,20 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
             /**
              *    此判断是为了适配项目在Deployment Info中是否勾选了横屏
              */
-            if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+            if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight) {
                 self.frame = frame;
                 self.transform = CGAffineTransformMakeRotation(M_PI_2);
-            }else {
-                self.frame = self.frame = kMRSCREEN_BOUNDS;
-            }
+            }else
+                if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) {
+                  self.frame = self.frame = kMRSCREEN_BOUNDS;
+                }
             self.controlView.frame = self.bounds;
             [self.controlView layoutIfNeeded];
             self.controlView.fullScreenButton.hidden = YES;
             self.controlView.shrinkScreenButton.hidden = NO;
-        } completion:^(BOOL finished) {}];
+        } completion:^(BOOL finished) {
+         NSLog(@"++++++++++++++ %@",@([UIApplication sharedApplication].statusBarOrientation));
+        }];
         
     }else {
         [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
@@ -349,7 +360,9 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
             self.controlView.fullScreenButton.hidden = NO;
             self.controlView.shrinkScreenButton.hidden = YES;
             
-        } completion:^(BOOL finished) {}];
+        } completion:^(BOOL finished) {
+            NSLog(@"============= %@",@([UIApplication sharedApplication].statusBarOrientation));
+        }];
 
         
     }
