@@ -289,6 +289,7 @@
     if (!_shrinkScreenButton) {
         _shrinkScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_shrinkScreenButton setImage:[UIImage imageNamed:@"play_shrink"] forState:UIControlStateNormal];
+        [_shrinkScreenButton setImage:[UIImage imageNamed:@"play_shrink_d"] forState:UIControlStateDisabled];
         _shrinkScreenButton.bounds = CGRectMake(0, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
     }
     return _shrinkScreenButton;
@@ -298,6 +299,7 @@
     if (!_prevButton) {
         _prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_prevButton setImage:[UIImage imageNamed:@"play_prev"] forState:UIControlStateNormal];
+         [_prevButton setImage:[UIImage imageNamed:@"play_prev_d"] forState:UIControlStateDisabled];
         _prevButton.bounds = CGRectMake(0, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
     }
     return _prevButton;
@@ -351,6 +353,7 @@
         _timeLabel = [UILabel new];
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.font = [UIFont systemFontOfSize:MRVideoControlTimeLabelFontSize];
+        _timeLabel.adjustsFontSizeToFitWidth = YES;
         _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.textAlignment = NSTextAlignmentRight;
         _timeLabel.bounds = CGRectMake(0, 0, 100, MRVideoBarButtonWidth);

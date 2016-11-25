@@ -10,12 +10,39 @@
 #import "MRVLCPlayer.h"
 @interface VideoViewController ()<MRVLCPlayerDelegate>
 {
+    NSArray   *_videoArray;
+    NSInteger  _videoIndex;
     MRVLCPlayer *_player;
+    PrevNextType _playPrevNextType;
 }
 @end
 
 @implementation VideoViewController
-
+- (void)setVideoPath:(NSString *)videoPath {
+    _playPrevNextType = PrevNextTypeAll;
+    _videoPath = videoPath;
+}
+- (void)setVideoArray:(NSArray *)videoArray WithIndex:(NSInteger)index {
+    _videoArray = videoArray;
+    _videoIndex = index;
+    if (videoArray.count== 0) {
+        _playPrevNextType = PrevNextTypeAll;
+        return;
+    }
+    if (_videoIndex == 0) {
+        _playPrevNextType = PrevNextTypePrev;
+        self.videoPath = _videoArray[_videoIndex];
+        
+    }
+    else if (_videoIndex >0 && _videoIndex<_videoArray.count-1) {
+        _playPrevNextType = PrevNextTypeNext;
+      self.videoPath = _videoArray[_videoIndex];  
+    }
+    else
+    if(_videoIndex == _videoArray.count - 1){
+       _playPrevNextType = PrevNextTypeNext;
+    }
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -27,11 +54,29 @@
         _player.delegate = self;
         self.view = _player;
     }
-    _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
+    if (self.videoPath) {
+       _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
+        _player.prevNextType = _playPrevNextType;
+    }
+    else
+    {
+        NSLog(@"播放路径错误");
+    }
+    
     
 }
 - (void)playerCloseButton:(UIButton *)button {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (void)playerNextPrevButtonIsNext:(BOOL)isNext {
+    _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
+    _player.prevNextType = _playPrevNextType;
+    [_player play];
+}
+- (void)playerStateEnd {
+    _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
+    _player.prevNextType = _playPrevNextType;
+    [_player play];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -49,6 +94,7 @@
     [super viewWillDisappear:animated];
 //    XTOOLS.isCanRotation = YES;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    [[UIApplication sharedApplication]setStatusBarHidden:NO];
 
 }
 - (BOOL)shouldAutorotate {

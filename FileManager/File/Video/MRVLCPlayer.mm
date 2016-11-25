@@ -33,7 +33,37 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     }
     return self;
 }
-
+- (void)setPrevNextType:(PrevNextType)prevNextType {
+    _prevNextType = prevNextType;
+    switch (_prevNextType) {
+        case PrevNextTypePrev:
+        {
+            self.controlView.prevButton.enabled = NO;
+            self.controlView.nextButton.enabled = YES;
+        }
+            break;
+        case PrevNextTypeNext:
+        {
+            self.controlView.prevButton.enabled = YES;
+            self.controlView.nextButton.enabled = NO;
+            
+        }
+            break;
+        case PrevNextTypeAll:
+        {
+            self.controlView.prevButton.enabled = NO;
+            self.controlView.nextButton.enabled = NO;
+        }
+            break;
+            
+        default:
+        {
+            self.controlView.prevButton.enabled = YES;
+            self.controlView.nextButton.enabled = YES;
+        }
+            break;
+    }
+}
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
@@ -94,11 +124,19 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     [self.controlView.fullScreenButton addTarget:self action:@selector(fullScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self.controlView.shrinkScreenButton addTarget:self action:@selector(shrinkScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.controlView.prevButton addTarget:self action:@selector(prevNextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.controlView.nextButton addTarget:self action:@selector(prevNextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressChange) forControlEvents:UIControlEventValueChanged];
     [self.controlView.progressSlider addTarget:self action:@selector(progressTouchDown) forControlEvents:UIControlEventTouchDown];
 }
-
+- (void)prevNextButtonAction:(UIButton *)button {
+    
+    if ([self.delegate respondsToSelector:@selector(playerNextPrevButtonIsNext:)]) {
+        [self.player stop];
+        [self.delegate playerNextPrevButtonIsNext:button == self.controlView.nextButton];
+    }
+}
 - (void)setupNotification {
     
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -276,7 +314,15 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
         self.controlView.bgLayer.hidden = YES;
     }else if (self.player.state == VLCMediaPlayerStateStopped) {
         [self stop];
-    }else {
+        if (self.player.media.state == VLCMediaStateNothingSpecial) {
+            NSLog(@"111=== play end ===");
+            if ([self.delegate respondsToSelector:@selector(playerStateEnd)]) {
+                [self.delegate playerStateEnd];
+            }
+        }
+        
+    }
+    else {
         self.controlView.indicatorView.hidden = NO;
         self.controlView.bgLayer.hidden = NO;
     }
