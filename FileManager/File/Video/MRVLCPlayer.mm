@@ -94,6 +94,8 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     [self.controlView.fullScreenButton addTarget:self action:@selector(fullScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.shrinkScreenButton addTarget:self action:@selector(shrinkScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.controlView.progressSlider addTarget:self action:@selector(progressChange) forControlEvents:UIControlEventValueChanged];
+    [self.controlView.progressSlider addTarget:self action:@selector(progressTouchDown) forControlEvents:UIControlEventTouchDown];
 }
 
 - (void)setupNotification {
@@ -179,6 +181,9 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 
 - (void)closeButtonClick {
     [self dismiss];
+    if ([self.delegate respondsToSelector:@selector(playerCloseButton:)]) {
+        [self.delegate playerCloseButton:self.controlView.closeButton];
+    }
 }
 
 - (void)fullScreenButtonClick {
@@ -202,7 +207,12 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     
     [self.controlView autoFadeOutControlBar];
 }
-
+- (void)progressChange {
+    
+}
+- (void)progressTouchDown {
+    [self.controlView cancelAutoFadeOutControlBar];
+}
 #pragma mark Player Logic
 - (void)play {
     [self.player play];

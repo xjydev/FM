@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 //程序需要的主要三个颜色
 #define kNavCOLOR [UIColor ora_colorWithHex:0xf5f5f5]
-#define kMainCOLOR [UIColor ora_colorWithHex:0xe73649]
+#define kMainCOLOR [UIColor ora_colorWithHex:0x1d67f1]
 #define kBACKCOLOR [UIColor ora_colorWithHex:0xeeeeee]
 #define kLINECOLOR [UIColor ora_colorWithHex:0xe5e5e5]
 #define kTEXTGRAY [UIColor ora_colorWithHex:0x999999]

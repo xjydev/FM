@@ -8,7 +8,7 @@
 #import "XTools.h"
 #import "VideoViewController.h"
 #import "MRVLCPlayer.h"
-@interface VideoViewController ()
+@interface VideoViewController ()<MRVLCPlayerDelegate>
 {
     MRVLCPlayer *_player;
 }
@@ -24,27 +24,31 @@
         
         _player.bounds = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         _player.center = self.view.center;
-        //    player.mediaURL = [[NSBundle mainBundle] URLForResource:@"1" withExtension:@"wmv"];
-        
-        //    [NSURL URLWithString:self.videoPath];
-        //    player.mediaURL = [NSURL fileURLWithPath:@"/Users/Maru/Documents/Media/Movie/1.mkv"];
-        
-//        [_player showInView:self.view];
+        _player.delegate = self;
         self.view = _player;
     }
     _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
     
 }
-
+- (void)playerCloseButton:(UIButton *)button {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+
     if (_player) {
         [_player play];
     }
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+
 }
 - (BOOL)shouldAutorotate {
     

@@ -31,6 +31,9 @@
     UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
 //                                      initWithTitle:@"扫扫" style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
     self.navigationItem.leftBarButtonItem = leftBarButton;
+    
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:0];
+    NSLog(@"array === %@",array.firstObject);
 }
 - (void)rightAddButtonAction:(UIBarButtonItem *)button {
     UIAlertController *aler = [UIAlertController alertControllerWithTitle:@"新建文件夹" message:@"在本目录下，新建一个文件夹" preferredStyle:UIAlertControllerStyleAlert];
