@@ -7,21 +7,19 @@
 //
 
 #import "PreferencesTableViewController.h"
-
+#import "XTools.h"
 @interface PreferencesTableViewController ()
-
+{
+    NSArray     *_mainArray;
+}
 @end
 
 @implementation PreferencesTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _mainArray = @[@[@{@"title":@"屏幕旋转",@"subTitle":@"应用的所有界面是否支持转屏",@"tag":@"0"},],];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,24 +30,45 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+    return _mainArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
-    return 0;
+    return ((NSArray *)_mainArray[section]).count;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"preferencesCell" forIndexPath:indexPath];
+    cell.textLabel.text = _mainArray[indexPath.section][indexPath.row][@"title"];
+    cell.detailTextLabel.text = _mainArray[indexPath.section][indexPath.row][@"subTitle"];
+    UISwitch *switchView = [cell.contentView viewWithTag:301];
+    if (switchView) {
+        if (switchView.allTargets.count==0) {
+            [switchView addTarget:self action:@selector(swithAction:) forControlEvents:UIControlEventValueChanged];
+        }
+        switchView.on = XTOOLS.isCanRotation;
+    }
+   
     
     return cell;
 }
-*/
+- (void)swithAction:(UISwitch *)switchView {
+    UITableViewCell *cell = (UITableViewCell *)switchView.superview.superview;
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    switch ([_mainArray[indexPath.section][indexPath.row][@"tag"] integerValue]) {
+        case 0:
+        {
+            XTOOLS.isCanRotation = switchView.on;
+            [kUSerD setObject:[NSNumber numberWithBool:XTOOLS.isCanRotation] forKey:userRotationKey];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+}
 
 /*
 // Override to support conditional editing of the table view.

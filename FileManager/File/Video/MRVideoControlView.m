@@ -28,10 +28,10 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
-    self.topBar.frame             = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetMinY(self.bounds), CGRectGetWidth(self.bounds), MRVideoControlBarHeight);
-    self.closeButton.frame        = CGRectMake(CGRectGetMinX(self.topBar.bounds), CGRectGetMinX(self.topBar.bounds)+20, CGRectGetWidth(self.closeButton.bounds), CGRectGetHeight(self.closeButton.bounds));
     
+    self.topBar.frame             = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetMinY(self.bounds), CGRectGetWidth(self.bounds), CGRectGetWidth(self.bounds)>500?MRVideoControlBarHeight-20 : MRVideoControlBarHeight);
+    self.closeButton.frame        = CGRectMake(CGRectGetMinX(self.topBar.bounds), CGRectGetHeight(self.topBar.bounds)-CGRectGetHeight(self.closeButton.bounds), CGRectGetWidth(self.closeButton.bounds), CGRectGetHeight(self.closeButton.bounds));
+    self.topTitleLabel.frame      = CGRectMake(CGRectGetMinX(self.topBar.bounds)+CGRectGetWidth(self.closeButton.bounds), CGRectGetHeight(self.topBar.bounds)-CGRectGetHeight(self.closeButton.bounds), CGRectGetWidth(self.topBar.bounds)-CGRectGetWidth(self.closeButton.bounds)-10, CGRectGetHeight(self.closeButton.bounds));
     
     self.bottomBar.frame          = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetHeight(self.bounds) - MRVideoControlBottomHeight, CGRectGetWidth(self.bounds), MRVideoControlBottomHeight);
     self.bottomLayer.frame = CGRectMake(CGRectGetMinX(self.bottomBar.bounds),MRVideoControlBottomHeight - MRVideoControlBottomLayerHeight, CGRectGetWidth(self.bounds), MRVideoControlBottomLayerHeight);
@@ -104,7 +104,8 @@
     [self addSubview:self.indicatorView];
     [self addSubview:self.alertlable];
 
-    [self.topBar    addSubview:self.closeButton];
+    [self.topBar addSubview:self.closeButton];
+    [self.topBar addSubview:self.topTitleLabel];
     
     [self.bottomBar.layer addSublayer:self.bottomLayer];
     [self.bottomBar addSubview:self.timeLabel];
@@ -232,7 +233,7 @@
 {
     if (!_topBar) {
         _topBar = [[UIView alloc]init];
-        _topBar.backgroundColor = MRRGB(40, 40, 40);
+        _topBar.backgroundColor = MRRGB(60, 60, 60,0.8);
     }
     return _topBar;
 }
@@ -248,7 +249,7 @@
 - (CALayer *)bottomLayer {
     if (!_bottomLayer) {
         _bottomLayer = [CALayer layer];
-        _bottomLayer.backgroundColor = MRRGB(40, 40, 40).CGColor;
+        _bottomLayer.backgroundColor = MRRGB(60, 60, 60,0.8).CGColor;
         
     }
     return _bottomLayer;
@@ -318,8 +319,8 @@
         _progressSlider = [[MRProgressSlider alloc] init];
         [_progressSlider setThumbImage:[UIImage imageNamed:@"play_progress"] forState:UIControlStateNormal];
         [_progressSlider setThumbImage:[UIImage imageNamed:@"play_progress_h"] forState:UIControlStateHighlighted];
-        [_progressSlider setMinimumTrackTintColor:MRRGB(255, 255, 255)];
-        [_progressSlider setMaximumTrackTintColor:MRRGB(157, 157, 157)];
+        [_progressSlider setMinimumTrackTintColor:MRRGB(255, 255, 255,1)];
+        [_progressSlider setMaximumTrackTintColor:MRRGB(157, 157, 157,1)];
         [_progressSlider setBackgroundColor:[UIColor clearColor]];
         _progressSlider.value = 0.f;
         _progressSlider.continuous = YES;
@@ -336,7 +337,14 @@
     }
     return _closeButton;
 }
-
+- (UILabel *)topTitleLabel {
+    if (!_topTitleLabel) {
+        _topTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, MRVideoControlBarHeight, MRVideoControlBarHeight)];
+        _topTitleLabel.textColor = [UIColor whiteColor];
+        _topTitleLabel.font = [UIFont systemFontOfSize:16];
+    }
+    return _topTitleLabel;
+}
 - (UILabel *)timeLabel
 {
     if (!_timeLabel) {

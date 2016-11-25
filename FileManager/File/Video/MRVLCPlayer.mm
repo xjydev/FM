@@ -104,11 +104,14 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 //    [UIApplication sharedApplication].statusBarOrientation
     //监听转屏
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(orientationHandler)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil
-     ];
+    if (XTOOLS.isCanRotation) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(orientationHandler)
+                                                     name:UIApplicationDidChangeStatusBarOrientationNotification
+                                                   object:nil
+         ];//UIDeviceOrientationDidChangeNotification
+  
+    }
     //回到前台
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillEnterForeground)
@@ -144,12 +147,13 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
  *    屏幕旋转处理
  */
 - (void)orientationHandler {
-    NSLog(@"0==%@",@([UIDevice currentDevice].orientation));
-    if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ) {
+//    NSLog(@"0==%@",@([UIDevice currentDevice].orientation));
+    //UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)
+    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight|| [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
         self.isFullscreenModel = YES;
         
-    }else
-        if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+    }else//UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)
+        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait|| [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown) {
             self.isFullscreenModel = NO;
         }
 
@@ -195,14 +199,28 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 
 - (void)fullScreenButtonClick {
-    
-    [self forceChangeOrientation:UIInterfaceOrientationLandscapeRight];
+    if (XTOOLS.isCanRotation) {
+       [self forceChangeOrientation:UIInterfaceOrientationLandscapeLeft];
+    }
+    else
+    {
+        self.isFullscreenModel = YES;
+        [[UIApplication sharedApplication]setStatusBarHidden:YES];
+    }
+   
 
 }
 
 - (void)shrinkScreenButtonClick {
+    if (XTOOLS.isCanRotation) {
+      [self forceChangeOrientation:UIInterfaceOrientationPortrait];
+    }
+    else
+    {
+        self.isFullscreenModel = NO;
+        [[UIApplication sharedApplication]setStatusBarHidden:NO];
+    }
     
-    [self forceChangeOrientation:UIInterfaceOrientationPortrait];;
 }
 
 - (void)progressClick {
@@ -223,6 +241,8 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 #pragma mark Player Logic
 - (void)play {
+    self.controlView.topTitleLabel.text =[_mediaURL.absoluteString lastPathComponent];
+    NSAssert(_mediaURL != nil, @"MRVLCPlayer Exception: mediaURL could not be nil!");
     [self.player play];
     self.controlView.playButton.hidden = YES;
     self.controlView.pauseButton.hidden = NO;
@@ -321,14 +341,15 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 
 - (void)setIsFullscreenModel:(BOOL)isFullscreenModel {
     
-    if (_isFullscreenModel == isFullscreenModel) {
-        return;
-    }
+//    if (_isFullscreenModel == isFullscreenModel) {
+//        return;
+//    }
     
     _isFullscreenModel = isFullscreenModel;
     
     if (isFullscreenModel) {
 //        _originFrame = self.frame;
+        
         CGFloat height = kMRSCREEN_BOUNDS.size.width;
         CGFloat width = kMRSCREEN_BOUNDS.size.height;
         CGRect frame = CGRectMake((height - width) / 2, (width - height) / 2, width, height);
@@ -336,19 +357,32 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
             /**
              *    此判断是为了适配项目在Deployment Info中是否勾选了横屏
              */
-            if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight) {
+           
+            if (XTOOLS.isCanRotation) {
+//                NSLog(@"00 ===%@",@([UIApplication sharedApplication].statusBarOrientation));
+                if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+//                    self.frame = frame;
+                    self.frame = kMRSCREEN_BOUNDS;
+                    
+//                    NSLog(@"111===%@ ===%@",@(self.frame.size.width) ,@([UIApplication sharedApplication].statusBarOrientation));
+                }else
+                    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
+                        self.frame = kMRSCREEN_BOUNDS;
+//                        self.transform = CGAffineTransformMakeRotation(M_PI);
+//                         NSLog(@"222===%@ ===%@",@(self.frame.size.width) ,@([UIApplication sharedApplication].statusBarOrientation));
+                    }
+            }
+            else
+            {
                 self.frame = frame;
-                self.transform = CGAffineTransformMakeRotation(M_PI_2);
-            }else
-                if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) {
-                  self.frame = self.frame = kMRSCREEN_BOUNDS;
-                }
+                self.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            }
             self.controlView.frame = self.bounds;
             [self.controlView layoutIfNeeded];
             self.controlView.fullScreenButton.hidden = YES;
             self.controlView.shrinkScreenButton.hidden = NO;
         } completion:^(BOOL finished) {
-         NSLog(@"++++++++++++++ %@",@([UIApplication sharedApplication].statusBarOrientation));
+//         NSLog(@"++++++++++++++ %@",@([UIApplication sharedApplication].statusBarOrientation));
         }];
         
     }else {
@@ -361,7 +395,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
             self.controlView.shrinkScreenButton.hidden = YES;
             
         } completion:^(BOOL finished) {
-            NSLog(@"============= %@",@([UIApplication sharedApplication].statusBarOrientation));
+//            NSLog(@"============= %@",@([UIApplication sharedApplication].statusBarOrientation));
         }];
 
         

@@ -55,7 +55,9 @@ typedef NS_ENUM(NSInteger , FileType) {
 : [UIScreen mainScreen].bounds.size.height)                                             \
 : [UIScreen mainScreen].bounds.size.height)
 
+//#define kUserRotationKey @"canRotationKey"
 
+extern NSString * const userRotationKey ;
 @interface XTools : NSObject
 + (instancetype)shareXTools;
 

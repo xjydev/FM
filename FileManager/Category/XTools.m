@@ -11,6 +11,9 @@
 #import "MRVLCPlayer.h"
 #import "VideoViewController.h"
 
+
+NSString * const userRotationKey = @"canRotationKey";
+
 static XTools *tools = nil;
 @interface XTools()
 {
@@ -23,7 +26,8 @@ static XTools *tools = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         tools = [[XTools alloc] init];
-        tools.isCanRotation = YES;
+        
+        tools.isCanRotation = [[kUSerD objectForKey:userRotationKey] boolValue];
     });
     return tools;
 }

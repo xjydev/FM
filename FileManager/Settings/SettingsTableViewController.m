@@ -56,7 +56,14 @@
 
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:_tableArray[indexPath.row][@"class"] sender:nil];
+    if (((NSString *)_tableArray[indexPath.row][@"class"]).length>0) {
+        UIViewController *subSetViewController = [self.storyboard instantiateViewControllerWithIdentifier:_tableArray[indexPath.row][@"class"]];
+        subSetViewController.hidesBottomBarWhenPushed = YES;
+        subSetViewController.title = _tableArray[indexPath.row][@"title"];
+        [self.navigationController pushViewController:subSetViewController animated:YES];
+    }
+    
+//    [self performSegueWithIdentifier:_tableArray[indexPath.row][@"class"] sender:nil];
 }
 
 /*

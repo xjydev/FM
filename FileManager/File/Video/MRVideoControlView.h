@@ -28,6 +28,9 @@
 @property (nonatomic,weak) id<MRVideoControlViewDelegate> delegate;
 
 @property (nonatomic, strong) UIView *topBar;
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UILabel *topTitleLabel;
+
 @property (nonatomic, strong) UIView *bottomBar;
 @property (nonatomic, strong) CALayer *bottomLayer;
 @property (nonatomic, strong) UIButton *playButton;
@@ -38,7 +41,7 @@
 @property (nonatomic, strong) UIButton *nextButton;
 
 @property (nonatomic, strong) MRProgressSlider *progressSlider;
-@property (nonatomic, strong) UIButton *closeButton;
+
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) MRVideoHUDView *indicatorView;
 @property (nonatomic, strong) CALayer *bgLayer;

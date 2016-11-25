@@ -10,7 +10,7 @@
 
 #define kMediaLength self.player.media.length
 #define kHUDCenter CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
-#define MRRGB(r,g,b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
+#define MRRGB(r,g,b,a) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
 #define kMRSCREEN_BOUNDS [[UIScreen mainScreen] bounds]
 
 /*************** HUD ****************************/

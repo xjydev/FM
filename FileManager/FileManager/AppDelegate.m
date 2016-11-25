@@ -54,7 +54,7 @@
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
     //可以转屏的方向
-    NSLog(@"a == %@",@(XTOOLS.orientationMask));
+//    NSLog(@"a == %@",@(XTOOLS.orientationMask));
     return XTOOLS.orientationMask;
 }
 
