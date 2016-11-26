@@ -23,21 +23,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="播放器" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tl9-7h-OK6">
-                                <rect key="frame" x="118" y="47" width="139" height="51"/>
+                                <rect key="frame" x="118" y="25" width="139" height="51"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="51" id="bAd-s3-KLz"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="axh-nv-k70">
-                                <rect key="frame" x="169" y="113" width="37" height="37"/>
+                                <rect key="frame" x="169" y="136" width="37" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="37" id="SWO-G7-iK6"/>
                                     <constraint firstAttribute="height" constant="37" id="lM2-5o-rGZ"/>
                                 </constraints>
-                                <color key="color" red="0.86666666670000003" green="0.86666666670000003" blue="0.86666666670000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </activityIndicatorView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WXG-fK-fQi">
                                 <rect key="frame" x="0.0" y="618" width="375" height="49"/>
@@ -50,9 +50,9 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="tl9-7h-OK6" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="102" id="J4A-KG-RFk"/>
-                            <constraint firstItem="axh-nv-k70" firstAttribute="top" secondItem="tl9-7h-OK6" secondAttribute="bottom" constant="15" id="Mg3-4n-emW"/>
+                            <constraint firstItem="axh-nv-k70" firstAttribute="top" secondItem="tl9-7h-OK6" secondAttribute="bottom" constant="60" id="Mg3-4n-emW"/>
                             <constraint firstItem="axh-nv-k70" firstAttribute="centerX" secondItem="tl9-7h-OK6" secondAttribute="centerX" id="dGa-ig-5GU"/>
-                            <constraint firstItem="tl9-7h-OK6" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="27" id="dV6-OJ-QSy"/>
+                            <constraint firstItem="tl9-7h-OK6" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="5" id="dV6-OJ-QSy"/>
                             <constraint firstItem="WXG-fK-fQi" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="el0-cB-nl0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tl9-7h-OK6" secondAttribute="trailing" constant="102" id="hpr-fI-eeQ"/>
                             <constraint firstAttribute="trailing" secondItem="WXG-fK-fQi" secondAttribute="trailing" id="miG-Ym-t5Z"/>

@@ -186,7 +186,8 @@
 #pragma mark - 扫描结果处理
 - (void)accordingQcode:(NSString *)str
 {
-    if ([str hasPrefix:@"http"]) {
+    //判断是否是网址
+    if ([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:str]]) {
         SVWebViewController *webViewController = [[SVWebViewController alloc] initWithAddress:str];
         webViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:webViewController animated:YES];
@@ -194,11 +195,17 @@
     else
     {
         UIAlertController *aler = [UIAlertController alertControllerWithTitle:@"扫描结果" message:str preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
         }];
+        UIAlertAction *copyAction = [UIAlertAction actionWithTitle:@"复制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            [pasteboard setString:str];
+        }];
+
         
         [aler addAction:cancelAction];
+        [aler addAction:copyAction];
         [self presentViewController:aler animated:YES completion:nil];
     }
     

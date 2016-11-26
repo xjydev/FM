@@ -10,14 +10,17 @@
 #import "SVWebViewControllerActivitySafari.h"
 #import "SVWebViewController.h"
 
-@interface SVWebViewController () <UIWebViewDelegate>
-
+@interface SVWebViewController () <UIWebViewDelegate,UIScrollViewDelegate>
+{
+    CGFloat    _offsetY;
+}
 @property (nonatomic, strong) UIBarButtonItem *backBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *forwardBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *refreshBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *stopBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *actionBarButtonItem;
 
+@property (nonatomic, strong) UILabel   *urlLabel;
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) NSURL *URL;
 
@@ -65,24 +68,17 @@
 
 #pragma mark - View lifecycle
 
-- (void)loadView {
-    self.view = self.webView;
-    [self loadURL:self.URL];
-}
+//- (void)loadView {
+//    
+//    [self loadURL:self.URL];
+//}
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview: self.webView];
     [self updateToolbarItems];
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    self.webView = nil;
-    _backBarButtonItem = nil;
-    _forwardBarButtonItem = nil;
-    _refreshBarButtonItem = nil;
-    _stopBarButtonItem = nil;
-    _actionBarButtonItem = nil;
+     [self loadURL:self.URL];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -116,12 +112,21 @@
 }
 
 #pragma mark - Getters
-
 - (UIWebView*)webView {
     if(!_webView) {
-        _webView = [[UIWebView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _webView = [[UIWebView alloc] initWithFrame: [UIScreen mainScreen].bounds];
+        //CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height-64-44)
         _webView.delegate = self;
         _webView.scalesPageToFit = YES;
+        _webView.backgroundColor = [UIColor whiteColor];
+        _urlLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 30)];
+//        _urlLabel.backgroundColor = [UIColor redColor];
+        _urlLabel.textColor = [UIColor lightGrayColor];
+        
+        _urlLabel.textAlignment = NSTextAlignmentCenter;
+        [_webView insertSubview:_urlLabel belowSubview:_webView.scrollView];
+        _webView.scrollView.delegate = self;
+        _webView.scrollView.contentInset = UIEdgeInsetsMake(64, 0, 44, 0);
     }
     return _webView;
 }
@@ -226,6 +231,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     [self updateToolbarItems];
 }
 
@@ -233,6 +239,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
+    _urlLabel.text = webView.request.URL.host;
     self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     [self updateToolbarItems];
 }
@@ -280,6 +287,20 @@
 
 - (void)doneButtonClicked:(id)sender {
     [self dismissViewControllerAnimated:YES completion:NULL];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView == _webView.scrollView) {
+        if (_offsetY<_webView.scrollView.contentOffset.y&&_webView.scrollView.contentOffset.y<_webView.scrollView.contentSize.height-_webView.scrollView.bounds.size.height&&_webView.scrollView.contentOffset.y>0) {
+            self.navigationController.navigationBarHidden = YES;
+            self.navigationController.toolbarHidden = YES;
+        }
+        else
+        {
+            self.navigationController.navigationBarHidden = NO;
+            self.navigationController.toolbarHidden = NO;
+        }
+        _offsetY = _webView.scrollView.contentOffset.y;
+    }
 }
 
 @end
