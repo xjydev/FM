@@ -45,10 +45,10 @@
     
     self.fullScreenButton.frame   = CGRectMake(CGRectGetWidth(self.bottomBar.bounds) - CGRectGetWidth(self.fullScreenButton.bounds) - 5, self.playButton.frame.origin.y, CGRectGetWidth(self.fullScreenButton.bounds), CGRectGetHeight(self.fullScreenButton.bounds));
     self.shrinkScreenButton.frame = self.fullScreenButton.frame;
-    self.indicatorView.center     = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+    self.centerView.center     = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
     self.timeLabel.frame          = CGRectMake(20+3*MRVideoBarButtonWidth, CGRectGetMinY(self.playButton.frame), CGRectGetWidth(self.bottomBar.frame)-30-4*MRVideoBarButtonWidth, CGRectGetHeight(self.playButton.frame));
     
-    self.alertlable.center        = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+//    self.alertlable.center        = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
     
 }
 
@@ -99,10 +99,10 @@
     
     
     [self addSubview:self.topBar];
-    [self addSubview:self.indicatorView];
+    [self addSubview:self.centerView];
     [self addSubview:self.bottomBar];
-    [self addSubview:self.indicatorView];
-    [self addSubview:self.alertlable];
+    //[self addSubview:self.indicatorView];
+//    [self addSubview:self.alertlable];
 
     [self.topBar addSubview:self.closeButton];
     [self.topBar addSubview:self.topTitleLabel];
@@ -116,6 +116,10 @@
     [self.bottomBar addSubview:self.nextButton];
     [self.bottomBar addSubview:self.prevButton];
     [self.bottomBar addSubview:self.progressSlider];
+    
+    
+//    [self.volumeView showsRouteButton];
+//    [self.volumeView showsVolumeSlider];
     
     [self addGestureRecognizer:self.pan];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)]];
@@ -148,7 +152,7 @@
             
         case UIGestureRecognizerStateBegan: {
             
-            self.alertlable.alpha = MRVideoControlAlertAlpha;
+//            self.alertlable.alpha = MRVideoControlAlertAlpha;
             
         }
             break;
@@ -157,28 +161,32 @@
         case UIGestureRecognizerStateChanged: {
             
             // 判断方向
-            if (ABS(speedDir.x) > ABS(speedDir.y)) {
+            if (fabs(speedDir.x) > fabs(speedDir.y)) {
                 if ([pan translationInView:self].x > 0) {
                     if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRight)]) {
                         [self.delegate controlViewFingerMoveRight];
                     }
-                    [self.alertlable configureWithTime:[self.timeLabel.text substringToIndex:5] isLeft:NO];
+                    [self.centerView ShowWithType:PlayerCenterTypeSpeedBack Title:[NSString stringWithFormat:@"%@",[self.timeLabel.text substringToIndex:5]]];
+//                    [self.alertlable configureWithTime:[self.timeLabel.text substringToIndex:5] isLeft:NO];
                 }else {
                     if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRight)]) {
                         [self.delegate controlViewFingerMoveLeft];
                     }
-                    [self.alertlable configureWithTime:[self.timeLabel.text substringToIndex:5] isLeft:YES];
+                    [self.centerView ShowWithType:PlayerCenterTypeSpeedForward Title:[NSString stringWithFormat:@"%@",[self.timeLabel.text substringToIndex:5]]];
+
                 }
             }else {
                 
                 if (localPoint.x > self.bounds.size.width / 2) {
                     // 改变音量
+                
                     if ([pan translationInView:self].y > 0) {
                         self.volumeSlider.value -= 0.03;
                     }else {
                         self.volumeSlider.value += 0.03;
                     }
-                    [self.alertlable configureWithVolume:self.volumeSlider.value];
+
+                    [self.centerView ShowWithType:PlayerCenterTypeVolume Title:[NSString stringWithFormat:@"音量:%d%%",(int)(self.volumeSlider.value * 100)]];
                 }else {
                     // 改变显示亮度
                     if ([pan translationInView:self].y > 0) {
@@ -186,7 +194,7 @@
                     }else {
                         [UIScreen mainScreen].brightness += 0.01;
                     }
-                    [self.alertlable configureWithLight];
+                    [self.centerView ShowWithType:PlayerCenterTypeBright Title:[NSString stringWithFormat:@"亮度:%d%%",(int)([UIScreen mainScreen].brightness * 100)]];
                 }
             }
         }
@@ -196,7 +204,7 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [UIView animateWithDuration:1 animations:^{
-                    self.alertlable.alpha = 0;
+//                    self.alertlable.alpha = 0;
                 }];
             });
         }
@@ -221,14 +229,15 @@
 }
 
 #pragma mark - Property
-- (MRVideoHUDView *)indicatorView {
-    if (!_indicatorView) {
-        _indicatorView = [[MRVideoHUDView alloc] init];
-        _indicatorView.bounds = CGRectMake(0, 0, 100, 100);
-    }
-    return _indicatorView;
-}
 
+- (PlayerCenterView *)centerView {
+    if (!_centerView) {
+        _centerView = [[PlayerCenterView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        _centerView.backgroundColor = MRRGB(60, 60, 60,0.8);
+//        _centerView.bounds = CGRectMake(0, 0, 100, 100);
+    }
+    return _centerView;
+}
 - (UIView *)topBar
 {
     if (!_topBar) {
@@ -389,20 +398,6 @@
     return _volumeView;
 }
 
-- (UILabel *)alertlable {
-    if (!_alertlable) {
-        _alertlable = [UILabel new];
-        _alertlable.bounds = CGRectMake(0, 0, 100, 40);
-        _alertlable.textAlignment = NSTextAlignmentCenter;
-        _alertlable.backgroundColor = [UIColor colorWithWhite:0.000 alpha:MRVideoControlAlertAlpha];
-        _alertlable.textColor = [UIColor whiteColor];
-        _alertlable.layer.cornerRadius = 10;
-        _alertlable.layer.masksToBounds = YES;
-        _alertlable.alpha = 0;
-    }
-    return _alertlable;
-}
-
 - (UIPanGestureRecognizer *)pan {
     if (!_pan) {
         _pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
@@ -433,17 +428,3 @@
 
 @end
 
-@implementation UILabel (ConfigureAble)
-
-- (void)configureWithTime:(NSString *)time isLeft:(BOOL)left {
-    left ? [self setText:[NSString stringWithFormat:@"<<%@",time]] : [self setText:[NSString stringWithFormat:@">>%@",time]];
-}
-- (void)configureWithLight {
-    self.text = [NSString stringWithFormat:@"亮度:%d%%",(int)([UIScreen mainScreen].brightness * 100)];
-}
-
-- (void)configureWithVolume:(float)volume {
-    self.text = [NSString stringWithFormat:@"音量:%d%%",(int)(volume * 100)];
-}
-
-@end

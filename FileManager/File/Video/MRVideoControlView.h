@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MRVideoHUDView.h"
+//#import "MRVideoHUDView.h"
+#import "PlayerCenterView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "MRVideoConst.h"
 @class MRProgressSlider;
@@ -43,11 +44,11 @@
 @property (nonatomic, strong) MRProgressSlider *progressSlider;
 
 @property (nonatomic, strong) UILabel *timeLabel;
-@property (nonatomic, strong) MRVideoHUDView *indicatorView;
+@property (nonatomic, strong) PlayerCenterView *centerView;
 @property (nonatomic, strong) CALayer *bgLayer;
 @property (nonatomic, strong) UISlider *volumeSlider;
 @property (nonatomic, strong) MPVolumeView *volumeView;
-@property (nonatomic, strong) UILabel *alertlable;
+//@property (nonatomic, strong) UILabel *alertlable;
 
 - (void)animateHide;
 - (void)animateShow;
@@ -59,9 +60,5 @@
 @interface MRProgressSlider : UISlider
 @end
 
-@interface UILabel (ConfigureAble)
-- (void)configureWithTime:(NSString *)time isLeft:(BOOL)left;
-- (void)configureWithLight;
-- (void)configureWithVolume:(float)volume;
-@end
+
 

@@ -21,6 +21,13 @@ typedef NS_ENUM(NSInteger , FileType) {
     FileTypeDefault,
     
 };
+typedef NS_ENUM(NSInteger ,SHUDType) {
+    SHUDTypeLoading,
+    SHUDTypeSuccess,
+    SHUDTypeFaile,
+    SHUDTypeForward,
+    SHUDTypeBack,
+};
 #define XTOOLS [XTools shareXTools]
 
 //userDefaults

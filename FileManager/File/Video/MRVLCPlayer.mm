@@ -305,13 +305,24 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 #pragma mark VLC
 - (void)mediaPlayerStateChanged:(NSNotification *)aNotification {
     // Every Time change the state,The VLC will draw video layer on this layer.
+    NSLog(@"==%@ == %@",@(self.player.media.state),@(self.player.state));
     [self bringSubviewToFront:self.controlView];
     if (self.player.media.state == VLCMediaStateBuffering) {
-        self.controlView.indicatorView.hidden = NO;
+        [self.controlView.centerView ShowWithType:PlayerCenterTypeWaiting Title:@"缓存中"];
+//        self.controlView.indicatorView.hidden = NO;
+
         self.controlView.bgLayer.hidden = NO;
     }else if (self.player.media.state == VLCMediaStatePlaying) {
-        self.controlView.indicatorView.hidden = YES;
-        self.controlView.bgLayer.hidden = YES;
+        
+        if (self.player.state == VLCMediaPlayerStatePaused) {
+            [self.controlView.centerView ShowWithType:PlayerCenterTypeStop Title:nil];
+            self.controlView.bgLayer.hidden = YES;
+        }
+        else
+        {
+            self.controlView.centerView.hidden = YES;
+            self.controlView.bgLayer.hidden = YES;
+        }
     }else if (self.player.state == VLCMediaPlayerStateStopped) {
         [self stop];
         if (self.player.media.state == VLCMediaStateNothingSpecial) {
@@ -323,7 +334,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
         
     }
     else {
-        self.controlView.indicatorView.hidden = NO;
+        [self.controlView.centerView ShowWithType:PlayerCenterTypeWaiting Title:@"缓存中"];
         self.controlView.bgLayer.hidden = NO;
     }
     

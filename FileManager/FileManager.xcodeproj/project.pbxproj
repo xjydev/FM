@@ -73,6 +73,8 @@
 		6C7947131DE44A51002A7083 /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470E1DE44A51002A7083 /* SVWebViewControllerActivitySafari.m */; };
 		6CB29CED1DE7E38A00C2FC2C /* XTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */; };
 		6CB29CF31DE7EC8700C2FC2C /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB29CF21DE7EC8700C2FC2C /* PreferencesTableViewController.m */; };
+		6CBFA7A31DEA80620001CE17 /* XHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CBFA7A21DEA80620001CE17 /* XHUDView.m */; };
+		6CBFA7A61DEA89B30001CE17 /* PlayerCenterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CBFA7A51DEA89B30001CE17 /* PlayerCenterView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +189,10 @@
 		6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XTabBarViewController.m; sourceTree = "<group>"; };
 		6CB29CF11DE7EC8700C2FC2C /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		6CB29CF21DE7EC8700C2FC2C /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
+		6CBFA7A11DEA80620001CE17 /* XHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHUDView.h; sourceTree = "<group>"; };
+		6CBFA7A21DEA80620001CE17 /* XHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHUDView.m; sourceTree = "<group>"; };
+		6CBFA7A41DEA89B30001CE17 /* PlayerCenterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCenterView.h; sourceTree = "<group>"; };
+		6CBFA7A51DEA89B30001CE17 /* PlayerCenterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCenterView.m; sourceTree = "<group>"; };
 		C4F31E74A1933BC1B38B7D36 /* Pods_FileManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FileManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C668736248FAD4E8ABF04076 /* Pods-FileManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FileManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-FileManager/Pods-FileManager.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -361,6 +367,8 @@
 				6C4D92251DDEF04700023AF8 /* XTools.m */,
 				6CB29CEB1DE7E38A00C2FC2C /* XTabBarViewController.h */,
 				6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */,
+				6CBFA7A11DEA80620001CE17 /* XHUDView.h */,
+				6CBFA7A21DEA80620001CE17 /* XHUDView.m */,
 			);
 			path = Category;
 			sourceTree = SOURCE_ROOT;
@@ -408,6 +416,8 @@
 		6C4D92121DDED40200023AF8 /* MRV */ = {
 			isa = PBXGroup;
 			children = (
+				6CBFA7A41DEA89B30001CE17 /* PlayerCenterView.h */,
+				6CBFA7A51DEA89B30001CE17 /* PlayerCenterView.m */,
 				6C4D92131DDED41300023AF8 /* MRVideoConst.h */,
 				6C4D92141DDED41300023AF8 /* MRVideoHUDView.h */,
 				6C4D92151DDED41300023AF8 /* MRVideoHUDView.m */,
@@ -692,8 +702,10 @@
 				6C4D921B1DDED41300023AF8 /* MRVideoHUDView.m in Sources */,
 				6C4D91E41DDEA95400023AF8 /* SettingsTableViewController.m in Sources */,
 				6C4D92231DDED5D200023AF8 /* VideoViewController.m in Sources */,
+				6CBFA7A31DEA80620001CE17 /* XHUDView.m in Sources */,
 				6C4D91AC1DDEA6F900023AF8 /* AppDelegate.m in Sources */,
 				6C4D921C1DDED41300023AF8 /* MRVideoControlView.m in Sources */,
+				6CBFA7A61DEA89B30001CE17 /* PlayerCenterView.m in Sources */,
 				6C4D91A91DDEA6F900023AF8 /* main.m in Sources */,
 				6C7947101DE44A51002A7083 /* SVWebViewController.m in Sources */,
 				6C4D91E91DDEAB2E00023AF8 /* FilesListTableViewController.m in Sources */,

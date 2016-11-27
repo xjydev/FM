@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "MRVLCPlayer.h"
 #import "VideoViewController.h"
-
+#import "XHUDView.h"
 
 NSString * const userRotationKey = @"canRotationKey";
 
