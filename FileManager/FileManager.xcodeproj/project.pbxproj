@@ -71,10 +71,16 @@
 		6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470A1DE44A51002A7083 /* SVWebViewControllerActivity.m */; };
 		6C7947121DE44A51002A7083 /* SVWebViewControllerActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470C1DE44A51002A7083 /* SVWebViewControllerActivityChrome.m */; };
 		6C7947131DE44A51002A7083 /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470E1DE44A51002A7083 /* SVWebViewControllerActivitySafari.m */; };
+		6C908ABD1DEC191000E6FF11 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C908ABC1DEC191000E6FF11 /* libz.tbd */; };
+		6C908ABF1DEC192100E6FF11 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C908ABE1DEC192100E6FF11 /* libxml2.tbd */; };
+		6C908AC11DEC193100E6FF11 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C908AC01DEC193100E6FF11 /* CFNetwork.framework */; };
+		6C908AC31DEC194600E6FF11 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C908AC21DEC194600E6FF11 /* MobileCoreServices.framework */; };
+		6C908AC51DEC195500E6FF11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C908AC41DEC195500E6FF11 /* UIKit.framework */; };
 		6CB29CED1DE7E38A00C2FC2C /* XTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */; };
 		6CB29CF31DE7EC8700C2FC2C /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB29CF21DE7EC8700C2FC2C /* PreferencesTableViewController.m */; };
 		6CBFA7A31DEA80620001CE17 /* XHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CBFA7A21DEA80620001CE17 /* XHUDView.m */; };
 		6CBFA7A61DEA89B30001CE17 /* PlayerCenterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CBFA7A51DEA89B30001CE17 /* PlayerCenterView.m */; };
+		6CC9D4D41DEC24200068872A /* TransferIPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC9D4D31DEC24200068872A /* TransferIPViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,6 +191,11 @@
 		6C79470C1DE44A51002A7083 /* SVWebViewControllerActivityChrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivityChrome.m; sourceTree = "<group>"; };
 		6C79470D1DE44A51002A7083 /* SVWebViewControllerActivitySafari.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewControllerActivitySafari.h; sourceTree = "<group>"; };
 		6C79470E1DE44A51002A7083 /* SVWebViewControllerActivitySafari.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivitySafari.m; sourceTree = "<group>"; };
+		6C908ABC1DEC191000E6FF11 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		6C908ABE1DEC192100E6FF11 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		6C908AC01DEC193100E6FF11 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		6C908AC21DEC194600E6FF11 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		6C908AC41DEC195500E6FF11 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6CB29CEB1DE7E38A00C2FC2C /* XTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XTabBarViewController.h; sourceTree = "<group>"; };
 		6CB29CEC1DE7E38A00C2FC2C /* XTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XTabBarViewController.m; sourceTree = "<group>"; };
 		6CB29CF11DE7EC8700C2FC2C /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
@@ -193,6 +204,8 @@
 		6CBFA7A21DEA80620001CE17 /* XHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHUDView.m; sourceTree = "<group>"; };
 		6CBFA7A41DEA89B30001CE17 /* PlayerCenterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCenterView.h; sourceTree = "<group>"; };
 		6CBFA7A51DEA89B30001CE17 /* PlayerCenterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCenterView.m; sourceTree = "<group>"; };
+		6CC9D4D21DEC24200068872A /* TransferIPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransferIPViewController.h; sourceTree = "<group>"; };
+		6CC9D4D31DEC24200068872A /* TransferIPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransferIPViewController.m; sourceTree = "<group>"; };
 		C4F31E74A1933BC1B38B7D36 /* Pods_FileManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FileManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C668736248FAD4E8ABF04076 /* Pods-FileManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FileManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-FileManager/Pods-FileManager.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -202,6 +215,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C908AC51DEC195500E6FF11 /* UIKit.framework in Frameworks */,
+				6C908AC31DEC194600E6FF11 /* MobileCoreServices.framework in Frameworks */,
+				6C908AC11DEC193100E6FF11 /* CFNetwork.framework in Frameworks */,
+				6C908ABF1DEC192100E6FF11 /* libxml2.tbd in Frameworks */,
+				6C908ABD1DEC191000E6FF11 /* libz.tbd in Frameworks */,
 				6C47DECC1DE3E1D800FA7364 /* libc++.tbd in Frameworks */,
 				6C4D92111DDED25B00023AF8 /* AudioToolbox.framework in Frameworks */,
 				6C47DECA1DE3E09C00FA7364 /* MobileVLCKit.framework in Frameworks */,
@@ -316,6 +334,7 @@
 		6C4D91DD1DDEA79C00023AF8 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				6C908A841DEC17E300E6FF11 /* Transfer */,
 				6C4D91F51DDED15000023AF8 /* Video */,
 				6C4D91E61DDEAB2000023AF8 /* FilesList */,
 				6C4D91DF1DDEA93E00023AF8 /* FilesTableViewController.h */,
@@ -395,6 +414,11 @@
 		6C4D91F91DDED1D700023AF8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6C908AC41DEC195500E6FF11 /* UIKit.framework */,
+				6C908AC21DEC194600E6FF11 /* MobileCoreServices.framework */,
+				6C908AC01DEC193100E6FF11 /* CFNetwork.framework */,
+				6C908ABE1DEC192100E6FF11 /* libxml2.tbd */,
+				6C908ABC1DEC191000E6FF11 /* libz.tbd */,
 				6C47DECB1DE3E1D800FA7364 /* libc++.tbd */,
 				6C4D92101DDED25A00023AF8 /* AudioToolbox.framework */,
 				6C4D920E1DDED25300023AF8 /* VideoToolbox.framework */,
@@ -488,6 +512,15 @@
 				6C79470E1DE44A51002A7083 /* SVWebViewControllerActivitySafari.m */,
 			);
 			path = webDetail;
+			sourceTree = "<group>";
+		};
+		6C908A841DEC17E300E6FF11 /* Transfer */ = {
+			isa = PBXGroup;
+			children = (
+				6CC9D4D21DEC24200068872A /* TransferIPViewController.h */,
+				6CC9D4D31DEC24200068872A /* TransferIPViewController.m */,
+			);
+			path = Transfer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -709,6 +742,7 @@
 				6C4D91A91DDEA6F900023AF8 /* main.m in Sources */,
 				6C7947101DE44A51002A7083 /* SVWebViewController.m in Sources */,
 				6C4D91E91DDEAB2E00023AF8 /* FilesListTableViewController.m in Sources */,
+				6CC9D4D41DEC24200068872A /* TransferIPViewController.m in Sources */,
 				6C4D921D1DDED41300023AF8 /* MRVLCPlayer.mm in Sources */,
 				6C4D92261DDEF04700023AF8 /* XTools.m in Sources */,
 				6C4D91ED1DDEBB8200023AF8 /* WebListTableViewController.m in Sources */,

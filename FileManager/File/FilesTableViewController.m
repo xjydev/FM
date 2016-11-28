@@ -36,30 +36,32 @@
     NSLog(@"array === %@",array.firstObject);
 }
 - (void)rightAddButtonAction:(UIBarButtonItem *)button {
-    UIAlertController *aler = [UIAlertController alertControllerWithTitle:@"新建文件夹" message:@"在本目录下，新建一个文件夹" preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *cancleAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        
-    }];
-    
-    [aler addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        
-    }];
-    UITextField *textField = aler.textFields.firstObject;
-    textField.placeholder = @"文件夹名称";
-    UIAlertAction *addAction = [UIAlertAction actionWithTitle:@"新建" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        if (textField.text.length<=0) {
-            
-        }
-        else
-        {
-          NSLog(@"==%@",textField.text);
-        }
-        
-    }];
-    [aler addAction:cancleAction];
-    [aler addAction:addAction];
-    [self presentViewController:aler animated:YES completion:nil];
+//    UIAlertController *aler = [UIAlertController alertControllerWithTitle:@"新建文件夹" message:@"在本目录下，新建一个文件夹" preferredStyle:UIAlertControllerStyleAlert];
+//    
+//    UIAlertAction *cancleAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//        
+//    }];
+//    
+//    [aler addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        
+//    }];
+//    UITextField *textField = aler.textFields.firstObject;
+//    textField.placeholder = @"文件夹名称";
+//    UIAlertAction *addAction = [UIAlertAction actionWithTitle:@"新建" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        if (textField.text.length<=0) {
+//            
+//        }
+//        else
+//        {
+//          NSLog(@"==%@",textField.text);
+//        }
+//        
+//    }];
+//    [aler addAction:cancleAction];
+//    [aler addAction:addAction];
+//    [self presentViewController:aler animated:YES completion:nil];
+    UIViewController *transfer = [self.storyboard instantiateViewControllerWithIdentifier:@"TransferIPViewController"];
+    [self.navigationController pushViewController:transfer animated:YES];
     
 }
 - (void)leftScanButtonAction:(UIBarButtonItem *)button {
