@@ -21,6 +21,7 @@ typedef  NS_ENUM(NSInteger, PlayerCenterType)
 {
     UILabel                 *_titleLabel;
     UIActivityIndicatorView *_activityView;
+    PlayerCenterType         _playerType;
 }
 //中间的button，有时候就当imageview用了。
 @property (strong,nonatomic)UIButton  *centerButton;
@@ -30,4 +31,5 @@ typedef  NS_ENUM(NSInteger, PlayerCenterType)
  @param title  按钮下面显示 的文字，nil为空就是不显示。
  **/
 - (void)ShowWithType:(PlayerCenterType)playertype Title:(NSString *)title;
+- (void)hiddenPlayButton;
 @end

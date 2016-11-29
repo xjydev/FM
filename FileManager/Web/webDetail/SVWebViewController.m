@@ -24,9 +24,8 @@
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) NSURL *URL;
 
-- (id)initWithAddress:(NSString*)urlString;
-- (id)initWithURL:(NSURL*)URL;
-- (void)loadURL:(NSURL*)URL;
+
+- (void)loadURL:(NSString *)URL;
 
 - (void)updateToolbarItems;
 
@@ -49,21 +48,12 @@
     self.webView.delegate = nil;
 }
 
-- (id)initWithAddress:(NSString *)urlString {
-    return [self initWithURL:[NSURL URLWithString:urlString]];
-}
-
-- (id)initWithURL:(NSURL*)pageURL {
+- (void)loadURL:(NSString *)urlStr {
+   
+    NSURL *url = [NSURL URLWithString:urlStr];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:request];
     
-    if(self = [super init]) {
-        self.URL = pageURL;
-    }
-    
-    return self;
-}
-
-- (void)loadURL:(NSURL *)pageURL {
-    [self.webView loadRequest:[NSURLRequest requestWithURL:pageURL]];
 }
 
 #pragma mark - View lifecycle
@@ -78,7 +68,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview: self.webView];
     [self updateToolbarItems];
-     [self loadURL:self.URL];
+    [self loadURL:self.urlStr];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -126,7 +116,7 @@
         _urlLabel.textAlignment = NSTextAlignmentCenter;
         [_webView insertSubview:_urlLabel belowSubview:_webView.scrollView];
         _webView.scrollView.delegate = self;
-        _webView.scrollView.contentInset = UIEdgeInsetsMake(64, 0, 44, 0);
+        
     }
     return _webView;
 }
@@ -241,6 +231,7 @@
     
     _urlLabel.text = webView.request.URL.host;
     self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    _webView.scrollView.contentInset = UIEdgeInsetsMake(64, 0, 44, 0);
     [self updateToolbarItems];
 }
 

@@ -113,10 +113,17 @@
         return;
     }
     [_searchBar resignFirstResponder];
-    if (![text hasPrefix:@"http"]) {
-        text =[NSString stringWithFormat:@"https://www.baidu.com/s?wd=%@",text];
-    }
-    SVWebViewController *webViewController = [[SVWebViewController alloc] initWithAddress:text];
+     if (![[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:text]]) {
+         NSString *encodedString = (NSString *)
+         CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                   (CFStringRef)text,
+                                                                   NULL,
+                                                                   (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                   kCFStringEncodingUTF8));
+         text =[NSString stringWithFormat:@"https://www.baidu.com/s?wd=%@",encodedString];
+     }
+    SVWebViewController *webViewController = [[SVWebViewController alloc] init];
+    webViewController.urlStr = text;
     webViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:webViewController animated:YES];
 }

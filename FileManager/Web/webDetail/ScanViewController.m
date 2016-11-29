@@ -188,7 +188,8 @@
 {
     //判断是否是网址
     if ([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:str]]) {
-        SVWebViewController *webViewController = [[SVWebViewController alloc] initWithAddress:str];
+        SVWebViewController *webViewController = [[SVWebViewController alloc] init];
+        webViewController.urlStr = str;
         webViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:webViewController animated:YES];
     }

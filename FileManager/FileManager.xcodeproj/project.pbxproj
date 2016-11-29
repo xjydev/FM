@@ -66,7 +66,6 @@
 		6C76D5561DE544510085AE3D /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C76D5551DE544510085AE3D /* ScanViewController.m */; };
 		6C76D5591DE545C40085AE3D /* QRCodeReaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C76D5581DE545C40085AE3D /* QRCodeReaderView.m */; };
 		6C76D55B1DE564160085AE3D /* noticeMusic.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6C76D55A1DE564160085AE3D /* noticeMusic.wav */; };
-		6C79470F1DE44A51002A7083 /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C7947061DE44A51002A7083 /* SVModalWebViewController.m */; };
 		6C7947101DE44A51002A7083 /* SVWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C7947081DE44A51002A7083 /* SVWebViewController.m */; };
 		6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470A1DE44A51002A7083 /* SVWebViewControllerActivity.m */; };
 		6C7947121DE44A51002A7083 /* SVWebViewControllerActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C79470C1DE44A51002A7083 /* SVWebViewControllerActivityChrome.m */; };
@@ -181,8 +180,6 @@
 		6C76D5571DE545C40085AE3D /* QRCodeReaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeReaderView.h; sourceTree = "<group>"; };
 		6C76D5581DE545C40085AE3D /* QRCodeReaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeReaderView.m; sourceTree = "<group>"; };
 		6C76D55A1DE564160085AE3D /* noticeMusic.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = noticeMusic.wav; sourceTree = "<group>"; };
-		6C7947051DE44A51002A7083 /* SVModalWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVModalWebViewController.h; sourceTree = "<group>"; };
-		6C7947061DE44A51002A7083 /* SVModalWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVModalWebViewController.m; sourceTree = "<group>"; };
 		6C7947071DE44A51002A7083 /* SVWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewController.h; sourceTree = "<group>"; };
 		6C7947081DE44A51002A7083 /* SVWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewController.m; sourceTree = "<group>"; };
 		6C7947091DE44A51002A7083 /* SVWebViewControllerActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewControllerActivity.h; sourceTree = "<group>"; };
@@ -500,8 +497,6 @@
 		6C7947041DE44A3B002A7083 /* webDetail */ = {
 			isa = PBXGroup;
 			children = (
-				6C7947051DE44A51002A7083 /* SVModalWebViewController.h */,
-				6C7947061DE44A51002A7083 /* SVModalWebViewController.m */,
 				6C7947071DE44A51002A7083 /* SVWebViewController.h */,
 				6C7947081DE44A51002A7083 /* SVWebViewController.m */,
 				6C7947091DE44A51002A7083 /* SVWebViewControllerActivity.h */,
@@ -752,7 +747,6 @@
 				6CB29CF31DE7EC8700C2FC2C /* PreferencesTableViewController.m in Sources */,
 				6C7947111DE44A51002A7083 /* SVWebViewControllerActivity.m in Sources */,
 				6C7947131DE44A51002A7083 /* SVWebViewControllerActivitySafari.m in Sources */,
-				6C79470F1DE44A51002A7083 /* SVModalWebViewController.m in Sources */,
 				6C76D5591DE545C40085AE3D /* QRCodeReaderView.m in Sources */,
 				6C4D91E11DDEA93E00023AF8 /* FilesTableViewController.m in Sources */,
 				6CB29CED1DE7E38A00C2FC2C /* XTabBarViewController.m in Sources */,

@@ -316,13 +316,12 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
         
         if (self.player.state == VLCMediaPlayerStatePaused) {
             [self.controlView.centerView ShowWithType:PlayerCenterTypeStop Title:nil];
-            self.controlView.bgLayer.hidden = YES;
         }
         else
         {
-            self.controlView.centerView.hidden = YES;
-            self.controlView.bgLayer.hidden = YES;
+            [self.controlView.centerView hiddenPlayButton];
         }
+        self.controlView.bgLayer.hidden = YES;
     }else if (self.player.state == VLCMediaPlayerStateStopped) {
         [self stop];
         if (self.player.media.state == VLCMediaStateNothingSpecial) {
@@ -356,15 +355,15 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 
 #pragma mark ControlView
-- (void)controlViewFingerMoveLeft {
+- (void)controlViewFingerMoveLeftWithTime:(int)intSec {
     
-    [self.player shortJumpBackward];
+    [self.player jumpBackward:intSec];
     
 }
 
-- (void)controlViewFingerMoveRight {
+- (void)controlViewFingerMoveRightWithTime:(int)intSec {
 
-    [self.player shortJumpForward];
+    [self.player jumpForward:intSec];
     
 }
 

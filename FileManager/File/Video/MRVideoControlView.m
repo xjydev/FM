@@ -9,6 +9,12 @@
 #import "MRVideoControlView.h"
 
 @interface MRVideoControlView ()<UIGestureRecognizerDelegate>
+{
+    CGPoint     _beganPoint;//开始滑动时的位置
+    CGPoint     _localPoint;//滑动的实时位置。
+    
+    int         _forwardSec;//前进播放多少秒
+}
 @property (nonatomic, strong) UIPanGestureRecognizer *pan;
 @end
 @implementation MRVideoControlView
@@ -48,7 +54,6 @@
     self.centerView.center     = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
     self.timeLabel.frame          = CGRectMake(20+3*MRVideoBarButtonWidth, CGRectGetMinY(self.playButton.frame), CGRectGetWidth(self.bottomBar.frame)-30-4*MRVideoBarButtonWidth, CGRectGetHeight(self.playButton.frame));
     
-//    self.alertlable.center        = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
     
 }
 
@@ -101,8 +106,6 @@
     [self addSubview:self.topBar];
     [self addSubview:self.centerView];
     [self addSubview:self.bottomBar];
-    //[self addSubview:self.indicatorView];
-//    [self addSubview:self.alertlable];
 
     [self.topBar addSubview:self.closeButton];
     [self.topBar addSubview:self.topTitleLabel];
@@ -116,10 +119,6 @@
     [self.bottomBar addSubview:self.nextButton];
     [self.bottomBar addSubview:self.prevButton];
     [self.bottomBar addSubview:self.progressSlider];
-    
-    
-//    [self.volumeView showsRouteButton];
-//    [self.volumeView showsVolumeSlider];
     
     [self addGestureRecognizer:self.pan];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)]];
@@ -144,67 +143,63 @@
 
 - (void)panAction:(UIPanGestureRecognizer *)pan {
     
-    CGPoint localPoint = [pan locationInView:self];
-    
-    CGPoint speedDir = [pan velocityInView:self];
-    
+//    CGPoint localPoint = [pan locationInView:self];
+    //相对偏移量，和速度发现都不适合。
+//    NSLog(@"==l(%f  %f)  ===s( %f  %f) ====t(%f  %f)",[pan locationInView:self].x,[pan locationInView:self].y,[pan velocityInView:self].x,[pan velocityInView:self].y,[pan translationInView:self].x,[pan translationInView:self].y);
     switch (pan.state) {
             
         case UIGestureRecognizerStateBegan: {
             
-//            self.alertlable.alpha = MRVideoControlAlertAlpha;
+            _beganPoint = [pan locationInView:self];
+            _localPoint = _beganPoint;
+            _forwardSec = 0;
             
         }
             break;
             
             
         case UIGestureRecognizerStateChanged: {
-            
-            // 判断方向
-            if (fabs(speedDir.x) > fabs(speedDir.y)) {
-                if ([pan translationInView:self].x > 0) {
-                    if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRight)]) {
-                        [self.delegate controlViewFingerMoveRight];
-                    }
-                    [self.centerView ShowWithType:PlayerCenterTypeSpeedBack Title:[NSString stringWithFormat:@"%@",[self.timeLabel.text substringToIndex:5]]];
-//                    [self.alertlable configureWithTime:[self.timeLabel.text substringToIndex:5] isLeft:NO];
+            CGPoint currentPoint = [pan locationInView:self];
+            // 判断方向45°角，向上左是亮度右是音量，水平是播放时间。
+            if (fabs(currentPoint.x - _beganPoint.x) > fabs(currentPoint.y - _beganPoint.y)) {//播放时间
+                if (currentPoint.x - _localPoint.x > 0) {
+//                    if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRightWithTime:)]) {
+//                        [self.delegate controlViewFingerMoveRightWithTime:(int)(currentPoint.x - _localPoint.x)];
+//                    }
+                    _forwardSec = (int)(currentPoint.x - _beganPoint.x);
+                    [self.centerView ShowWithType:PlayerCenterTypeSpeedForward Title:[NSString stringWithFormat:@"+ %d S",_forwardSec]];
+
                 }else {
-                    if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRight)]) {
-                        [self.delegate controlViewFingerMoveLeft];
-                    }
-                    [self.centerView ShowWithType:PlayerCenterTypeSpeedForward Title:[NSString stringWithFormat:@"%@",[self.timeLabel.text substringToIndex:5]]];
+//                    if ([_delegate respondsToSelector:@selector(controlViewFingerMoveLeftWithTime:)]) {
+//                        [self.delegate controlViewFingerMoveLeftWithTime:(int)(currentPoint.x - _localPoint.x)];
+//                    }
+                    _forwardSec = (int)(currentPoint.x - _beganPoint.x);
+                    [self.centerView ShowWithType:PlayerCenterTypeSpeedBack Title:[NSString stringWithFormat:@"- %d S",-_forwardSec]];
 
                 }
             }else {
                 
-                if (localPoint.x > self.bounds.size.width / 2) {
+                if (_beganPoint.x > self.bounds.size.width / 2) {
                     // 改变音量
-                
-                    if ([pan translationInView:self].y > 0) {
-                        self.volumeSlider.value -= 0.03;
-                    }else {
-                        self.volumeSlider.value += 0.03;
-                    }
+                    self.volumeSlider.value += -(currentPoint.y - _localPoint.y)*0.002;
 
                     [self.centerView ShowWithType:PlayerCenterTypeVolume Title:[NSString stringWithFormat:@"音量:%d%%",(int)(self.volumeSlider.value * 100)]];
                 }else {
                     // 改变显示亮度
-                    if ([pan translationInView:self].y > 0) {
-                        [UIScreen mainScreen].brightness -= 0.01;
-                    }else {
-                        [UIScreen mainScreen].brightness += 0.01;
-                    }
+                    [UIScreen mainScreen].brightness +=  -(currentPoint.y - _localPoint.y)*0.002;
                     [self.centerView ShowWithType:PlayerCenterTypeBright Title:[NSString stringWithFormat:@"亮度:%d%%",(int)([UIScreen mainScreen].brightness * 100)]];
                 }
             }
+            
+            _localPoint = currentPoint;
         }
             break;
             
         case UIGestureRecognizerStateEnded: {
-            
+            [self panEndBegainPlay];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [UIView animateWithDuration:1 animations:^{
-//                    self.alertlable.alpha = 0;
+
                 }];
             });
         }
@@ -213,7 +208,19 @@
             break;
     }
 }
-
+- (void)panEndBegainPlay {
+    if (_forwardSec >0) {
+        if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRightWithTime:)]) {
+            [self.delegate controlViewFingerMoveRightWithTime:_forwardSec];
+        }
+    }
+    else
+        if (_forwardSec<0) {
+            if ([_delegate respondsToSelector:@selector(controlViewFingerMoveLeftWithTime:)]) {
+                [self.delegate controlViewFingerMoveLeftWithTime:-_forwardSec];
+            }
+        }
+}
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     if (touch.tapCount > 0) {

@@ -20,7 +20,7 @@ static float imageViewWidth = 50;
         _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, imageViewWidth, frame.size.width, frame.size.height-imageViewWidth)];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.textColor = [UIColor whiteColor];
-        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
+        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:18];
 //        _titleLabel.backgroundColor = [UIColor blueColor];
         [self addSubview:_titleLabel];
         
@@ -32,13 +32,13 @@ static float imageViewWidth = 50;
         
         
         _activityView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        _activityView.frame = CGRectMake((frame.size.width-imageViewWidth)/2, 0, imageViewWidth, imageViewWidth);
-        _activityView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
+        _activityView.frame = CGRectMake((frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
+//        _activityView.backgroundColor = [UIColor clearColor];
         _activityView.color = [UIColor grayColor];
         
         _activityView.hidesWhenStopped = YES;
-        _activityView.layer.masksToBounds = YES;
-        _activityView.layer.cornerRadius = 5;
+//        _activityView.layer.masksToBounds = YES;
+//        _activityView.layer.cornerRadius = 5;
 //        self.backgroundColor = [UIColor yellowColor];
         [self addSubview:_activityView];
         
@@ -50,7 +50,9 @@ static float imageViewWidth = 50;
 }
 - (void)ShowWithType:(PlayerCenterType)playertype Title:(NSString *)title
 {
-    switch (playertype) {
+    _playerType = playertype;
+    
+    switch (_playerType) {
         case PlayerCenterTypeStop:
         {
            self.hidden= NO;
@@ -73,8 +75,8 @@ static float imageViewWidth = 50;
             _centerButton.hidden = YES;
             _activityView.hidden = NO;
 //            _titleLabel.frame = CGRectMake(0, 70, 185, 30);
-            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:10];
-            _titleLabel.numberOfLines = 0;
+//            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:10];
+//            _titleLabel.numberOfLines = 0;
             [_activityView startAnimating];
             
         }
@@ -82,7 +84,7 @@ static float imageViewWidth = 50;
         case PlayerCenterTypeSpeedForward:
         {
             self.hidden= NO;
-            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
+//            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
             _centerButton.frame = CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
 //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
             [_centerButton setImage:[UIImage imageNamed:@"play_forward"] forState:UIControlStateNormal];
@@ -99,7 +101,7 @@ static float imageViewWidth = 50;
             self.hidden= NO;
             _centerButton.frame=CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
 //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
-            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
+//            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
             [_centerButton setImage:[UIImage imageNamed:@"play_back"] forState:UIControlStateNormal];
             _centerButton.userInteractionEnabled = NO;
             _centerButton.hidden = NO;
@@ -107,12 +109,13 @@ static float imageViewWidth = 50;
             _activityView.hidden = YES;
             [self centerWillDismiss];
         }
+             break;
         case PlayerCenterTypeBright:
         {
             self.hidden= NO;
             _centerButton.frame=CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
             //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
-            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
+//            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
             [_centerButton setImage:[UIImage imageNamed:@"play_bright"] forState:UIControlStateNormal];
             _centerButton.userInteractionEnabled = NO;
             _centerButton.hidden = NO;
@@ -120,13 +123,13 @@ static float imageViewWidth = 50;
             _activityView.hidden = YES;
             [self centerWillDismiss];
         }
-
+            break;
         case PlayerCenterTypeVolume:
         {
             self.hidden= NO;
             _centerButton.frame=CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
             //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
-            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
+//            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
             [_centerButton setImage:[UIImage imageNamed:@"play_volume"] forState:UIControlStateNormal];
             _centerButton.userInteractionEnabled = NO;
             _centerButton.hidden = NO;
@@ -151,13 +154,21 @@ static float imageViewWidth = 50;
     self.hidden = NO;
     self.alpha = 1;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
-    [self performSelector:@selector(dismiss) withObject:nil afterDelay:2.0];
+    [self performSelector:@selector(dismiss) withObject:nil afterDelay:1.0];
 }
 - (void)dismiss{
-    [UIView animateWithDuration:0.3 animations:^{
-        self.alpha = 0;
-    }completion:^(BOOL finished) {
+    if (_playerType == PlayerCenterTypeBright||_playerType == PlayerCenterTypeVolume||_playerType == PlayerCenterTypeSpeedBack ||_playerType == PlayerCenterTypeSpeedForward) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.alpha = 0;
+        }completion:^(BOOL finished) {
+            self.hidden = YES;
+        }];
+    }
+    
+}
+- (void)hiddenPlayButton {
+    if (_playerType == PlayerCenterTypeStop||_playerType == PlayerCenterTypeWaiting) {
         self.hidden = YES;
-    }];
+    }
 }
 @end

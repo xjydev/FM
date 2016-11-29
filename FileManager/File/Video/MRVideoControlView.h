@@ -18,8 +18,8 @@
 @optional
 - (void)controlViewFingerMoveUp;
 - (void)controlViewFingerMoveDown;
-- (void)controlViewFingerMoveLeft;
-- (void)controlViewFingerMoveRight;
+- (void)controlViewFingerMoveLeftWithTime:(int)intSec;
+- (void)controlViewFingerMoveRightWithTime:(int)intSec;
 
 @end
 
