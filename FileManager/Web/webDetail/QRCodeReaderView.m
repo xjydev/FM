@@ -1,45 +1,24 @@
-/*
- * QRCodeReaderViewController
- *
- * Copyright 2014-present Yannick Loriot.
- * http://yannickloriot.com
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
+
 
 #import "QRCodeReaderView.h"
 #import <AVFoundation/AVFoundation.h>
-
-#define DeviceMaxHeight ([UIScreen mainScreen].bounds.size.height)
-#define DeviceMaxWidth ([UIScreen mainScreen].bounds.size.width)
-#define widthRate DeviceMaxWidth/320
+#import "XTools.h"
+//#define DeviceMaxHeight ([UIScreen mainScreen].bounds.size.height)
+//#define DeviceMaxWidth ([UIScreen mainScreen].bounds.size.width)
+//#define widthRate DeviceMaxWidth/320
 
 #define contentTitleColorStr @"666666" //正文颜色较深
-
+#define scanWidth 240.0/320.0*[UIScreen mainScreen].bounds.size.width
 @interface QRCodeReaderView ()<AVCaptureMetadataOutputObjectsDelegate>
 {
     AVCaptureSession * session;
     
-    NSTimer * countTime;
+    NSTimer * _countTime;
+    float   _height;
+    BOOL    _scanUp;
 }
 @property (nonatomic, strong) CAShapeLayer *overlay;
+@property (nonatomic, strong) UIImageView  *scanLineImageView;
 @end
 
 @implementation QRCodeReaderView
@@ -57,14 +36,14 @@
 - (void)instanceDevice
 {
     //扫描区域
-//    UIImage *hbImage=[UIImage imageNamed:@"scanscanBg"];
+    UIImage *hbImage=[UIImage imageNamed:@"scanscanBg"];
     UIImageView * scanZomeBack=[[UIImageView alloc] init];
     scanZomeBack.backgroundColor = [UIColor clearColor];
-    scanZomeBack.layer.borderColor = [UIColor whiteColor].CGColor;
-    scanZomeBack.layer.borderWidth = 2.5;
-//    scanZomeBack.image = hbImage;
+//    scanZomeBack.layer.borderColor = [UIColor whiteColor].CGColor;
+//    scanZomeBack.layer.borderWidth = 2.5;
+    scanZomeBack.image = hbImage;
     //添加一个背景图片
-    CGRect mImagerect = CGRectMake(60*widthRate, (DeviceMaxHeight-200*widthRate)/2, 200*widthRate, 200*widthRate);
+    CGRect mImagerect = CGRectMake((kScreen_Width - scanWidth)/2, (kScreen_Height - scanWidth)/2, scanWidth, scanWidth);
     [scanZomeBack setFrame:mImagerect];
     CGRect scanCrop=[self getScanCrop:mImagerect readerViewBounds:self.frame];
     [self addSubview:scanZomeBack];
@@ -118,69 +97,37 @@
     
 }
 
--(void)loopDrawLine
-{
-    _is_AnmotionFinished = NO;
-    CGRect rect = CGRectMake(60*widthRate, (DeviceMaxHeight-200*widthRate)/2, 200*widthRate, 2);
-    if (_readLineView) {
-        _readLineView.alpha = 1;
-        _readLineView.frame = rect;
-    }
-    else{
-        _readLineView = [[UIImageView alloc] initWithFrame:rect];
-        [_readLineView setImage:[UIImage imageNamed:@"scanLine"]];
-        [self addSubview:_readLineView];
-    }
-    
-    [UIView animateWithDuration:1.5 animations:^{
-        //修改fream的代码写在这里
-        _readLineView.frame =CGRectMake(60*widthRate, (DeviceMaxHeight-200*widthRate)/2+200*widthRate-5, 200*widthRate, 2);
-    } completion:^(BOOL finished) {
-        if (!_is_Anmotion) {
-            [self loopDrawLine];
-        }
-        _is_AnmotionFinished = YES;
-    }];
-}
-
 - (void)setOverlayPickerView:(QRCodeReaderView *)reader
 {
     
-    CGFloat wid = 60*widthRate;
-    CGFloat heih = (DeviceMaxHeight-200*widthRate)/2;
-    
+    CGFloat wid = (kScreen_Width - scanWidth)/2;
+    CGFloat heih = (kScreen_Height - scanWidth)/2;
+    UIColor * backColor = [UIColor colorWithWhite:0.1 alpha:0.5];
     //最上部view
-    CGFloat alpha = 0.6;
-    UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DeviceMaxWidth, heih)];
-    upView.alpha = alpha;
-    upView.backgroundColor = [self colorFromHexRGB:contentTitleColorStr];
+    UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreen_Width, heih)];
+    upView.backgroundColor = backColor;
     [reader addSubview:upView];
-    
     //用于说明的label
-    UILabel * labIntroudction= [[UILabel alloc] init];
-    labIntroudction.backgroundColor = [UIColor clearColor];
-    labIntroudction.frame=CGRectMake(0, 64+(heih-64-50*widthRate)/2, DeviceMaxWidth, 50*widthRate);
+    UILabel * labIntroudction= [[UILabel alloc] initWithFrame:CGRectMake(0,64+ (heih-64-40)/2, kScreen_Width, 40)];
     labIntroudction.textAlignment = NSTextAlignmentCenter;
     labIntroudction.textColor=[UIColor whiteColor];
     labIntroudction.text=@"扫描二维码/条形码";
+    labIntroudction.backgroundColor = [UIColor clearColor];
     [upView addSubview:labIntroudction];
     
     //左侧的view
-    UIView * cLeftView = [[UIView alloc] initWithFrame:CGRectMake(0, heih, wid, 200*widthRate)];
-    cLeftView.alpha = alpha;
-    cLeftView.backgroundColor = [self colorFromHexRGB:contentTitleColorStr];
+    UIView * cLeftView = [[UIView alloc] initWithFrame:CGRectMake(0, heih, wid, scanWidth)];
+    cLeftView.backgroundColor = backColor;
     [reader addSubview:cLeftView];
     
     //右侧的view
-    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(DeviceMaxWidth-wid, heih, wid, 200*widthRate)];
-    rightView.alpha = alpha;
-    rightView.backgroundColor = [self colorFromHexRGB:contentTitleColorStr];
+    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(kScreen_Width-wid, heih, wid,scanWidth)];
+    rightView.backgroundColor = backColor;
     [reader addSubview:rightView];
     
     //底部view
-    UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, heih+200*widthRate, DeviceMaxWidth, DeviceMaxHeight - heih-200*widthRate)];
-    downView.alpha = alpha;
-    downView.backgroundColor = [self colorFromHexRGB:contentTitleColorStr];
+    UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, heih+scanWidth, kScreen_Width, kScreen_Height - heih-scanWidth)];
+    downView.backgroundColor = backColor;
     [reader addSubview:downView];
     
     //开关灯button
@@ -188,7 +135,7 @@
     turnBtn.backgroundColor = [UIColor clearColor];
     [turnBtn setBackgroundImage:[UIImage imageNamed:@"lightSelect"] forState:UIControlStateNormal];
     [turnBtn setBackgroundImage:[UIImage imageNamed:@"lightNormal"] forState:UIControlStateSelected];
-    turnBtn.frame=CGRectMake((DeviceMaxWidth-50*widthRate)/2, (CGRectGetHeight(downView.frame)-50*widthRate)/2, 50*widthRate, 50*widthRate);
+    turnBtn.frame=CGRectMake((kScreen_Width-60)/2,(heih - 60)/2, 60, 60);
     [turnBtn addTarget:self action:@selector(turnBtnEvent:) forControlEvents:UIControlEventTouchUpInside];
     
     [downView addSubview:turnBtn];
@@ -234,13 +181,6 @@
     
     CGFloat x,y,width,height;
     
-//    width = (CGFloat)(rect.size.height+10)/readerViewBounds.size.height;
-//    
-//    height = (CGFloat)(rect.size.width-50)/readerViewBounds.size.width;
-//    
-//    x = (1-width)/2;
-//    y = (1-height)/2;
-    
     x = (CGRectGetHeight(readerViewBounds)-CGRectGetHeight(rect))/2/CGRectGetHeight(readerViewBounds);
     y = (CGRectGetWidth(readerViewBounds)-CGRectGetWidth(rect))/2/CGRectGetWidth(readerViewBounds);
     width = CGRectGetHeight(rect)/CGRectGetHeight(readerViewBounds);
@@ -253,13 +193,48 @@
 - (void)start
 {
     [session startRunning];
+    if (!_countTime) {
+       _countTime = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(moveScanLine) userInfo:nil repeats:YES];
+    }
+   
 }
 
 - (void)stop
 {
     [session stopRunning];
+    if (_countTime) {
+        [_countTime invalidate];
+        _countTime = nil;
+    }
 }
+- (void)moveScanLine {
+    if (!_readLineView) {
+        _readLineView = [[UIImageView alloc] initWithFrame:CGRectMake((kScreen_Width - scanWidth)/2+5, (kScreen_Height - scanWidth)/2+3, (scanWidth-10), 5)];
+        [_readLineView setImage:[UIImage imageNamed:@"scanLine"]];
+        [self addSubview:_readLineView];
+    }
+    if (_height >= (scanWidth - 20)) {
+        _scanUp = YES;
+    }
+    else
+        if (_height<=0) {
+            _scanUp = NO;
+        }
+    
+    if (_scanUp) {
+        _height -= 4;
+    }
+    else
+    {
+        _height += 4;
+        
+    }
 
+    _readLineView.center = CGPointMake(kScreen_Width/2, (kScreen_Height-scanWidth)/2+10+_height);
+    
+    
+    
+}
 #pragma mark - 扫描结果
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
 {

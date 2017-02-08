@@ -7,18 +7,20 @@
 //
 
 #import "MRVLCPlayer.h"
-#import <MediaPlayer/MediaPlayer.h>
+//#import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
 #import "MRVideoConst.h"
+
 #import "XTools.h"
 
 static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 
-@interface MRVLCPlayer ()
+@interface MRVLCPlayer ()<VideoAudioPlayerDelegate> 
 {
     CGRect _originFrame;
+    float  _playRate;
+    BOOL   _isNotification;
 }
-@property (nonatomic,strong) VLCMediaPlayer *player;
 @property (nonatomic, nonnull,strong) MRVideoControlView *controlView;
 @end
 
@@ -27,43 +29,33 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 #pragma mark - Life Cycle
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        
         _originFrame = frame;
+        if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+            if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) {
+                
+                self.isLeft = YES;
+                
+            }
+            else
+            {
+                self.isLeft = NO;
+                
+            }
+            self.isFullscreenModel = YES;
+        }
         [self setupNotification];
         
     }
     return self;
 }
-- (void)setPrevNextType:(PrevNextType)prevNextType {
-    _prevNextType = prevNextType;
-    switch (_prevNextType) {
-        case PrevNextTypePrev:
-        {
-            self.controlView.prevButton.enabled = NO;
-            self.controlView.nextButton.enabled = YES;
-        }
-            break;
-        case PrevNextTypeNext:
-        {
-            self.controlView.prevButton.enabled = YES;
-            self.controlView.nextButton.enabled = NO;
-            
-        }
-            break;
-        case PrevNextTypeAll:
-        {
-            self.controlView.prevButton.enabled = NO;
-            self.controlView.nextButton.enabled = NO;
-        }
-            break;
-            
-        default:
-        {
-            self.controlView.prevButton.enabled = YES;
-            self.controlView.nextButton.enabled = YES;
-        }
-            break;
-    }
+
+- (void)playerHidePrev:(BOOL)hidePrev HideNext:(BOOL)hideNext {
+    self.controlView.prevButton.enabled = hidePrev;
+    self.controlView.nextButton.enabled = hideNext;
+    self.controlView.topTitleLabel.text =[self.videoPlayer.currentPath lastPathComponent];
 }
+
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
@@ -76,31 +68,16 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 
 
 #pragma mark - Public Method
-- (void)showInView:(UIView *)view {
-    
-    NSAssert(_mediaURL != nil, @"MRVLCPlayer Exception: mediaURL could not be nil!");
-    
-    [view addSubview:self];
-    
-    self.alpha = 0.0;
-    [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
-        self.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        [self play];
-    }];
-}
 
 - (void)dismiss {
-    [self.player stop];
-    self.player.delegate = nil;
-    self.player.drawable = nil;
-    self.player = nil;
+    [self.videoPlayer pause];
+    self.videoPlayer.drawable = nil;
     
     // 注销通知
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    _isNotification = NO;
     
-    [self removeFromSuperview];
 }
 
 #pragma mark - Private Method
@@ -109,8 +86,8 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 
 - (void)setupPlayer {
-    [self.player setDrawable:self];
-    self.player.media = [[VLCMedia alloc] initWithURL:self.mediaURL];
+    [self.videoPlayer setDrawable:self];
+//    self.videoPlayer.media = [[VLCMedia alloc] initWithURL:self.mediaURL];
 }
 
 - (void)setupControlView {
@@ -122,44 +99,54 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     [self.controlView.pauseButton addTarget:self action:@selector(pauseButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.closeButton addTarget:self action:@selector(closeButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.fullScreenButton addTarget:self action:@selector(fullScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.controlView.centerView.centerButton addTarget:self action:@selector(playButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self.controlView.shrinkScreenButton addTarget:self action:@selector(shrinkScreenButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.prevButton addTarget:self action:@selector(prevNextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.nextButton addTarget:self action:@selector(prevNextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.controlView.rateButton addTarget:self action:@selector(rateButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressClick) forControlEvents:UIControlEventTouchUpInside];
     [self.controlView.progressSlider addTarget:self action:@selector(progressChange) forControlEvents:UIControlEventValueChanged];
     [self.controlView.progressSlider addTarget:self action:@selector(progressTouchDown) forControlEvents:UIControlEventTouchDown];
 }
+
 - (void)prevNextButtonAction:(UIButton *)button {
-    
-    if ([self.delegate respondsToSelector:@selector(playerNextPrevButtonIsNext:)]) {
-        [self.player stop];
-        [self.delegate playerNextPrevButtonIsNext:button == self.controlView.nextButton];
+    if (button == self.controlView.prevButton) {
+       self.videoPlayer.index -=1;
+    }
+    else
+    {
+       self.videoPlayer.index +=1;
     }
 }
+
 - (void)setupNotification {
     
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-//    [UIApplication sharedApplication].statusBarOrientation
-    //监听转屏
-    if (XTOOLS.isCanRotation) {
+    if (!_isNotification) {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        //    [UIApplication sharedApplication].statusBarOrientation
+        //监听转屏
+        if (XTOOLS.isCanRotation) {
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(orientationHandler)
+                                                         name:UIDeviceOrientationDidChangeNotification
+                                                       object:nil
+             ];//UIDeviceOrientationDidChangeNotification
+            //  UIApplicationDidChangeStatusBarOrientationNotification
+        }
+        //回到前台
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(orientationHandler)
-                                                     name:UIApplicationDidChangeStatusBarOrientationNotification
-                                                   object:nil
-         ];//UIDeviceOrientationDidChangeNotification
-  
+                                                 selector:@selector(applicationWillEnterForeground)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+        //进入后台
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationWillResignActive)
+                                                     name:UIApplicationWillResignActiveNotification
+                                                   object:nil];
+        _isNotification = YES;
     }
-    //回到前台
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillEnterForeground)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-    //进入后台
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillResignActive)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:nil];
+   
 }
 
 /**
@@ -185,50 +172,57 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
  *    屏幕旋转处理
  */
 - (void)orientationHandler {
-//    NSLog(@"0==%@",@([UIDevice currentDevice].orientation));
-    //UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)
-    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight|| [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
-        self.isFullscreenModel = YES;
-        
-    }else//UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)
-        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait|| [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-            self.isFullscreenModel = NO;
-        }
 
+    if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+        self.isFullscreenModel = NO;
+    }
+    else
+        if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+            if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) {
+               
+                   self.isLeft = YES;
+               
+            }
+            else
+            {
+                  self.isLeft = NO;
+                
+            }
+            self.isFullscreenModel = YES;
+        }
+    
     [self.controlView autoFadeOutControlBar];
 }
-
 /**
- *    即将进入后台的处理
+ *    即将进入前台的处理
  */
 - (void)applicationWillEnterForeground {
     
-    VLCTime *targetTime = [[VLCTime alloc] initWithInt:[self.player.time.value floatValue]-2];
-    [self.player setTime:targetTime];
-    
-    [self play];
+    if (self.controlView.playButton.hidden){
+        VLCTime *targetTime = [[VLCTime alloc] initWithInt:[self.videoPlayer.time.value floatValue]-2];
+        [self.videoPlayer setTime:targetTime];
+        [self play];
+    }
 }
 
 /**
- *    即将返回前台的处理
+ *    即将返回后台的处理
  */
 - (void)applicationWillResignActive {
-    [self pause];
+    if (self.controlView.playButton.hidden) {
+      [self pause];
+    }
 }
-
-
 #pragma mark Button Event
 - (void)playButtonClick {
-    
     [self play];
     
 }
-
 - (void)pauseButtonClick {
     
     [self pause];
+    
 }
-
 - (void)closeButtonClick {
     [self dismiss];
     if ([self.delegate respondsToSelector:@selector(playerCloseButton:)]) {
@@ -237,27 +231,25 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 
 - (void)fullScreenButtonClick {
-    if (XTOOLS.isCanRotation) {
-       [self forceChangeOrientation:UIInterfaceOrientationLandscapeLeft];
+    if (IsPad) {
+        [XTOOLS showLoading:@"打开系统方向锁定"];
     }
     else
     {
-        self.isFullscreenModel = YES;
-        [[UIApplication sharedApplication]setStatusBarHidden:YES];
+       self.isFullscreenModel = YES;
     }
-   
-
+    
 }
 
 - (void)shrinkScreenButtonClick {
-    if (XTOOLS.isCanRotation) {
-      [self forceChangeOrientation:UIInterfaceOrientationPortrait];
+    if (IsPad) {
+        [XTOOLS showLoading:@"打开系统方向锁定"];
     }
     else
     {
-        self.isFullscreenModel = NO;
-        [[UIApplication sharedApplication]setStatusBarHidden:NO];
+       self.isFullscreenModel = NO;
     }
+    
     
 }
 
@@ -267,7 +259,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
     
     VLCTime *targetTime = [[VLCTime alloc] initWithInt:targetIntvalue];
     
-    [self.player setTime:targetTime];
+    [self.videoPlayer setTime:targetTime];
     
     [self.controlView autoFadeOutControlBar];
 }
@@ -279,62 +271,67 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 #pragma mark Player Logic
 - (void)play {
-    self.controlView.topTitleLabel.text =[_mediaURL.absoluteString lastPathComponent];
-    NSAssert(_mediaURL != nil, @"MRVLCPlayer Exception: mediaURL could not be nil!");
-    [self.player play];
+    
+    [self.videoPlayer play];
     self.controlView.playButton.hidden = YES;
     self.controlView.pauseButton.hidden = NO;
     [self.controlView autoFadeOutControlBar];
 }
 
 - (void)pause {
-    [self.player pause];
+    [self.videoPlayer pause];
     self.controlView.playButton.hidden = NO;
     self.controlView.pauseButton.hidden = YES;
-    [self.controlView autoFadeOutControlBar];
+    [self.controlView cancelAutoFadeOutControlBar];
 }
 
 - (void)stop {
-    [self.player stop];
+    [self.videoPlayer stop];
     self.controlView.progressSlider.value = 1;
     self.controlView.playButton.hidden = NO;
     self.controlView.pauseButton.hidden = YES;
 }
-
+- (void)rateButtonAction:(UIButton *)button {
+    [self.controlView autoFadeOutControlBar];
+    if (_playRate >= 2.0) {
+        _playRate = 0.5;
+    }
+    else
+    {
+        _playRate+=0.5;
+    }
+    [button setTitle:[NSString stringWithFormat:@"x%.1f",_playRate] forState:UIControlStateNormal];
+    [self.videoPlayer setRate:_playRate];
+}
 #pragma mark - Delegate
 #pragma mark VLC
 - (void)mediaPlayerStateChanged:(NSNotification *)aNotification {
     // Every Time change the state,The VLC will draw video layer on this layer.
-    NSLog(@"==%@ == %@",@(self.player.media.state),@(self.player.state));
+    NSLog(@"==%@ == %@",@(self.videoPlayer.media.state),@(self.videoPlayer.state));
     [self bringSubviewToFront:self.controlView];
-    if (self.player.media.state == VLCMediaStateBuffering) {
+    if (self.videoPlayer.media.state == VLCMediaStateBuffering) {
         [self.controlView.centerView ShowWithType:PlayerCenterTypeWaiting Title:@"缓存中"];
 //        self.controlView.indicatorView.hidden = NO;
 
-        self.controlView.bgLayer.hidden = NO;
-    }else if (self.player.media.state == VLCMediaStatePlaying) {
+        self.controlView.hiddenFrontView = NO;
+    }else if (self.videoPlayer.media.state == VLCMediaStatePlaying) {
         
-        if (self.player.state == VLCMediaPlayerStatePaused) {
+        if (self.videoPlayer.state == VLCMediaPlayerStatePaused) {
             [self.controlView.centerView ShowWithType:PlayerCenterTypeStop Title:nil];
         }
         else
         {
             [self.controlView.centerView hiddenPlayButton];
         }
-        self.controlView.bgLayer.hidden = YES;
-    }else if (self.player.state == VLCMediaPlayerStateStopped) {
-        [self stop];
-        if (self.player.media.state == VLCMediaStateNothingSpecial) {
-            NSLog(@"111=== play end ===");
-            if ([self.delegate respondsToSelector:@selector(playerStateEnd)]) {
-                [self.delegate playerStateEnd];
-            }
-        }
+        [self.controlView.totalTimeLabel setText:[NSString stringWithFormat:@"%@",kMediaLength.stringValue]];
+        self.controlView.hiddenFrontView = YES;
+    }else if (self.videoPlayer.state == VLCMediaPlayerStateStopped) {
+       
         
     }
     else {
         [self.controlView.centerView ShowWithType:PlayerCenterTypeWaiting Title:@"缓存中"];
-        self.controlView.bgLayer.hidden = NO;
+        self.controlView.hiddenFrontView = NO;
     }
     
 }
@@ -347,26 +344,31 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
         return;
     }
     
-    float precentValue = ([self.player.time.value floatValue]) / ([kMediaLength.value floatValue]);
+    float precentValue = ([self.videoPlayer.time.value floatValue]) / ([kMediaLength.value floatValue]);
     
     [self.controlView.progressSlider setValue:precentValue animated:YES];
     
-    [self.controlView.timeLabel setText:[NSString stringWithFormat:@"%@/%@",_player.time.stringValue,kMediaLength.stringValue]];
+    [self.controlView.timeLabel setText:[NSString stringWithFormat:@"%@",self.videoPlayer.time.stringValue]];
+    
 }
 
 #pragma mark ControlView
 - (void)controlViewFingerMoveLeftWithTime:(int)intSec {
     
-    [self.player jumpBackward:intSec];
+    [self.videoPlayer jumpBackward:intSec];
     
 }
 
 - (void)controlViewFingerMoveRightWithTime:(int)intSec {
 
-    [self.player jumpForward:intSec];
-    
+    [self.videoPlayer jumpForward:intSec];
 }
-
+- (int)currentPlayTimeSecond {
+    return [XTOOLS timeStrToSecWithStr:self.videoPlayer.time.stringValue];
+}
+- (int)allPlayTimeSecond {
+  return [XTOOLS timeStrToSecWithStr:kMediaLength.stringValue];
+}
 - (void)controlViewFingerMoveUp {
     
     self.controlView.volumeSlider.value += 0.05;
@@ -378,12 +380,14 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 }
 
 #pragma mark - Property
-- (VLCMediaPlayer *)player {
-    if (!_player) {
-        _player = [[VLCMediaPlayer alloc] init];
-        _player.delegate = self;
+- (VideoAudioPlayer *)videoPlayer {
+    if (!_videoPlayer) {
+        _videoPlayer = [VideoAudioPlayer defaultPlayer];
+        _videoPlayer.isVideo = YES;
+        _videoPlayer.playerDelegate = self;
+        _playRate = 1.0;
     }
-    return _player;
+    return _videoPlayer;
 }
 
 - (MRVideoControlView *)controlView {
@@ -396,68 +400,111 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
 
 
 - (void)setIsFullscreenModel:(BOOL)isFullscreenModel {
-    
-//    if (_isFullscreenModel == isFullscreenModel) {
-//        return;
-//    }
-    
-    _isFullscreenModel = isFullscreenModel;
-    
-    if (isFullscreenModel) {
-//        _originFrame = self.frame;
-        
-        CGFloat height = kMRSCREEN_BOUNDS.size.width;
-        CGFloat width = kMRSCREEN_BOUNDS.size.height;
-        CGRect frame = CGRectMake((height - width) / 2, (width - height) / 2, width, height);
-        [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
-            /**
-             *    此判断是为了适配项目在Deployment Info中是否勾选了横屏
-             */
-           
-            if (XTOOLS.isCanRotation) {
-//                NSLog(@"00 ===%@",@([UIApplication sharedApplication].statusBarOrientation));
-                if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+    if (_isFullscreenModel!=isFullscreenModel) {
+        if (isFullscreenModel) {
+            [[UIApplication sharedApplication]setStatusBarHidden:YES];
+            if (IsPad) {
+                
+                //如果选择了放大，以前是小的就放大。
+                CGFloat height = kScreen_Width;
+                CGFloat width = kScreen_Height;
+                CGRect frame = CGRectMake(0, 0, width, height);
+                [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
 //                    self.frame = frame;
-                    self.frame = kMRSCREEN_BOUNDS;
+//                    CGFloat pi =-M_PI_2;
+//                    if (self.isLeft) {
+//                        pi = M_PI_2;
+//                    }
+//                    self.transform = CGAffineTransformMakeRotation(pi);
+                    //            }
+                    self.controlView.frame = frame;
+                    self.controlView.isFullscreen = YES;
+                    [self.controlView layoutIfNeeded];
+                    self.controlView.fullScreenButton.hidden = YES;
+                    self.controlView.shrinkScreenButton.hidden = NO;
+                } completion:^(BOOL finished) {
                     
-//                    NSLog(@"111===%@ ===%@",@(self.frame.size.width) ,@([UIApplication sharedApplication].statusBarOrientation));
-                }else
-                    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft) {
-                        self.frame = kMRSCREEN_BOUNDS;
-//                        self.transform = CGAffineTransformMakeRotation(M_PI);
-//                         NSLog(@"222===%@ ===%@",@(self.frame.size.width) ,@([UIApplication sharedApplication].statusBarOrientation));
-                    }
+                }];
             }
             else
             {
-                self.frame = frame;
-                self.transform = CGAffineTransformMakeRotation(-M_PI_2);
+                //如果选择了放大，以前是小的就放大。
+                CGFloat height = kScreen_Width;
+                CGFloat width = kScreen_Height;
+                CGRect frame = CGRectMake((height - width) / 2, (width - height) / 2, width, height);
+                [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
+                    self.frame = frame;
+                    CGFloat pi =-M_PI_2;
+                    if (self.isLeft) {
+                        pi = M_PI_2;
+                    }
+                    self.transform = CGAffineTransformMakeRotation(pi);
+                    //            }
+                    self.controlView.frame = self.bounds;
+                    self.controlView.isFullscreen = YES;
+                    [self.controlView layoutIfNeeded];
+                    self.controlView.fullScreenButton.hidden = YES;
+                    self.controlView.shrinkScreenButton.hidden = NO;
+                } completion:^(BOOL finished) {
+                    
+                }];
+  
             }
-            self.controlView.frame = self.bounds;
-            [self.controlView layoutIfNeeded];
-            self.controlView.fullScreenButton.hidden = YES;
-            self.controlView.shrinkScreenButton.hidden = NO;
-        } completion:^(BOOL finished) {
-//         NSLog(@"++++++++++++++ %@",@([UIApplication sharedApplication].statusBarOrientation));
-        }];
-        
-    }else {
-        [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
-            self.transform = CGAffineTransformIdentity;
-            self.frame = _originFrame;
-            self.controlView.frame = self.bounds;
-            [self.controlView layoutIfNeeded];
-            self.controlView.fullScreenButton.hidden = NO;
-            self.controlView.shrinkScreenButton.hidden = YES;
+        }else
+        {
+             [[UIApplication sharedApplication]setStatusBarHidden:NO];
+            if (IsPad) {
+                [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
+                    self.transform = CGAffineTransformIdentity;
+//                    self.frame = _originFrame;
+                    self.controlView.frame = _originFrame;
+                    self.controlView.isFullscreen = NO;
+                    [self.controlView layoutIfNeeded];
+                    self.controlView.fullScreenButton.hidden = NO;
+                    self.controlView.shrinkScreenButton.hidden = YES;
+                    
+                } completion:^(BOOL finished) {
+                    
+                }];
+            }
+            else
+            {
+                [UIView animateWithDuration:kVideoPlayerAnimationTimeinterval animations:^{
+                    self.transform = CGAffineTransformIdentity;
+                    self.frame = _originFrame;
+                    self.controlView.frame = self.bounds;
+                    self.controlView.isFullscreen = NO;
+                    [self.controlView layoutIfNeeded];
+                    self.controlView.fullScreenButton.hidden = NO;
+                    self.controlView.shrinkScreenButton.hidden = YES;
+                    
+                } completion:^(BOOL finished) {
+                    
+                }];
+            }
             
-        } completion:^(BOOL finished) {
-//            NSLog(@"============= %@",@([UIApplication sharedApplication].statusBarOrientation));
-        }];
-
+        }
+        _isFullscreenModel = isFullscreenModel;
         
     }
-
+    
 }
-
+- (void)setIsLeft:(BOOL)isLeft {
+    if (_isLeft!= isLeft) {
+        _isLeft = isLeft;
+        if (self.isFullscreenModel) {
+            CGFloat pi =-M_PI_2;
+            if (isLeft) {
+                pi = M_PI_2;
+            }
+            [UIView animateWithDuration:0.2 animations:^{
+               self.transform = CGAffineTransformMakeRotation(pi);
+            }];
+           
+        }
+        
+    }
+    
+}
 
 @end

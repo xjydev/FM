@@ -6,7 +6,8 @@
 //
 //  https://github.com/samvermette/SVWebViewController
 
-
+typedef void (^ BackRefreshData )(NSInteger state);
 @interface SVWebViewController : UIViewController
 @property (nonatomic ,copy)NSString * urlStr;
+@property (nonatomic, strong)BackRefreshData backRefreshData;
 @end

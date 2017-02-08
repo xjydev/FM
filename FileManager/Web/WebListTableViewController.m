@@ -11,14 +11,17 @@
 #import "SVWebViewController.h"
 #import "XTools.h"
 #import "UIColor+Hex.h"
+#import "XManageCoreData.h"
+#import "WebCollector+CoreDataClass.h"
+#import "DownloadViewController.h"
 @interface WebListTableViewController ()<UITextFieldDelegate,UISearchBarDelegate>
 {
     NSMutableArray   *_webArray;
-//    UITextField      *_searchField;
     
     NSMutableArray   *_searchArray;
     UISearchController *_searchController;
     UISearchBar        *_searchBar;
+
 }
 @end
 
@@ -26,22 +29,34 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+//downLoad
     UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
     self.navigationItem.leftBarButtonItem = leftBarButton;
+    UIBarButtonItem *rightBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"downLoad"] style:UIBarButtonItemStyleDone target:self action:@selector(rightDownLoadButtonAction:)];
+    self.navigationItem.rightBarButtonItem = rightBarButton;
     _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width - 80, 30)];
     _searchBar.barTintColor = kNavCOLOR;
-    _searchBar.placeholder = @"网址";
+    _searchBar.placeholder = @"网址/关键字";
     _searchBar.returnKeyType = UIReturnKeySearch;
     _searchBar.delegate = self;
     self.navigationItem.titleView = _searchBar;
-    
+    [self getWebListData];
+        
+}
+- (void)getWebListData {
+    _webArray = [NSMutableArray arrayWithArray:[[XManageCoreData manageCoreData]getAllWebUrl]];
+    [self.tableView reloadData];
 }
 - (void)leftScanButtonAction:(UIBarButtonItem *)item {
     ScanViewController *scan = [self.storyboard instantiateViewControllerWithIdentifier:@"ScanViewController"];
     scan.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:scan animated:YES];
+}
+- (void)rightDownLoadButtonAction:(UIBarButtonItem *)item {
+    DownloadViewController *filesList = [self.storyboard instantiateViewControllerWithIdentifier:@"DownloadViewController"];
+    filesList.title = @"下载";
+    filesList.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:filesList animated:YES];
 }
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
     return YES;
@@ -76,12 +91,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"WebListCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    
+    WebCollector *object = _webArray[indexPath.row];
+    cell.textLabel.text = object.title;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self gotoWebWithSearchText:@""];
+    WebCollector *object = _webArray[indexPath.row];
+    [self pushWebDetailWithurl:object.url];
 }
 
 // Override to support conditional editing of the table view.
@@ -92,8 +109,13 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+         WebCollector *object = _webArray[indexPath.row];
+
+        if ([[XManageCoreData manageCoreData]deleteWeb:object]) {
+            [_webArray removeObject:object];
+        }
+        [self.tableView reloadData];
+        
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
@@ -122,20 +144,23 @@
                                                                    kCFStringEncodingUTF8));
          text =[NSString stringWithFormat:@"https://www.baidu.com/s?wd=%@",encodedString];
      }
+    [self pushWebDetailWithurl:text];
+}
+- (void)pushWebDetailWithurl:(NSString *)url{
     SVWebViewController *webViewController = [[SVWebViewController alloc] init];
-    webViewController.urlStr = text;
+    webViewController.urlStr = url;
     webViewController.hidesBottomBarWhenPushed = YES;
+    webViewController.backRefreshData = ^(NSInteger state){
+        [self getWebListData];
+    };
     [self.navigationController pushViewController:webViewController animated:YES];
 }
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [_searchBar resignFirstResponder];
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    [_searchBar resignFirstResponder];
-//    if ([segue.identifier isEqualToString:@"WebDetailViewController"]) {
-//        WebDetailViewController *detail = segue.destinationViewController;
-//        detail.webUrlStr = sender;
-//    }
+
     
 }
 

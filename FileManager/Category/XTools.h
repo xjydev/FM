@@ -13,12 +13,14 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 typedef NS_ENUM(NSInteger , FileType) {
+    FileTypeDefault,
     FileTypeVideo,
     FileTypeAudio,
     FileTypeImage,
     FileTypeDocument,
     FileTypeCompress,
-    FileTypeDefault,
+    FileTypeFolder,
+    
     
 };
 typedef NS_ENUM(NSInteger ,SHUDType) {
@@ -39,27 +41,25 @@ typedef NS_ENUM(NSInteger ,SHUDType) {
 //document路径
 #define KDocumentP [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 #define kCachesP [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define kTmpP NSTemporaryDirectory()
 //单例Application
 #define APPSHAREAPP [UIApplication sharedApplication]
+//是ipad
+#define IsPad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 //系统版本号
 #define IOSSystemVersion [[[UIDevice currentDevice] systemVersion] floatValue]
 //当前应用版本 版本比较用
 #define APP_CURRENT_VERSION [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
 
 //屏幕的宽度,支持旋转屏幕
-#define kScreen_Width                                                                                   \
-((floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1)                            \
-? (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]) \
-? [UIScreen mainScreen].bounds.size.height                                              \
-: [UIScreen mainScreen].bounds.size.width)                                              \
-: [UIScreen mainScreen].bounds.size.width)
+#define kScreen_Width  (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]) \
+? [UIScreen mainScreen].bounds.size.height : [UIScreen mainScreen].bounds.size.width)
+
 
 //屏幕的高度,支持旋转屏幕
 #define kScreen_Height                                                                                  \
-((floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1)                            \
-? (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]) \
+(UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]) \
 ? [UIScreen mainScreen].bounds.size.width                                               \
-: [UIScreen mainScreen].bounds.size.height)                                             \
 : [UIScreen mainScreen].bounds.size.height)
 
 //#define kUserRotationKey @"canRotationKey"
@@ -74,11 +74,15 @@ extern NSString * const userRotationKey ;
 @property (nonatomic, assign)UIInterfaceOrientationMask orientationMask;
 //是否可以转屏,默认是YES，可以旋转。
 @property (nonatomic, assign)BOOL isCanRotation;
+@property (nonatomic, copy) NSString *hiddenFilePath;
 @property (nonatomic, strong)NSArray * videoFormatArray;
 @property (nonatomic, strong)NSArray * audioFormatArray;
 @property (nonatomic, strong)NSArray * imageFormatArray;
 @property (nonatomic, strong)NSArray * documentFormatArray;
 @property (nonatomic, strong)NSArray * compressFormatArray;
+@property (nonatomic, strong)NSDateFormatter *dateFormater;
+@property (nonatomic, strong)NSString *dateStr;
+
 
 /**
  播放文件
@@ -97,4 +101,14 @@ extern NSString * const userRotationKey ;
  */
 - (FileType)fileFormatWithPath:(NSString *)path;
 
+- (void)showMessage:(NSString *)title;
+- (void)showLoading:(NSString *)title;
+- (void)hiddenLoading;
+//时间和秒之间字符串的转换
+- (double)timeStrToSecWithStr:(NSString *)str;
+- (NSString *)timeSecToStrWithSec:(double)sec;
+//获取手机存储空间信息
+- (float)allStorageSpace;
+- (float)freeStorageSpace;
+- (NSString *)storageSpaceStringWith:(float)space;
 @end

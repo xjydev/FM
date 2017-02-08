@@ -1,0 +1,22 @@
+platform :ios, '8.0'
+use_frameworks!
+
+target 'FileManager' do
+    
+    pod 'MWPhotoBrowser', '~> 2.1.2'
+    pod 'ZipArchive', '~> 1.4.0'
+    #GCDWebServer 添加了favicon。
+    pod 'GCDWebServer', '~> 3.3.3'
+    pod 'GCDWebServer/WebUploader', '~> 3.3.3'
+    pod 'GCDWebServer/WebDAV', '~> 3.3.3'
+    pod 'AFNetworking', '~> 3.1.0'
+    pod 'UMengAnalytics-NO-IDFA'
+    pod 'CocoaAsyncSocket', '~> 7.5.1'
+    
+    pod 'UMengUShare/UI'
+    pod 'UMengUShare/Social/WeChat'
+    pod 'UMengUShare/Social/QQ'
+    pod 'UMengUShare/Social/SMS'
+    pod 'UMengUShare/Social/Email'
+    
+end

@@ -7,13 +7,15 @@
 //
 
 #import "MRVideoControlView.h"
-
+#import "XTools.h"
 @interface MRVideoControlView ()<UIGestureRecognizerDelegate>
 {
     CGPoint     _beganPoint;//开始滑动时的位置
     CGPoint     _localPoint;//滑动的实时位置。
     
     int         _forwardSec;//前进播放多少秒
+    int         _currentPlayerTime;//当前播放的时间秒数
+    int         _allPlayTime;//多媒体的播放总长度
 }
 @property (nonatomic, strong) UIPanGestureRecognizer *pan;
 @end
@@ -35,26 +37,31 @@
 {
     [super layoutSubviews];
     
-    self.topBar.frame             = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetMinY(self.bounds), CGRectGetWidth(self.bounds), CGRectGetWidth(self.bounds)>500?MRVideoControlBarHeight-20 : MRVideoControlBarHeight);
+    self.topBar.frame             = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetMinY(self.bounds),  CGRectGetWidth(self.bounds), _isFullscreen?MRVideoControlBarHeight-20 : MRVideoControlBarHeight);
     self.closeButton.frame        = CGRectMake(CGRectGetMinX(self.topBar.bounds), CGRectGetHeight(self.topBar.bounds)-CGRectGetHeight(self.closeButton.bounds), CGRectGetWidth(self.closeButton.bounds), CGRectGetHeight(self.closeButton.bounds));
     self.topTitleLabel.frame      = CGRectMake(CGRectGetMinX(self.topBar.bounds)+CGRectGetWidth(self.closeButton.bounds), CGRectGetHeight(self.topBar.bounds)-CGRectGetHeight(self.closeButton.bounds), CGRectGetWidth(self.topBar.bounds)-CGRectGetWidth(self.closeButton.bounds)-10, CGRectGetHeight(self.closeButton.bounds));
     
     self.bottomBar.frame          = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetHeight(self.bounds) - MRVideoControlBottomHeight, CGRectGetWidth(self.bounds), MRVideoControlBottomHeight);
     self.bottomLayer.frame = CGRectMake(CGRectGetMinX(self.bottomBar.bounds),MRVideoControlBottomHeight - MRVideoControlBottomLayerHeight, CGRectGetWidth(self.bounds), MRVideoControlBottomLayerHeight);
     
-    self.progressSlider.frame     = CGRectMake(0, 0, CGRectGetWidth(self.bounds), MRVideoControlSliderHeight);
+    self.progressSlider.frame     = CGRectMake(timeLabelWidth, 0, CGRectGetWidth(self.bounds)-timeLabelWidth*2, MRVideoControlSliderHeight);
     
-    self.playButton.frame         = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+5, MRVideoControlSliderHeight, CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
+    self.playButton.frame         = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+10, MRVideoControlSliderHeight, CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
     self.pauseButton.frame        = self.playButton.frame;
-    self.prevButton.frame         = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+10+MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
-    self.nextButton.frame         =  CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+15+2*MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
+    self.prevButton.frame         = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+20+MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
+    self.nextButton.frame         =  CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+25+2*MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
+    self.rateButton.frame        = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+35+3*MRVideoBarButtonWidth, MRVideoControlSliderHeight+7,CGRectGetWidth(self.rateButton.bounds), CGRectGetHeight(self.rateButton.bounds));
+//    if (!IsPad) {
+        self.fullScreenButton.frame   = CGRectMake(CGRectGetWidth(self.bottomBar.bounds) - CGRectGetWidth(self.fullScreenButton.bounds) - 5, self.playButton.frame.origin.y, CGRectGetWidth(self.fullScreenButton.bounds), CGRectGetHeight(self.fullScreenButton.bounds));
+        self.shrinkScreenButton.frame = self.fullScreenButton.frame;
+//    }
+   
     
-    self.fullScreenButton.frame   = CGRectMake(CGRectGetWidth(self.bottomBar.bounds) - CGRectGetWidth(self.fullScreenButton.bounds) - 5, self.playButton.frame.origin.y, CGRectGetWidth(self.fullScreenButton.bounds), CGRectGetHeight(self.fullScreenButton.bounds));
-    self.shrinkScreenButton.frame = self.fullScreenButton.frame;
-    self.centerView.center     = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
-    self.timeLabel.frame          = CGRectMake(20+3*MRVideoBarButtonWidth, CGRectGetMinY(self.playButton.frame), CGRectGetWidth(self.bottomBar.frame)-30-4*MRVideoBarButtonWidth, CGRectGetHeight(self.playButton.frame));
+    self.centerView.center        = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+    self.timeLabel.frame          = CGRectMake(CGRectGetMinX(self.bottomBar.bounds), 10, timeLabelWidth, 20);
+    self.totalTimeLabel.frame     = CGRectMake( CGRectGetWidth(self.bottomBar.frame) - timeLabelWidth, 10, timeLabelWidth, 20);
     
-    
+    self.frontView.frame          = CGRectMake(0, self.topBar.frame.size.height, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)-CGRectGetHeight(self.topBar.frame)-CGRectGetHeight(self.bottomBar.frame));
 }
 
 - (void)didMoveToSuperview
@@ -100,30 +107,34 @@
     
     self.backgroundColor = [UIColor clearColor];
 
-    [self.layer addSublayer:self.bgLayer];
-    
-    
     [self addSubview:self.topBar];
-    [self addSubview:self.centerView];
+    [self addSubview:self.frontView];
     [self addSubview:self.bottomBar];
-
+    [self addSubview:self.centerView];
+    
+    
     [self.topBar addSubview:self.closeButton];
     [self.topBar addSubview:self.topTitleLabel];
     
     [self.bottomBar.layer addSublayer:self.bottomLayer];
     [self.bottomBar addSubview:self.timeLabel];
+    [self.bottomBar addSubview:self.totalTimeLabel];
     [self.bottomBar addSubview:self.playButton];
     [self.bottomBar addSubview:self.pauseButton];
-    [self.bottomBar addSubview:self.fullScreenButton];
-    [self.bottomBar addSubview:self.shrinkScreenButton];
+//    if (!IsPad) {
+        [self.bottomBar addSubview:self.fullScreenButton];
+        [self.bottomBar addSubview:self.shrinkScreenButton];
+//    }
+    
     [self.bottomBar addSubview:self.nextButton];
     [self.bottomBar addSubview:self.prevButton];
+    [self.bottomBar addSubview:self.rateButton];
     [self.bottomBar addSubview:self.progressSlider];
     
-    [self addGestureRecognizer:self.pan];
-    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)]];
+    [self.frontView addGestureRecognizer:self.pan];
+    [self.frontView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)]];
     
-    self.pauseButton.hidden = YES;
+    self.playButton.hidden = YES;
     self.shrinkScreenButton.hidden = YES;
     
    
@@ -138,7 +149,7 @@
 #pragma mark Touch Event
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
-    
+  [self responseTapImmediately];  
 }
 
 - (void)panAction:(UIPanGestureRecognizer *)pan {
@@ -153,6 +164,22 @@
             _beganPoint = [pan locationInView:self];
             _localPoint = _beganPoint;
             _forwardSec = 0;
+            if ([self.delegate respondsToSelector:@selector(currentPlayTimeSecond)]) {
+               _currentPlayerTime = [self.delegate currentPlayTimeSecond];
+            }
+            else
+            {
+                _currentPlayerTime = 0;
+            }
+            if ([self.delegate respondsToSelector:@selector(allPlayTimeSecond)]) {
+                _allPlayTime = [self.delegate allPlayTimeSecond];
+            }
+            else
+            {
+                //如果没有获取总长度，就无限大，保证可以拖拽。
+                _allPlayTime = 100000;
+            }
+           
             
         }
             break;
@@ -163,18 +190,19 @@
             // 判断方向45°角，向上左是亮度右是音量，水平是播放时间。
             if (fabs(currentPoint.x - _beganPoint.x) > fabs(currentPoint.y - _beganPoint.y)) {//播放时间
                 if (currentPoint.x - _localPoint.x > 0) {
-//                    if ([_delegate respondsToSelector:@selector(controlViewFingerMoveRightWithTime:)]) {
-//                        [self.delegate controlViewFingerMoveRightWithTime:(int)(currentPoint.x - _localPoint.x)];
-//                    }
                     _forwardSec = (int)(currentPoint.x - _beganPoint.x);
-                    [self.centerView ShowWithType:PlayerCenterTypeSpeedForward Title:[NSString stringWithFormat:@"+ %d S",_forwardSec]];
+                    if (_currentPlayerTime + _forwardSec>_allPlayTime) {
+                        _forwardSec = _allPlayTime - _currentPlayerTime;
+                    }
+                    [self.centerView ShowWithType:PlayerCenterTypeSpeedForward Title:[NSString stringWithFormat:@"%@",[XTOOLS timeSecToStrWithSec: abs(_currentPlayerTime + _forwardSec)]]];
 
                 }else {
-//                    if ([_delegate respondsToSelector:@selector(controlViewFingerMoveLeftWithTime:)]) {
-//                        [self.delegate controlViewFingerMoveLeftWithTime:(int)(currentPoint.x - _localPoint.x)];
-//                    }
+
                     _forwardSec = (int)(currentPoint.x - _beganPoint.x);
-                    [self.centerView ShowWithType:PlayerCenterTypeSpeedBack Title:[NSString stringWithFormat:@"- %d S",-_forwardSec]];
+                    if (_currentPlayerTime + _forwardSec<0) {
+                        _forwardSec = -_currentPlayerTime;
+                    }
+                    [self.centerView ShowWithType:PlayerCenterTypeSpeedBack Title:[NSString stringWithFormat:@"%@",[XTOOLS timeSecToStrWithSec:abs(_currentPlayerTime + _forwardSec)]]];
 
                 }
             }else {
@@ -221,19 +249,19 @@
             }
         }
 }
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [touches anyObject];
-    if (touch.tapCount > 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self responseTapImmediately];
-        });
-
-    }
-}
-
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self responseTapImmediately];
-}
+//- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+//    UITouch *touch = [touches anyObject];
+//    if (touch.tapCount > 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            
+//        });
+//
+//    }
+//}
+//
+//- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+//    [self responseTapImmediately];
+//}
 
 #pragma mark - Property
 
@@ -275,7 +303,7 @@
     if (!_playButton) {
         _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_playButton setImage:[UIImage imageNamed:@"playing"] forState:UIControlStateNormal];
-        _playButton.bounds = CGRectMake(0, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
+        _playButton.bounds = CGRectMake(10, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
     }
     return _playButton;
 }
@@ -285,7 +313,7 @@
     if (!_pauseButton) {
         _pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_pauseButton setImage:[UIImage imageNamed:@"play_pause"] forState:UIControlStateNormal];
-        _pauseButton.bounds = CGRectMake(0, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
+        _pauseButton.bounds = CGRectMake(10, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
     }
     return _pauseButton;
 }
@@ -329,7 +357,20 @@
     }
     return _nextButton;
 }
-
+- (UIButton *)rateButton {
+    if (!_rateButton) {
+        _rateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        [_rateButton setTitle:@"X1.0" forState:UIControlStateNormal];
+        _rateButton.bounds = CGRectMake(0, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
+        _rateButton.titleLabel.font = [UIFont systemFontOfSize:16];
+//        _rateButton.layer.cornerRadius = 15;
+//        _rateButton.layer.masksToBounds = YES;
+//        _rateButton.layer.borderColor = [UIColor whiteColor].CGColor;
+//        _rateButton.layer.borderWidth = 1.0;
+    }
+    return _rateButton;
+}
 
 - (MRProgressSlider *)progressSlider
 {
@@ -359,32 +400,41 @@
     if (!_topTitleLabel) {
         _topTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, MRVideoControlBarHeight, MRVideoControlBarHeight)];
         _topTitleLabel.textColor = [UIColor whiteColor];
-        _topTitleLabel.font = [UIFont systemFontOfSize:16];
+        _topTitleLabel.font = [UIFont systemFontOfSize:17];
     }
     return _topTitleLabel;
 }
-- (UILabel *)timeLabel
-{
+- (UILabel *)timeLabel {
     if (!_timeLabel) {
-        _timeLabel = [UILabel new];
+        _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, timeLabelWidth, MRVideoControlSliderHeight)];
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.font = [UIFont systemFontOfSize:MRVideoControlTimeLabelFontSize];
         _timeLabel.adjustsFontSizeToFitWidth = YES;
+        _timeLabel.textAlignment = NSTextAlignmentCenter;
         _timeLabel.textColor = [UIColor whiteColor];
-        _timeLabel.textAlignment = NSTextAlignmentRight;
-        _timeLabel.bounds = CGRectMake(0, 0, 100, MRVideoBarButtonWidth);
+        
     }
     return _timeLabel;
 }
-
-- (CALayer *)bgLayer {
-    if (!_bgLayer) {
-        _bgLayer = [CALayer layer];
-        _bgLayer.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Video Bg"]].CGColor;
-        _bgLayer.bounds = self.frame;
-        _bgLayer.position = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+- (UILabel *)totalTimeLabel {
+    if (!_totalTimeLabel) {
+        _totalTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, timeLabelWidth, MRVideoControlSliderHeight)];
+        _totalTimeLabel.backgroundColor = [UIColor clearColor];
+        _totalTimeLabel.font = [UIFont systemFontOfSize:MRVideoControlTimeLabelFontSize];
+        _totalTimeLabel.adjustsFontSizeToFitWidth = YES;
+        _totalTimeLabel.textColor = [UIColor whiteColor];
+        _totalTimeLabel.textAlignment = NSTextAlignmentCenter;
     }
-    return _bgLayer;
+    return _totalTimeLabel;
+}
+- (UIView *)frontView {
+    if (!_frontView) {
+        _frontView = [[UIView alloc]init];
+        _frontView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Video Bg"]];
+        _frontView.bounds = CGRectMake(0, 64, self.bounds.size.width, self.bounds.size.height - MRVideoControlBottomHeight-64);
+        _frontView.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+    }
+    return _frontView;
 }
 
 - (UISlider *)volumeSlider {
@@ -400,11 +450,25 @@
 
 - (MPVolumeView *)volumeView {
     if (!_volumeView) {
-        _volumeView = [[MPVolumeView alloc] init];
+        _volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-1000,-1000, 10, 10)];
+        [self addSubview:_volumeView];
     }
     return _volumeView;
 }
-
+- (void)setHiddenFrontView:(BOOL)hiddenFrontView {
+    if (_hiddenFrontView!=hiddenFrontView) {
+        if (hiddenFrontView) {
+            self.frontView.backgroundColor = [UIColor clearColor];
+        }
+        else
+        {
+            self.frontView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Video Bg"]];
+        }
+        _hiddenFrontView = hiddenFrontView;
+    }
+    
+    
+}
 - (UIPanGestureRecognizer *)pan {
     if (!_pan) {
         _pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
@@ -412,6 +476,7 @@
     }
     return _pan;
 }
+
 -(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
     
     if([touch.view isKindOfClass:[UISlider class]])

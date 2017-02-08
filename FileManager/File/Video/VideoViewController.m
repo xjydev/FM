@@ -8,75 +8,57 @@
 #import "XTools.h"
 #import "VideoViewController.h"
 #import "MRVLCPlayer.h"
+#import "UMMobClick/MobClick.h"
 @interface VideoViewController ()<MRVLCPlayerDelegate>
 {
     NSArray   *_videoArray;
     NSInteger  _videoIndex;
-    MRVLCPlayer *_player;
-    PrevNextType _playPrevNextType;
 }
+@property (nonatomic, strong)MRVLCPlayer *player;
 @end
 
 @implementation VideoViewController
-- (void)setVideoPath:(NSString *)videoPath {
-    _playPrevNextType = PrevNextTypeAll;
-    _videoPath = videoPath;
-}
+
 - (void)setVideoArray:(NSArray *)videoArray WithIndex:(NSInteger)index {
     _videoArray = videoArray;
     _videoIndex = index;
-    if (videoArray.count== 0) {
-        _playPrevNextType = PrevNextTypeAll;
-        return;
+}
+- (MRVLCPlayer *)player {
+    if (!_player) {
+        _player =[[MRVLCPlayer alloc] initWithFrame:CGRectMake(0, 0, kScreen_Width, kScreen_Height)];
+        if (!_player.delegate) {
+            _player.delegate = self;
+        }
     }
-    if (_videoIndex == 0) {
-        _playPrevNextType = PrevNextTypePrev;
-        self.videoPath = _videoArray[_videoIndex];
-        
-    }
-    else if (_videoIndex >0 && _videoIndex<_videoArray.count-1) {
-        _playPrevNextType = PrevNextTypeNext;
-      self.videoPath = _videoArray[_videoIndex];  
-    }
-    else
-    if(_videoIndex == _videoArray.count - 1){
-       _playPrevNextType = PrevNextTypeNext;
-    }
+    return _player;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
     self.view.backgroundColor = [UIColor whiteColor];
-    if (!_player) {
-        _player = [[MRVLCPlayer alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-        
-//        _player.bounds = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        _player.center = self.view.center;
-        _player.delegate = self;
-        self.view = _player;
-    }
+
+    self.player.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    self.player.center = self.view.center;
+    
+    self.view = self.player;
     if (self.videoPath) {
-       _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
-        _player.prevNextType = _playPrevNextType;
+        self.player.videoPlayer.currentPath = self.videoPath;
     }
     else
     {
-        NSLog(@"播放路径错误");
+        self.player.videoPlayer.mediaArray = _videoArray;
+        self.player.videoPlayer.index = _videoIndex;
     }
     
     
 }
 - (void)playerCloseButton:(UIButton *)button {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-- (void)playerNextPrevButtonIsNext:(BOOL)isNext {
-    _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
-    _player.prevNextType = _playPrevNextType;
-    [_player play];
-}
-- (void)playerStateEnd {
-    _player.mediaURL = [NSURL fileURLWithPath:self.videoPath];
-    _player.prevNextType = _playPrevNextType;
-    [_player play];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+       [VideoAudioPlayer playerRelease];
+       [self.player removeFromSuperview];
+    }];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -85,26 +67,33 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
-
-    if (_player) {
-        [_player play];
-    }
 }
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 //    XTOOLS.isCanRotation = YES;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
     [[UIApplication sharedApplication]setStatusBarHidden:NO];
+    [MobClick endLogPageView:@"video"];
 
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:@"video"];//("PageOne"为页面名称，可自定义)
 }
 - (BOOL)shouldAutorotate {
     
-    return XTOOLS.isCanRotation;
+    return NO;
 }
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-//    XTOOLS.isCanRotation = NO;
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+
+    
+    return NO;
+}
+
 
 /*
 #pragma mark - Navigation

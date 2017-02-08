@@ -12,6 +12,7 @@
 #import "QRCodeReaderView.h"
 #import "XTools.h"
 #import "SVWebViewController.h"
+#import "UMMobClick/MobClick.h"
 
 @interface ScanViewController ()<QRCodeReaderViewDelegate,AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 {
@@ -46,6 +47,27 @@
         [self presentViewController:aler animated:YES completion:nil];
         return;
     }
+    NSString *mediaType = AVMediaTypeVideo;
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    
+     if(authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied){
+         UIAlertController *aler = [UIAlertController alertControllerWithTitle:@"相机权限" message:@"请开启此应用访问您相机的权限" preferredStyle:UIAlertControllerStyleAlert];
+         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+             [self.navigationController popViewControllerAnimated:YES];
+         }];
+         UIAlertAction *sureAction = [UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+         }];
+         
+         [aler addAction:cancelAction];
+         [aler addAction:sureAction];
+         [self presentViewController:aler animated:YES completion:nil];
+         return;
+         
+     }
+    
+    
     
     isFirst = YES;
     isPush = NO;
@@ -104,7 +126,7 @@
     mediaUI.allowsEditing = NO;
     mediaUI.delegate = self;
     [self presentViewController:mediaUI animated:YES completion:^{
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+      //  [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
     }];
     
     
@@ -118,13 +140,12 @@
         image = [info objectForKey:UIImagePickerControllerOriginalImage];
     }
     self.detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{ CIDetectorAccuracy : CIDetectorAccuracyHigh }];
-    readview.is_Anmotion = YES;
     
     NSArray *features = [self.detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
     if (features.count >=1) {
         
         [picker dismissViewControllerAnimated:YES completion:^{
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+           // [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
             
             CIQRCodeFeature *feature = [features objectAtIndex:0];
             NSString *scannedResult = feature.messageString;
@@ -142,9 +163,8 @@
        
         
         [picker dismissViewControllerAnimated:YES completion:^{
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+           // [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
             
-            readview.is_Anmotion = NO;
             [readview start];
             
             UIAlertController *aler = [UIAlertController alertControllerWithTitle:@"提示" message:@"未识别出二维码/条形码" preferredStyle:UIAlertControllerStyleAlert];
@@ -161,7 +181,7 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [picker dismissViewControllerAnimated:YES completion:^{
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+       // [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
     }];
     
 }
@@ -169,7 +189,6 @@
 #pragma mark -QRCodeReaderViewDelegate
 - (void)readerScanResult:(NSString *)result
 {
-    readview.is_Anmotion = YES;
     [readview stop];
     
     //播放扫描二维码的声音
@@ -218,11 +237,6 @@
 
 - (void)reStartScan
 {
-    readview.is_Anmotion = NO;
-    
-    if (readview.is_AnmotionFinished) {
-        [readview loopDrawLine];
-    }
     
     [readview start];
 }
@@ -238,6 +252,12 @@
         }
     }
     
+    [MobClick beginLogPageView:@"scan"];//("PageOne"为页面名称，可自定义)
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:@"scan"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -246,7 +266,6 @@
     
     if (readview) {
         [readview stop];
-        readview.is_Anmotion = YES;
     }
     
 }

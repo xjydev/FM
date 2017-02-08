@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,12 +22,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="播放器" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tl9-7h-OK6">
-                                <rect key="frame" x="118" y="25" width="139" height="51"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="悦览播放器" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tl9-7h-OK6">
+                                <rect key="frame" x="96" y="25" width="183" height="51"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="51" id="bAd-s3-KLz"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -49,12 +49,12 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="tl9-7h-OK6" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="102" id="J4A-KG-RFk"/>
+                            <constraint firstItem="tl9-7h-OK6" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="80" id="J4A-KG-RFk"/>
                             <constraint firstItem="axh-nv-k70" firstAttribute="top" secondItem="tl9-7h-OK6" secondAttribute="bottom" constant="60" id="Mg3-4n-emW"/>
                             <constraint firstItem="axh-nv-k70" firstAttribute="centerX" secondItem="tl9-7h-OK6" secondAttribute="centerX" id="dGa-ig-5GU"/>
                             <constraint firstItem="tl9-7h-OK6" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="5" id="dV6-OJ-QSy"/>
                             <constraint firstItem="WXG-fK-fQi" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="el0-cB-nl0"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="tl9-7h-OK6" secondAttribute="trailing" constant="102" id="hpr-fI-eeQ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="tl9-7h-OK6" secondAttribute="trailing" constant="80" id="hpr-fI-eeQ"/>
                             <constraint firstAttribute="trailing" secondItem="WXG-fK-fQi" secondAttribute="trailing" id="miG-Ym-t5Z"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="WXG-fK-fQi" secondAttribute="bottom" id="nhn-cd-B0l"/>
                         </constraints>

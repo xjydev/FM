@@ -20,6 +20,8 @@
 - (void)controlViewFingerMoveDown;
 - (void)controlViewFingerMoveLeftWithTime:(int)intSec;
 - (void)controlViewFingerMoveRightWithTime:(int)intSec;
+- (int)currentPlayTimeSecond;
+- (int)allPlayTimeSecond;
 
 @end
 
@@ -40,14 +42,18 @@
 @property (nonatomic, strong) UIButton *shrinkScreenButton;
 @property (nonatomic, strong) UIButton *prevButton;
 @property (nonatomic, strong) UIButton *nextButton;
+@property (nonatomic, strong) UIButton *rateButton;
 
 @property (nonatomic, strong) MRProgressSlider *progressSlider;
 
 @property (nonatomic, strong) UILabel *timeLabel;
+@property (nonatomic, strong) UILabel *totalTimeLabel;
 @property (nonatomic, strong) PlayerCenterView *centerView;
-@property (nonatomic, strong) CALayer *bgLayer;
+@property (nonatomic, strong) UIView *frontView;
 @property (nonatomic, strong) UISlider *volumeSlider;
 @property (nonatomic, strong) MPVolumeView *volumeView;
+@property (nonatomic, assign) BOOL  hiddenFrontView;
+@property (nonatomic, assign) BOOL  isFullscreen;
 //@property (nonatomic, strong) UILabel *alertlable;
 
 - (void)animateHide;

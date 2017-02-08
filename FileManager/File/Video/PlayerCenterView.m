@@ -22,6 +22,7 @@ static float imageViewWidth = 50;
         _titleLabel.textColor = [UIColor whiteColor];
         _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:18];
 //        _titleLabel.backgroundColor = [UIColor blueColor];
+        _titleLabel.text = @"加载中";
         [self addSubview:_titleLabel];
         
         
@@ -29,19 +30,17 @@ static float imageViewWidth = 50;
         _centerButton.frame=CGRectMake((frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
 //        _centerButton.backgroundColor = [UIColor redColor];
         [self addSubview:_centerButton];
+        _centerButton.hidden = YES;
         
         
         _activityView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         _activityView.frame = CGRectMake((frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
-//        _activityView.backgroundColor = [UIColor clearColor];
         _activityView.color = [UIColor grayColor];
         
         _activityView.hidesWhenStopped = YES;
-//        _activityView.layer.masksToBounds = YES;
-//        _activityView.layer.cornerRadius = 5;
-//        self.backgroundColor = [UIColor yellowColor];
+
         [self addSubview:_activityView];
-        
+        [_activityView startAnimating];
         self.layer.cornerRadius = 10;
         self.layer.masksToBounds = YES;
         

@@ -4,6 +4,32 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>悦览播放器</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Molecules Structure File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.plain-text</string>
+				<string>public.data</string>
+				<string>public.png</string>
+				<string>org.gnu.gnu-zip-archive</string>
+				<string>com.fzrong.jpg</string>
+				<string>public.image</string>
+				<string>public.movie</string>
+				<string>public.audio</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -11,13 +37,84 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>播放器</string>
+	<string>悦览播放器</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.2.1</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>xiaodev.cn.filesmanager</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>QQ</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>QQ41e97c5f</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>tencent</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tencent1105820767</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>weixin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wxf6cfb197efafda54</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.2.1</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>wechat</string>
+		<string>weixin</string>
+		<string>mqqapi</string>
+		<string>mqq</string>
+		<string>mqqOpensdkSSoLogin</string>
+		<string>mqqconnect</string>
+		<string>mqqopensdkdataline</string>
+		<string>mqqopensdkgrouptribeshare</string>
+		<string>mqqopensdkfriend</string>
+		<string>mqqopensdkapi</string>
+		<string>mqqopensdkapiV2</string>
+		<string>mqqopensdkapiV3</string>
+		<string>mqqopensdkapiV4</string>
+		<string>mqzoneopensdk</string>
+		<string>wtloginmqq</string>
+		<string>wtloginmqq2</string>
+		<string>mqqwpa</string>
+		<string>mqzone</string>
+		<string>mqzonev2</string>
+		<string>mqzoneshare</string>
+		<string>wtloginqzone</string>
+		<string>mqzonewx</string>
+		<string>mqzoneopensdkapiV2</string>
+		<string>mqzoneopensdkapi19</string>
+		<string>mqzoneopensdkapi</string>
+		<string>mqqbrowser</string>
+		<string>mttbrowser</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -29,6 +126,10 @@
 	<string>应用需要访问您设备的照相机</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>应用需要访问您设备的相册</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -54,9 +155,9 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -67,5 +168,25 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ulearn Data zip</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.pkware.zip-archive</string>
+		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>Ulearn Document File </string>
+			<key>UTTypeIdentifier</key>
+			<string>com.adobe.pdf </string>
+		</dict>
+	</array>
 </dict>
 </plist>

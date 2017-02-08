@@ -26,6 +26,14 @@
 - (BOOL)shouldAutorotate {
  return  XTOOLS.isCanRotation;
 }
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    
+    
+    return NO;
+}
 /*
 #pragma mark - Navigation
 
