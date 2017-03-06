@@ -51,22 +51,33 @@
     self.navigationItem.leftBarButtonItem = leftBarButton;
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     
-    _rightBarButton = [[UIBarButtonItem alloc]initWithTitle:@"选择" style:UIBarButtonItemStyleDone target:self action:@selector(rightBarButtonAction:)];
-    self.navigationItem.rightBarButtonItem = _rightBarButton;
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
     if (!self.filePath) {
         self.filePath = KDocumentP;
     }
-    [self setAutomaticallyAdjustsScrollViewInsets:NO];
-    for (UIButton *button in self.bottomView.subviews) {
-        if ([button isKindOfClass:[UIButton class]]) {
-            button.adjustsImageWhenHighlighted = NO;
-            button.enabled = NO;
-        }
-    }
-    self.bottomView.userInteractionEnabled = NO;
     _filesArray = [NSMutableArray arrayWithCapacity:0];
     
-    [self reloadFilesArray];
+    if (!self.isSelected) {
+        _rightBarButton = [[UIBarButtonItem alloc]initWithTitle:@"选择" style:UIBarButtonItemStyleDone target:self action:@selector(rightBarButtonAction:)];
+        self.navigationItem.rightBarButtonItem = _rightBarButton;
+        for (UIButton *button in self.bottomView.subviews) {
+            if ([button isKindOfClass:[UIButton class]]) {
+                button.adjustsImageWhenHighlighted = NO;
+                button.enabled = NO;
+            }
+        }
+        self.bottomView.userInteractionEnabled = NO;
+        [self reloadFilesArray];
+    }
+    else
+    {
+        self.bottomView.hidden = YES;
+        [self reloadVideoAudioArray];
+    }
+    
+    
+    
+    
     UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
     [refresh addTarget:self action:@selector(refreshPullUp:) forControlEvents:UIControlEventValueChanged];
     [self.mainTableView addSubview:refresh];
@@ -83,7 +94,17 @@
 - (void)endRefresh:(UIRefreshControl *)control  {
     [control endRefreshing];
 }
-
+- (void)reloadVideoAudioArray {
+    NSError *error;
+    NSArray *array = [kFileM subpathsOfDirectoryAtPath:self.filePath error:&error];
+    [_filesArray removeAllObjects];
+    for (NSString *name in array) {
+        if ([XTOOLS fileFormatWithPath:name] == FileTypeAudio || [XTOOLS fileFormatWithPath:name] == FileTypeVideo) {
+            [_filesArray addObject:name];
+        }
+    }
+    [self.mainTableView reloadData];
+}
 - (void)reloadFilesArray {
     NSError *error;
     
@@ -158,10 +179,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FilesListCell" forIndexPath:indexPath];
-    cell.accessoryType = UITableViewCellAccessoryDetailButton;
-    UIButton *accessoryButton =(UIButton *)cell.accessoryView;
-    [accessoryButton setImage:[UIImage imageNamed:@"collect"] forState:UIControlStateNormal];
-    NSString *pathName = _filesArray[indexPath.row];
+    if (self.isSelected) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    else
+    {
+        cell.accessoryType = UITableViewCellAccessoryDetailButton;
+        UIButton *accessoryButton =(UIButton *)cell.accessoryView;
+        [accessoryButton setImage:[UIImage imageNamed:@"collect"] forState:UIControlStateNormal];
+ 
+    }
+        NSString *pathName = _filesArray[indexPath.row];
     cell.textLabel.text = pathName;
     switch ([XTOOLS fileFormatWithPath:pathName]) {
         case FileTypeFolder:
@@ -202,8 +230,17 @@
         [self tableViewSelectedDeSelectedPath:file selected:NO];
     }
 }
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-   
+    if (self.isSelected) {
+        if (self.selectedPath) {
+            NSString *path = [NSString stringWithFormat:@"%@/%@",self.filePath,_filesArray[indexPath.row]];
+            self.selectedPath(path);
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    else
+    {
     if (_isEditing) {
         NSString *file  = _filesArray[indexPath.row];
         [self tableViewSelectedDeSelectedPath:file selected:YES];
@@ -235,6 +272,7 @@
             case FileTypeImage:
             {
                 MWPhotoBrowser *browser = [[MWPhotoBrowser alloc]initWithDelegate:self];
+                [browser setCurrentPhotoIndex:indexPath.row ];
                 [self.navigationController pushViewController:browser animated:YES];
             }
                 break;
@@ -271,6 +309,7 @@
                 break;
         }
   
+    }
     }
     
 }
@@ -309,6 +348,9 @@
 
 -(NSArray *)tableView:(UITableView* )tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.isSelected) {
+        return nil;
+    }
     NSString *path = [NSString stringWithFormat:@"%@/%@",self.filePath,_filesArray[indexPath.row]];
     
     UITableViewRowAction *deleteRoWAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {//title可自已定义

@@ -13,6 +13,7 @@
 #import "XTools.h"
 #import "SVWebViewController.h"
 #import "UMMobClick/MobClick.h"
+#import "DownLoadCenter.h"
 
 @interface ScanViewController ()<QRCodeReaderViewDelegate,AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 {
@@ -202,9 +203,20 @@
     [self performSelector:@selector(reStartScan) withObject:nil afterDelay:1.5];
 }
 
-#pragma mark - 扫描结果处理
+#pragma mark - delegate 扫描结果处理
 - (void)accordingQcode:(NSString *)str
 {
+    NSLog(@"qr ==%@",str);
+//    .dwstatic.c
+    if ([str containsString:@".dwstatic.c"]) {//download?path=
+        [XTOOLS showAlertTitle:@"是否下载" message:str buttonTitles:@[@"取消",@"下载"] completionHandler:^(NSInteger num) {
+            if (num == 1) {
+              [[DownLoadCenter defaultDownLoad]startDownload:str trag:nil];  
+            }
+        }];
+      
+    }
+    else
     //判断是否是网址
     if ([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:str]]) {
         SVWebViewController *webViewController = [[SVWebViewController alloc] init];

@@ -16,5 +16,6 @@ typedef void (^SelectedPathBack)(NSString * movePath, NSInteger index);
 @property (nonatomic, strong)SelectedPathBack selectedPathBackBlock;
 @property (nonatomic, copy)NSString *selectedStr;
 @property (nonatomic, strong)NSArray  *moveArray;
+@property (nonatomic, assign)BOOL     isShow;
 -(void)showWithFolderArray:(NSArray *)array withTitle:(NSString *)title backBlock:(SelectedPathBack)backBlock;
 @end

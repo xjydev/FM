@@ -34,24 +34,9 @@
     
     
     float size =[[dict objectForKey:NSFileSize] floatValue];
-    NSAttributedString *sizeStr = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"文件大小：%.fB ",size] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}] ;
+    NSAttributedString *sizeStr = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"文件大小：%@\n ",[XTOOLS storageSpaceStringWith:size]] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}] ;
     [mstr appendAttributedString:sizeStr];
-    NSString *sizeMstr = nil;
-    if (size/1024>1) {
-        if (size/1024/1024>1) {
-            sizeMstr =[NSString stringWithFormat:@"(%.2fM)\n",size/1024/1024];
-        }
-        else
-        {
-            sizeMstr =[NSString stringWithFormat:@"(%.2fK)\n",size/1024];
-        }
-    }
-    else
-    {
-        sizeMstr = @"\n";
-    }
-    
-    [mstr appendAttributedString:[[NSAttributedString alloc]initWithString:sizeMstr attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:18]}]];
+
     
     NSDate *createDate = [dict objectForKey:NSFileCreationDate];
     NSString *createStr = [NSString stringWithFormat:@"创建时间：%@\n",[XTOOLS.dateFormater stringFromDate:createDate]];

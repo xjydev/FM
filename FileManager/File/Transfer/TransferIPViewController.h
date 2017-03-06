@@ -9,5 +9,9 @@ typedef void(^FilesTransferChangeBack)(int num);
 #import <UIKit/UIKit.h>
 
 @interface TransferIPViewController : UIViewController
+
+/**
+ 如果创建了文件夹，首页的文件夹列表需要刷新。
+ */
 @property (nonatomic, strong)FilesTransferChangeBack filesTransferChangeBack;
 @end

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 @class WebCollector;
+@class Download;
 @interface XManageCoreData : NSObject
 @property (nonatomic, strong)NSManagedObjectContext *manageObjectContext;
 @property (nonatomic, strong)NSManagedObjectModel *manageObjectModel;
@@ -27,4 +28,9 @@
 #pragma mark -- 播放记录
 - (BOOL)saveRecordName:(NSString *)name path:(NSString *)path record:(float)rate;
 - (float)getRecordWithPath:(NSString *)path;
+#pragma  mark --下载记录
+- (BOOL)saveDownloadUrl:(NSString *)url Progress:(float)progress downLoadPath:(NSString *)path;
+- (NSArray *)allDownload;
+- (BOOL)deleteDownloadUrl:(NSString *)url;
+- (BOOL)deleteDownLoadModel:(Download *)model;
 @end

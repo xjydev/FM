@@ -86,6 +86,15 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.moveArray.count;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isShow) {
+        return 80;
+    }
+    else
+    {
+        return 44;
+    }
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"selectedmovecell"];
     if (!cell) {
@@ -101,6 +110,10 @@
         title = @"主目录";
     }
     cell.textLabel.text = title;
+    if (self.isShow) {
+        NSString *imagePath = [NSString stringWithFormat:@"%@/%@",KDocumentP, self.moveArray[indexPath.row]];
+        [cell.imageView setImage:[UIImage imageWithContentsOfFile:imagePath]];
+    }
     return cell;
 }
 

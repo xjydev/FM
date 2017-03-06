@@ -9,6 +9,7 @@
 #import "XManageCoreData.h"
 #import "WebCollector+CoreDataClass.h"
 #import "Record+CoreDataClass.h"
+#import "Download+CoreDataProperties.h"
 #import "XTools.h"
 static XManageCoreData *_manageCoredata = nil;
 
@@ -37,9 +38,9 @@ static XManageCoreData *_manageCoredata = nil;
     //根据模型对象初始化NSPersistentStoreCoordinator
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc]initWithManagedObjectModel:self.manageObjectModel];
     NSString *storePath = [NSString stringWithFormat:@"%@/FilesModel.sqlite",XTOOLS.hiddenFilePath];
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isDeleteDB111"]) {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isDeleteDB2"]) {
         [[NSFileManager defaultManager] removeItemAtURL:[NSURL fileURLWithPath:storePath] error:nil];   //删除数据库
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isDeleteDB111"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isDeleteDB2"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
@@ -50,7 +51,7 @@ static XManageCoreData *_manageCoredata = nil;
         dict[NSLocalizedFailureReasonErrorKey] = @"coredata 初始化失败";
         dict[NSUnderlyingErrorKey] = error;
         error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
-        abort();
+//        abort();
     }
     return _persistentStoreCoordinator;
 }
@@ -77,7 +78,7 @@ static XManageCoreData *_manageCoredata = nil;
         NSError *error = nil;
         if ([managedObjectContext hasChanges]&&! [managedObjectContext save:&error] ) {
             NSLog(@"unresolved error  %@, %@",error,[error userInfo]);
-            abort();
+//            abort();
         }
     }
 }
@@ -89,7 +90,7 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
     BOOL success = [self.manageObjectContext save:&error];
     if (!success) {
-        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
         return NO;
     }
     return YES;
@@ -100,7 +101,7 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
         NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
         if (error) {
-            [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+//            [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
         }
     
         for (WebCollector *object in objets) {
@@ -108,7 +109,7 @@ static XManageCoreData *_manageCoredata = nil;
         }
     BOOL success = [self.manageObjectContext save:&error];
     if (!success) {
-        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
         return NO;
     }
     return YES;
@@ -120,7 +121,7 @@ static XManageCoreData *_manageCoredata = nil;
 
     BOOL success = [self.manageObjectContext save:&error];
     if (!success) {
-        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
         return NO;
     }
     return YES;
@@ -131,7 +132,7 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
     NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
     if (error) {
-        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
     }
     //结果大于0就是包含了。
     return objets.count>0;
@@ -142,7 +143,7 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
     NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
     if (error) {
-        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
     }
     return objets;
   
@@ -158,7 +159,7 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
     BOOL success = [self.manageObjectContext save:&error];
     if (!success) {
-        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
     }
     
     
@@ -178,7 +179,8 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
     NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
     if (error) {
-        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+        [XTOOLS showMessage:@"查询错误"];
     }
     return objets;
     
@@ -192,7 +194,8 @@ static XManageCoreData *_manageCoredata = nil;
     NSError *error = nil;
     NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
     if (error) {
-        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+        [XTOOLS showMessage:@"查询错误"];
         return NO;
     }
     if (objets.count>0) {
@@ -201,7 +204,8 @@ static XManageCoreData *_manageCoredata = nil;
         }
         BOOL success = [self.manageObjectContext save:&error];
         if (!success) {
-            [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+//            [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+            [XTOOLS showMessage:@"访问错误"];
             return NO;
         }
     }
@@ -214,7 +218,8 @@ static XManageCoreData *_manageCoredata = nil;
         NSError *error = nil;
         BOOL success = [self.manageObjectContext save:&error];
         if (!success) {
-            [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+//            [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+            [XTOOLS showMessage:@"访问错误"];
             return NO;
         }
         
@@ -230,7 +235,8 @@ return YES;
     NSError *error = nil;
     NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
     if (error) {
-        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+//        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+        [XTOOLS showMessage:@"查询错误"];
         return 0.0;
     }
     
@@ -239,5 +245,94 @@ return YES;
     }
     return 0.0;
 
+}
+#pragma  mark --下载记录
+- (BOOL)saveDownloadUrl:(NSString *)url Progress:(float)progress downLoadPath:(NSString *)path {
+    NSFetchRequest * request = [NSFetchRequest fetchRequestWithEntityName:@"Download"];
+    request.predicate = [NSPredicate predicateWithFormat:@"url = %@",url];
+    NSError *error = nil;
+    NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
+    if (error) {
+        //        [NSException raise:@"查询错误" format:@"%@",[error localizedDescription]];
+        [XTOOLS showMessage:@"查询错误"];
+        return NO;
+    }
+    if (objets.count>0) {
+        for (Download *object in objets) {
+            object.progress = progress;
+            object.path = path;
+            object.name = path.lastPathComponent;
+        }
+        BOOL success = [self.manageObjectContext save:&error];
+        if (!success) {
+            //            [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+            [XTOOLS showMessage:@"访问错误"];
+            return NO;
+        }
+    }
+    else
+    {
+        Download *downloadObject = [NSEntityDescription insertNewObjectForEntityForName:@"Download" inManagedObjectContext:self.manageObjectContext];
+        downloadObject.name = path.lastPathComponent;
+        downloadObject.path = path;
+        downloadObject.progress = progress;
+        downloadObject.url = url;
+//        [self.manageObjectContext insertObject:downloadObject];
+        NSError *error = nil;
+        BOOL success = [self.manageObjectContext save:&error];
+        if (!success) {
+            //            [NSException raise:@"访问数据库错误" format:@"%@",[error localizedDescription]];
+            [XTOOLS showMessage:@"访问错误"];
+            return NO;
+        }
+        
+    }
+    
+    return YES;
+
+}
+- (NSArray *)allDownload {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Download"];
+    
+    NSError *error = nil;
+    NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
+    if (error) {
+        
+    }
+    return objets;
+}
+- (BOOL)deleteDownloadUrl:(NSString *)url {
+    NSFetchRequest * request = [NSFetchRequest fetchRequestWithEntityName:@"Download"];
+    request.predicate = [NSPredicate predicateWithFormat:@"url = %@",url];
+    NSError *error = nil;
+    NSArray *objets = [self.manageObjectContext executeFetchRequest:request error:&error];
+    if (error) {
+        
+        [XTOOLS showMessage:@"查询错误"];
+        return NO;
+    }
+    if (objets.count>0) {
+        for (Download *object in objets) {
+            [self.manageObjectContext deleteObject:object];
+        }
+        BOOL success = [self.manageObjectContext save:&error];
+        if (!success) {
+            
+            [XTOOLS showMessage:@"访问错误"];
+            return NO;
+        }
+    }
+    return YES;
+}
+- (BOOL)deleteDownLoadModel:(Download *)model {
+    [self.manageObjectContext deleteObject:model];
+    NSError *error = nil;
+    BOOL success = [self.manageObjectContext save:&error];
+    if (!success) {
+        
+        [XTOOLS showMessage:@"访问错误"];
+        return NO;
+    }
+    return YES;
 }
 @end

@@ -330,7 +330,7 @@ static const NSTimeInterval kVideoPlayerAnimationTimeinterval = 0.3f;
         
     }
     else {
-        [self.controlView.centerView ShowWithType:PlayerCenterTypeWaiting Title:@"缓存中"];
+//        [self.controlView.centerView ShowWithType:PlayerCenterTypeWaiting Title:@"缓存中"];
         self.controlView.hiddenFrontView = NO;
     }
     

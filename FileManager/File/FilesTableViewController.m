@@ -11,18 +11,25 @@
 #import "ScanViewController.h"
 #import "TransferIPViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "SafeView.h"
 @interface FilesTableViewController ()
 {
     NSArray        *_tableArray;
     NSMutableArray *_foldersArray;
 }
-@property (nonatomic,strong)AVPlayer *player;
+//@property (nonatomic,strong)AVPlayer *player;
 @end
 
 @implementation FilesTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([kUSerD objectForKey:KPassWord]){
+        [SafeView defaultSafeView].type = PassWordTypeDefault;
+        [[SafeView defaultSafeView] showSafeViewHandle:^(NSInteger num) {
+            
+        }];
+    }
     _tableArray = @[@{@"title":@"所有文件",@"type":@"0",@"image":@"path_home"},
   @{@"title":@"视频",@"type":@"1",@"image":@"path_video"},
   @{@"title":@"音频",@"type":@"2",@"image":@"path_audio"},
@@ -33,7 +40,6 @@
     UIButton *footButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [footButton setImage:[UIImage imageNamed:@"addFile"] forState:UIControlStateNormal];
     footButton.frame = CGRectMake(0, 0, kScreen_Width-40, 44);
-    
     footButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     footButton.layer.borderWidth = 0.5;
     [footButton addTarget:self action:@selector(footButtonAddFileAction) forControlEvents:UIControlEventTouchUpInside];
@@ -48,7 +54,8 @@
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:0];
     NSLog(@"array === %@",array.firstObject);
     [self reloadNewFolders];
-    
+
+   
 }
 - (void)reloadNewFolders {
     NSArray *fileArray = [kFileM contentsOfDirectoryAtPath:KDocumentP error:nil];
@@ -201,4 +208,5 @@
     }
     return nil;
 }
+
 @end

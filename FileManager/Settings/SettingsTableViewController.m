@@ -13,9 +13,11 @@
 #import "UMMobClick/MobClick.h"
 #import "InfoDetailViewController.h"
 #import "GuideViewController.h"
+#import "FilesListController.h"
 @interface SettingsTableViewController ()<MFMailComposeViewControllerDelegate,UMSocialShareMenuViewDelegate>
 {
     NSArray        *_tableArray;
+    UIView         *_headerView;
 }
 @end
 
@@ -23,7 +25,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     _tableArray = @[@[@{@"title":@"偏好设置",@"class":@"PreferencesTableViewController"}],
   @[@{@"title":@"应用好评",@"class":@"1"},
   @{@"title":@"分享好友",@"class":@"6"},
@@ -33,6 +34,8 @@
     @{@"title":@"应用介绍",@"class":@"AboutAppViewController"},
     @{@"title":@"文件传输介绍",@"class":@"GuideViewController"}]];
     //@{@"title":@"关于我",@"class":@""},@{@"title":@"鼓励",@"class":@""},
+    
+    
     self.tableView.tableFooterView = [[UIView alloc]init];
     
     UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
@@ -234,6 +237,20 @@
     [self.tableView reloadData];
     NSLog(@"UMSocialShareMenuViewDidDisappear");
 }
+//面对面传输按钮事件
+- (IBAction)faceTransferButtonAction:(id)sender {
+    
+    FilesListController *filesList = [self.storyboard instantiateViewControllerWithIdentifier:@"FilesListController"];
+    filesList.isSelected = YES;
+    filesList.fileType = FileTypeAudio|FileTypeVideo;
+    filesList.title = @"选择文件";
+    filesList.selectedPath = ^(NSString *path){
+//        _filePath = path;
+//        [_mainTableView reloadData];
+    };
+    [self.navigationController pushViewController:filesList animated:YES];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

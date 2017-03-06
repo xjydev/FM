@@ -48,6 +48,7 @@ static VideoAudioPlayer *_player = nil;
     _player.playerDelegate = nil;
     _player.delegate = nil;
     _player = nil;
+    [XTOOLS gotoAppStoreComment];
 }
 #pragma mark -- 监听
 - (void)handleInterreption:(NSNotification *)sender {
@@ -74,7 +75,10 @@ static VideoAudioPlayer *_player = nil;
                 }
                 else
                 {
-                  self.index +=1;
+                    if (self.mediaArray.count>0) {
+                      self.index +=1;
+                    }
+                  
                 }
                 
             }
@@ -88,7 +92,10 @@ static VideoAudioPlayer *_player = nil;
             }
             else
             {
-                self.index +=1;
+                if (self.mediaArray.count>0) {
+                  self.index +=1;
+                }
+                
             }
             
         }

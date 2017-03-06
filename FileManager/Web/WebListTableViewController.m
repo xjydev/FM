@@ -14,6 +14,7 @@
 #import "XManageCoreData.h"
 #import "WebCollector+CoreDataClass.h"
 #import "DownloadViewController.h"
+#import <AFNetworking/AFNetworking.h>
 @interface WebListTableViewController ()<UITextFieldDelegate,UISearchBarDelegate>
 {
     NSMutableArray   *_webArray;
@@ -30,18 +31,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 //downLoad
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if (status == AFNetworkReachabilityStatusNotReachable) {
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接网络" message:@"应用只有在链接网络的情况下，才可以搜索和访问网页，是否检查应用设置？" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }];
+            UIAlertAction *sureAction =[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                
+                //                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=WIFI"]];
+            }];
+            [alert addAction:cancleAction];
+            [alert addAction:sureAction];
+            [self presentViewController:alert animated:YES completion:^{
+                
+            }];
+            
+        }
+        [[AFNetworkReachabilityManager sharedManager]stopMonitoring];
+    }];
+
+    
     UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
     self.navigationItem.leftBarButtonItem = leftBarButton;
     UIBarButtonItem *rightBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"downLoad"] style:UIBarButtonItemStyleDone target:self action:@selector(rightDownLoadButtonAction:)];
     self.navigationItem.rightBarButtonItem = rightBarButton;
-    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width - 80, 30)];
+    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width - 80, 40)];
     _searchBar.barTintColor = kNavCOLOR;
     _searchBar.placeholder = @"网址/关键字";
+    [_searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    _searchBar.keyboardType = UIKeyboardTypeURL;
     _searchBar.returnKeyType = UIReturnKeySearch;
     _searchBar.delegate = self;
     self.navigationItem.titleView = _searchBar;
     [self getWebListData];
+    UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
+    [refresh addTarget:self action:@selector(refreshPullUp:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:refresh];
+    [XTOOLS choose18year];
         
+}
+- (void)refreshPullUp:(UIRefreshControl *)refresh {
+    [self getWebListData];
 }
 - (void)getWebListData {
     _webArray = [NSMutableArray arrayWithArray:[[XManageCoreData manageCoreData]getAllWebUrl]];
@@ -163,6 +197,8 @@
 
     
 }
-
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
+}
 
 @end

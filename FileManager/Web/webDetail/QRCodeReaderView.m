@@ -3,6 +3,7 @@
 #import "QRCodeReaderView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "XTools.h"
+
 //#define DeviceMaxHeight ([UIScreen mainScreen].bounds.size.height)
 //#define DeviceMaxWidth ([UIScreen mainScreen].bounds.size.width)
 //#define widthRate DeviceMaxWidth/320

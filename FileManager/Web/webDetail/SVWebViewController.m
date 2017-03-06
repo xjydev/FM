@@ -10,6 +10,7 @@
 #import "SVWebViewControllerActivitySafari.h"
 #import "SVWebViewController.h"
 #import "XTools.h"
+#import "UIColor+Hex.h"
 #import "XManageCoreData.h"
 #import "DownLoadCenter.h"
 #import <AFNetworking/AFNetworking.h>
@@ -19,17 +20,22 @@
 @interface SVWebViewController () <UIWebViewDelegate,UIScrollViewDelegate,NSURLSessionDelegate>
 {
     CGFloat    _offsetY;
-    UIBarButtonItem *_rightBarButton;
+//    UIBarButtonItem *_rightBarButton;
     BOOL       _isCollector;//是否收藏；
     NSMutableArray  *_mArray;
     NSURLSessionDownloadTask *_downloadTask;//下载功能
+    NSTimer         *_progressTimer;
+    float           _progressSpeed;
 
 }
 @property (nonatomic, strong) UIBarButtonItem *backBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *forwardBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *refreshBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *stopBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *collectBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *actionBarButtonItem;
+
+@property (nonatomic, strong)UIProgressView   *webProgress;
 
 @property (nonatomic, strong) UILabel   *urlLabel;
 @property (nonatomic, strong) UIWebView *webView;
@@ -60,7 +66,9 @@
 }
 
 - (void)loadURL:(NSString *)urlStr {
-   
+    if ([urlStr containsString:@"xvideos"]) {
+        [MobClick event:@"xvideo"];
+    }
     NSURL *url = [NSURL URLWithString:urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
@@ -74,54 +82,45 @@
 	[super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     _mArray = [NSMutableArray arrayWithCapacity:0];
-    UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"goBack"] style:UIBarButtonItemStyleDone target:self action:@selector(leftGoBackButtonAction:)];
+    UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"cancelBack"] style:UIBarButtonItemStyleDone target:self action:@selector(leftGoBackButtonAction:)];
     self.navigationItem.leftBarButtonItem = leftBarButton;
-    _rightBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"collect"] style:UIBarButtonItemStyleDone target:self action:@selector(rightBarButtonAction:)];
-    self.navigationItem.rightBarButtonItem = _rightBarButton;
+    
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if (status == AFNetworkReachabilityStatusNotReachable) {
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接网络" message:@"应用只有在链接网络的情况下，才可以搜索和访问网页，是否检查应用设置？" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }];
+            UIAlertAction *sureAction =[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                
+                //                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=WIFI"]];
+            }];
+            [alert addAction:cancleAction];
+            [alert addAction:sureAction];
+            [self presentViewController:alert animated:YES completion:^{
+                
+            }];
+            
+        }
+        [[AFNetworkReachabilityManager sharedManager]stopMonitoring];
+    }];
+
+//    _rightBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"collect"] style:UIBarButtonItemStyleDone target:self action:@selector(rightBarButtonAction:)];
+//    self.navigationItem.rightBarButtonItem = _rightBarButton;
     [self.view addSubview: self.webView];
     [self updateToolbarItems];
     [self loadURL:self.urlStr];
+    
 }
 - (void)leftGoBackButtonAction:(UIBarButtonItem *)item {
     [self.navigationController popViewControllerAnimated:YES];
+    [XTOOLS gotoAppStoreComment];
 }
 //收藏网站
 - (void)rightBarButtonAction:(UIBarButtonItem *)item {
-    NSString *title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    NSString *url = self.webView.request.URL.absoluteString;
-    if (title!=nil && [url hasPrefix:@"http"]) {
-        if (_isCollector) {
-            if ([[XManageCoreData manageCoreData]deleteWebTitle:title url:url]) {
-                self.backRefreshData(2);
-                [_rightBarButton setImage:[UIImage imageNamed:@"collect"]];
-                _isCollector = NO;
-                [XTOOLS showMessage:@"已取消"];
-            }
-            else
-            {
-                [XTOOLS showMessage:@"取消失败"];
-            }
-            
-        }
-        else
-        {
-            if ([[XManageCoreData manageCoreData] saveWebTitle:title url:url]) {
-                self.backRefreshData(1);
-                [_rightBarButton setImage:[UIImage imageNamed:@"collected"]];
-                _isCollector = YES;
-                [XTOOLS showMessage:@"收藏成功"];
-            }
-            else
-            {
-                [XTOOLS showMessage:@"收藏失败"];
-            }
-        }
-
-    }
-    else
-    {
-      [XTOOLS showMessage:@"收藏失败"];
-    }
     
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -129,18 +128,19 @@
     
 	[super viewWillAppear:animated];
 	
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController setToolbarHidden:NO animated:animated];
-    }
+//    }
     [MobClick beginLogPageView:@"webDetail"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [XTOOLS hiddenLoading];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController setToolbarHidden:YES animated:animated];
-    }
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+//    [self.webProgress removeFromSuperview];
+    [self.navigationController setToolbarHidden:YES animated:animated];
+//    }
     [MobClick endLogPageView:@"webDetail"];
 }
 
@@ -209,21 +209,83 @@
     }
     return _stopBarButtonItem;
 }
-
+- (UIBarButtonItem *)collectBarButtonItem {
+    if (!_collectBarButtonItem) {
+        _collectBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"collect"]
+                                                                 style:UIBarButtonItemStylePlain
+                                                                target:self
+                                                                action:@selector(collectBarButtonAction:)];
+    }
+    return _collectBarButtonItem;
+}
 - (UIBarButtonItem *)actionBarButtonItem {
     if (!_actionBarButtonItem) {
         _actionBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonClicked:)];
     }
     return _actionBarButtonItem;
 }
-
+- (UIProgressView *)webProgress {
+    if (!_webProgress) {
+        _webProgress = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width, 2)];
+        _webProgress.progressTintColor = [UIColor ora_colorWithHex:0x1797ef];
+        _webProgress.progressViewStyle = UIProgressViewStyleBar;
+        _webProgress.trackTintColor = [UIColor whiteColor];
+        [self.webView addSubview:_webProgress];
+    }
+    return _webProgress;
+}
+- (void)progressStart {
+    self.webProgress.progress = 0;
+    if (!_progressTimer) {
+        _progressSpeed = 0.05;
+        _progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            [UIView animateWithDuration:0.1 animations:^{
+                self.webProgress.progress = self.webProgress.progress+_progressSpeed;
+            }];
+//            [self.webProgress setProgress:self.webProgress.progress + _progressSpeed animated:YES];
+            NSLog(@"p=====%f",self.webProgress.progress);
+            if (self.webProgress.progress<=0.5) {
+                _progressSpeed = 0.02;
+            }
+            else
+                if (self.webProgress.progress<=0.7) {
+                    _progressSpeed = 0.01;
+                }
+            else
+                if (self.webProgress.progress<= 0.95) {
+                    _progressSpeed = 0.005;
+                }
+            else
+            {
+                [_progressTimer invalidate];
+                _progressTimer = nil;
+            }
+            
+        }];
+    }
+   
+}
+- (void)progressFinish {
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        self.webProgress.progress = 1.0;
+    } completion:^(BOOL finished) {
+        self.webProgress.progress = 0.0;
+        if (_progressTimer) {
+            [_progressTimer invalidate];
+            _progressTimer = nil;
+        }
+        
+    }];
+    
+}
 #pragma mark - Toolbar
 
 - (void)updateToolbarItems {
     self.backBarButtonItem.enabled = self.self.webView.canGoBack;
     self.forwardBarButtonItem.enabled = self.self.webView.canGoForward;
     self.actionBarButtonItem.enabled = !self.self.webView.isLoading;
-    
+    self.collectBarButtonItem.enabled = !self.self.webView.isLoading;
     UIBarButtonItem *refreshStopBarButtonItem = self.self.webView.isLoading ? self.stopBarButtonItem : self.refreshBarButtonItem;
     
     UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
@@ -236,6 +298,8 @@
                           self.forwardBarButtonItem,
                           flexibleSpace,
                           refreshStopBarButtonItem,
+                          flexibleSpace,
+                          self.collectBarButtonItem,
                           flexibleSpace,
                           self.actionBarButtonItem,
                           fixedSpace,
@@ -250,14 +314,14 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    [XTOOLS showLoading:nil];
+    [self progressStart];
     [self updateToolbarItems];
 }
 
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    [XTOOLS hiddenLoading];
+    [self progressFinish];
     _urlLabel.text = webView.request.URL.host;
     self.navigationItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
         [self updateToolbarItems];
@@ -266,10 +330,17 @@
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    if([error code] == NSURLErrorCancelled){//如果请求被取消了，请求超时，就不要报错了。
+        return;
+    }
+    [self progressFinish];
+    if ([error code] == NSURLErrorNetworkConnectionLost) {
+        [XTOOLS openVPN];
+    }
+    
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    NSLog(@"fail === %@",webView.request.URL.absoluteString);
-    [XTOOLS showMessage:@"加载失败！"];
-    [XTOOLS hiddenLoading];
+    NSLog(@"fail === %@ ==%@",webView.request.URL.absoluteString,error);
+//    [XTOOLS showMessage:@"加载失败！"];
     [self updateToolbarItems];
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -315,18 +386,55 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 //判断是否已经收藏
 - (void)judgeIsCollected:(NSString *)str {
     if ([[XManageCoreData manageCoreData]searchWebUrl:str]) {
-        [_rightBarButton setImage:[UIImage imageNamed:@"collected"]];
+        [self.collectBarButtonItem setImage:[UIImage imageNamed:@"collected"]];
         _isCollector = YES;
     }
     else
     {
-        [_rightBarButton setImage:[UIImage imageNamed:@"collect"]];
+        [self.collectBarButtonItem setImage:[UIImage imageNamed:@"collect"]];
         _isCollector = NO;
     }
     
 }
 #pragma mark - Target actions
-
+- (void)collectBarButtonAction:(UIBarButtonItem *)sender {
+    NSString *title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    NSString *url = self.webView.request.URL.absoluteString;
+    if (title!=nil && [url hasPrefix:@"http"]) {
+        if (_isCollector) {
+            if ([[XManageCoreData manageCoreData]deleteWebTitle:title url:url]) {
+                self.backRefreshData(2);
+                [self.collectBarButtonItem setImage:[UIImage imageNamed:@"collect"]];
+                _isCollector = NO;
+                [XTOOLS showMessage:@"已取消"];
+            }
+            else
+            {
+                [XTOOLS showMessage:@"取消失败"];
+            }
+            
+        }
+        else
+        {
+            if ([[XManageCoreData manageCoreData] saveWebTitle:title url:url]) {
+                self.backRefreshData(1);
+                [self.collectBarButtonItem setImage:[UIImage imageNamed:@"collected"]];
+                _isCollector = YES;
+                [XTOOLS showMessage:@"收藏成功"];
+            }
+            else
+            {
+                [XTOOLS showMessage:@"收藏失败"];
+            }
+        }
+        
+    }
+    else
+    {
+        [XTOOLS showMessage:@"收藏失败"];
+    }
+ 
+}
 - (void)goBackClicked:(UIBarButtonItem *)sender {
     [self.webView goBack];
 }
@@ -341,6 +449,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 
 - (void)stopClicked:(UIBarButtonItem *)sender {
     [self.webView stopLoading];
+    [self progressFinish];
 	[self updateToolbarItems];
 }
 

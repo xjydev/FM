@@ -82,6 +82,7 @@ extern NSString * const userRotationKey ;
 @property (nonatomic, strong)NSArray * compressFormatArray;
 @property (nonatomic, strong)NSDateFormatter *dateFormater;
 @property (nonatomic, strong)NSString *dateStr;
+@property (nonatomic, strong)NSString *timeStr;
 
 
 /**
@@ -104,6 +105,7 @@ extern NSString * const userRotationKey ;
 - (void)showMessage:(NSString *)title;
 - (void)showLoading:(NSString *)title;
 - (void)hiddenLoading;
+- (void)showAlertTitle:(NSString *)title message:(NSString *)message buttonTitles:(NSArray *)buttonTitles completionHandler:(void (^)(NSInteger num))completionHandler;
 //时间和秒之间字符串的转换
 - (double)timeStrToSecWithStr:(NSString *)str;
 - (NSString *)timeSecToStrWithSec:(double)sec;
@@ -111,4 +113,21 @@ extern NSString * const userRotationKey ;
 - (float)allStorageSpace;
 - (float)freeStorageSpace;
 - (NSString *)storageSpaceStringWith:(float)space;
+#pragma mark -- 加密md5
+- (NSString *)md5Fromstr:(NSString *)str;
+
+/**
+ 判断是否应该打开vpn
+ */
+- (void)openVPN;
+
+/**
+ 判断是否年满18周岁
+ */
+- (void)choose18year;
+
+/**
+ 判断是否去App Store评论应用
+ */
+- (void)gotoAppStoreComment;
 @end

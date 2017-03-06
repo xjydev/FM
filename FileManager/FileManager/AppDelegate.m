@@ -14,7 +14,10 @@
 #import "UMMobClick/MobClick.h"
 #import <UMSocialCore/UMSocialCore.h>
 #import "GuideViewController.h"
-@interface AppDelegate ()
+#import "UMessage.h"
+#import <UserNotifications/UserNotifications.h>
+#import "SafeView.h"
+@interface AppDelegate ()<UNUserNotificationCenterDelegate>
 {
     UIBackgroundTaskIdentifier  _bgTaskId;
 }
@@ -33,6 +36,26 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
    [[UMSocialManager defaultManager] setUmSocialAppkey:UmengKey];
     [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:weixinKey appSecret:@"ba38b1018ef912004f5fca36b0949564" redirectURL:@"http://xiaodev.cn/UlearnPlayer/"];
    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1105820767"  appSecret:@"F5vIUKEdcZdHT9L1" redirectURL:@"http://xiaodev.cn/UlearnPlayer/"];
+    //推送
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    [UMessage startWithAppkey:UmengKey launchOptions:launchOptions httpsenable:YES ];
+    if (IOSSystemVersion>=10.0) {
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        center.delegate=self;
+        UNAuthorizationOptions types10=UNAuthorizationOptionBadge|  UNAuthorizationOptionAlert|UNAuthorizationOptionSound;
+        [center requestAuthorizationWithOptions:types10     completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            if (granted) {
+                //点击允许
+                //这里可以添加一些自己的逻辑
+            } else {
+                //点击不允许
+                //这里可以添加一些自己的逻辑
+            }
+        }];
+    }
+    
+
     if (![[kUSerD objectForKey:@"kversion"]isEqualToString:APP_CURRENT_VERSION]) {
         GuideViewController *guide = [[GuideViewController alloc]init];
         guide.hiddenNav = YES;
@@ -40,8 +63,85 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
         self.window.rootViewController = nav;
         [kUSerD setObject:APP_CURRENT_VERSION forKey:@"kversion"];
     }
+    //开启调试日志
+   [UMessage setLogEnabled:YES];
     
     return YES;
+}
+#pragma mark -- 推送
+
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler{
+    
+    [UIApplication sharedApplication].applicationIconBadgeNumber+=1;
+    
+    NSDictionary * userInfo = notification.request.content.userInfo;
+//    NSLog(@"push === %@",userInfo);
+//    aps =     {
+//        URL = http;
+//        alert =         {
+//            body = urlllllllll;
+//            subtitle = fubiaoti;
+//            title = zhubiaoti;
+//        };
+//        "mutable-content" = 1;
+//        sound = default;
+//    };
+//    d = us69331148800672501311;
+//    p = 0;
+    [self pushUrlWith:userInfo];
+    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        //应用处于前台时的远程推送接受
+        //关闭友盟自带的弹出框
+        [UMessage setAutoAlert:NO];
+        //必须加这句代码
+        [UMessage didReceiveRemoteNotification:userInfo];
+        
+    }else{
+        //应用处于前台时的本地推送接受
+    }
+    //当应用处于前台时提示设置，需要哪个可以设置哪一个
+    completionHandler(UNNotificationPresentationOptionSound|UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionAlert);
+}
+
+//iOS10新增：处理后台点击通知的代理方法
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler{
+    NSDictionary * userInfo = response.notification.request.content.userInfo;
+    
+    [self pushUrlWith:userInfo];
+    if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        //应用处于后台时的远程推送接受
+        //必须加这句代码
+        [UMessage didReceiveRemoteNotification:userInfo];
+        
+    }else{
+        //应用处于后台时的本地推送接受
+    }
+    
+}
+- (void)pushUrlWith:(NSDictionary *)userInfo {//推送对网址的处理
+    if ([[userInfo objectForKey:@"aps"]objectForKey:@"URL"]) {
+        NSString *title = [[[userInfo objectForKey:@"aps"]objectForKey:@"alert"]objectForKey:@"title"];
+        NSString *url =[[userInfo objectForKey:@"aps"]objectForKey:@"URL"];
+        if ([[XManageCoreData manageCoreData] saveWebTitle:title url:url]) {
+            [UMessage setAlias:@"18up1" type:kUMessageAliasTypeSina response:^(id responseObject, NSError *error) {
+            }];
+        }
+    }
+}
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+
+{
+    [application registerForRemoteNotifications];
+    
+}
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    // 1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
+    NSLog(@"device token==%@",[[NSString alloc]initWithData:deviceToken encoding:NSUTF8StringEncoding]);
+    [UMessage registerDeviceToken:deviceToken];
+}
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"regsiter fail ==%@",error);
 }
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     NSLog(@"url===%@",url);
@@ -88,17 +188,29 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    }
+    [self showSafeView];
+    
+}
 
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
    
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
 }
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+   
+}
+- (void)showSafeView {
+    if ([kUSerD objectForKey:KPassWord]) {
+        [SafeView defaultSafeView].type = PassWordTypeDefault;
+        [[SafeView defaultSafeView] showSafeViewHandle:^(NSInteger num) {
+            
+        }];
 
+    }
 }
 //远程操作播放进度，
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event {

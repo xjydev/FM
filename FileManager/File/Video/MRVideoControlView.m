@@ -50,7 +50,7 @@
     self.pauseButton.frame        = self.playButton.frame;
     self.prevButton.frame         = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+20+MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
     self.nextButton.frame         =  CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+25+2*MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.playButton.bounds), CGRectGetHeight(self.playButton.bounds));
-    self.rateButton.frame        = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+35+3*MRVideoBarButtonWidth, MRVideoControlSliderHeight+7,CGRectGetWidth(self.rateButton.bounds), CGRectGetHeight(self.rateButton.bounds));
+    self.rateButton.frame        = CGRectMake(CGRectGetMinX(self.bottomBar.bounds)+35+3*MRVideoBarButtonWidth, MRVideoControlSliderHeight,CGRectGetWidth(self.rateButton.bounds), CGRectGetHeight(self.rateButton.bounds));
 //    if (!IsPad) {
         self.fullScreenButton.frame   = CGRectMake(CGRectGetWidth(self.bottomBar.bounds) - CGRectGetWidth(self.fullScreenButton.bounds) - 5, self.playButton.frame.origin.y, CGRectGetWidth(self.fullScreenButton.bounds), CGRectGetHeight(self.fullScreenButton.bounds));
         self.shrinkScreenButton.frame = self.fullScreenButton.frame;
@@ -363,11 +363,8 @@
         
         [_rateButton setTitle:@"X1.0" forState:UIControlStateNormal];
         _rateButton.bounds = CGRectMake(0, 0, MRVideoBarButtonWidth, MRVideoBarButtonWidth);
-        _rateButton.titleLabel.font = [UIFont systemFontOfSize:16];
-//        _rateButton.layer.cornerRadius = 15;
-//        _rateButton.layer.masksToBounds = YES;
-//        _rateButton.layer.borderColor = [UIColor whiteColor].CGColor;
-//        _rateButton.layer.borderWidth = 1.0;
+        _rateButton.titleLabel.font = [UIFont systemFontOfSize:17];
+
     }
     return _rateButton;
 }
