@@ -8,6 +8,7 @@
 
 #import "MRVideoControlView.h"
 #import "XTools.h"
+#import "UIColor+Hex.h"
 @interface MRVideoControlView ()<UIGestureRecognizerDelegate>
 {
     CGPoint     _beganPoint;//开始滑动时的位置
@@ -42,7 +43,8 @@
     self.topTitleLabel.frame      = CGRectMake(CGRectGetMinX(self.topBar.bounds)+CGRectGetWidth(self.closeButton.bounds), CGRectGetHeight(self.topBar.bounds)-CGRectGetHeight(self.closeButton.bounds), CGRectGetWidth(self.topBar.bounds)-CGRectGetWidth(self.closeButton.bounds)-10, CGRectGetHeight(self.closeButton.bounds));
     
     self.bottomBar.frame          = CGRectMake(CGRectGetMinX(self.bounds), CGRectGetHeight(self.bounds) - MRVideoControlBottomHeight, CGRectGetWidth(self.bounds), MRVideoControlBottomHeight);
-    self.bottomLayer.frame = CGRectMake(CGRectGetMinX(self.bottomBar.bounds),MRVideoControlBottomHeight - MRVideoControlBottomLayerHeight, CGRectGetWidth(self.bounds), MRVideoControlBottomLayerHeight);
+//    [self setBottomBarColor];
+    self.bottomLayer.frame = CGRectMake(0,0, CGRectGetWidth(self.bounds), MRVideoControlBottomHeight);
     
     self.progressSlider.frame     = CGRectMake(timeLabelWidth, 0, CGRectGetWidth(self.bounds)-timeLabelWidth*2, MRVideoControlSliderHeight);
     
@@ -58,8 +60,8 @@
    
     
     self.centerView.center        = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
-    self.timeLabel.frame          = CGRectMake(CGRectGetMinX(self.bottomBar.bounds), 10, timeLabelWidth, 20);
-    self.totalTimeLabel.frame     = CGRectMake( CGRectGetWidth(self.bottomBar.frame) - timeLabelWidth, 10, timeLabelWidth, 20);
+    self.timeLabel.frame          = CGRectMake(CGRectGetMinX(self.bottomBar.bounds), 15, timeLabelWidth, 20);
+    self.totalTimeLabel.frame     = CGRectMake( CGRectGetWidth(self.bottomBar.frame) - timeLabelWidth, 15, timeLabelWidth, 20);
     
     self.frontView.frame          = CGRectMake(0, self.topBar.frame.size.height, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)-CGRectGetHeight(self.topBar.frame)-CGRectGetHeight(self.bottomBar.frame));
 }
@@ -136,7 +138,7 @@
     
     self.playButton.hidden = YES;
     self.shrinkScreenButton.hidden = YES;
-    
+    [self  autoFadeOutControlBar];//加载完界面的时候初始化一下隐藏，
    
 }
 
@@ -262,13 +264,22 @@
 //- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
 //    [self responseTapImmediately];
 //}
-
+#pragma mark - 渐变色
+- (void)setBottomBarColor {
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = @[(__bridge id)[UIColor yellowColor].CGColor, (__bridge id)[UIColor blueColor].CGColor];
+    gradientLayer.locations = @[@0.1, @1.0];
+    gradientLayer.startPoint = CGPointMake(0, 0);
+    gradientLayer.endPoint = CGPointMake(0, 1.0);
+    gradientLayer.frame = CGRectMake(0, 0, self.bottomBar.bounds.size.width, self.bottomBar.bounds.size.height);
+    [self.bottomBar.layer addSublayer:gradientLayer];
+}
 #pragma mark - Property
 
 - (PlayerCenterView *)centerView {
     if (!_centerView) {
         _centerView = [[PlayerCenterView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        _centerView.backgroundColor = MRRGB(60, 60, 60,0.8);
+       
 //        _centerView.bounds = CGRectMake(0, 0, 100, 100);
     }
     return _centerView;
@@ -290,14 +301,22 @@
     }
     return _bottomBar;
 }
-- (CALayer *)bottomLayer {
+- (CAGradientLayer *)bottomLayer {
     if (!_bottomLayer) {
-        _bottomLayer = [CALayer layer];
-        _bottomLayer.backgroundColor = MRRGB(60, 60, 60,0.8).CGColor;
+//        _bottomLayer = [CALayer layer];
+//        _bottomLayer.backgroundColor = MRRGB(60, 60, 60,0.8).CGColor;
+        _bottomLayer = [CAGradientLayer layer];
+        _bottomLayer.colors = @[(__bridge id)[UIColor clearColor].CGColor, (__bridge id)MRRGB(60, 60, 60,0.8).CGColor];
+        _bottomLayer.locations = @[@0.05, @(1-MRVideoControlBottomLayerHeight/MRVideoControlBottomHeight)];
+        _bottomLayer.startPoint = CGPointMake(0, 0);
+        _bottomLayer.endPoint = CGPointMake(0, 1.0);
+        
         
     }
+//    _bottomLayer.frame = CGRectMake(0, 0, self.bottomBar.bounds.size.width, self.bottomBar.bounds.size.height);
     return _bottomLayer;
 }
+
 - (UIButton *)playButton
 {
     if (!_playButton) {
@@ -375,8 +394,8 @@
         _progressSlider = [[MRProgressSlider alloc] init];
         [_progressSlider setThumbImage:[UIImage imageNamed:@"play_progress"] forState:UIControlStateNormal];
         [_progressSlider setThumbImage:[UIImage imageNamed:@"play_progress_h"] forState:UIControlStateHighlighted];
-        [_progressSlider setMinimumTrackTintColor:MRRGB(255, 255, 255,1)];
-        [_progressSlider setMaximumTrackTintColor:MRRGB(157, 157, 157,1)];
+        [_progressSlider setMinimumTrackTintColor:[UIColor ora_colorWithHex:0x1797ef]];//MRRGB(255, 255, 255,1)
+        [_progressSlider setMaximumTrackTintColor:MRRGB(157, 157, 157,1)];//MRRGB(157, 157, 157,1)
         [_progressSlider setBackgroundColor:[UIColor clearColor]];
         _progressSlider.value = 0.f;
         _progressSlider.continuous = YES;

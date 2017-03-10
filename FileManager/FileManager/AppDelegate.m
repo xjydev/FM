@@ -56,7 +56,7 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
     }
     
 
-    if (![[kUSerD objectForKey:@"kversion"]isEqualToString:APP_CURRENT_VERSION]) {
+    if (![kUSerD objectForKey:@"kversion"]) {
         GuideViewController *guide = [[GuideViewController alloc]init];
         guide.hiddenNav = YES;
          UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:guide];
@@ -151,6 +151,7 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
         NSLog(@"path ==%@",path);
         NSString *toPath = [NSString stringWithFormat:@"%@/%@",KDocumentP,path.lastPathComponent];
         if ([kFileM copyItemAtPath:path toPath:toPath error:nil]) {
+            [XTOOLS playFileWithPath:toPath OrigionalWiewController:self.window.rootViewController];
             [XTOOLS showMessage:@"已拷贝到应用中"];
         }
     }

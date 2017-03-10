@@ -56,13 +56,13 @@ static float imageViewWidth = 50;
         {
            self.hidden= NO;
             self.alpha = 1;
+            self.backgroundColor = [UIColor clearColor];
             _centerButton.userInteractionEnabled = YES;
             _centerButton.frame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 //            _titleLabel.frame = CGRectMake(0, 70, 185, 30);
 //            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:10];
 //            _titleLabel.numberOfLines = 0;
             [_centerButton setImage:[UIImage imageNamed:@"play_big"] forState:UIControlStateNormal];
-            
             _centerButton.hidden = NO;
             [_activityView stopAnimating];
             _activityView.hidden = YES;
@@ -71,6 +71,7 @@ static float imageViewWidth = 50;
         case PlayerCenterTypeWaiting:
         {
             self.hidden= NO;
+            self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
             _centerButton.hidden = YES;
             _activityView.hidden = NO;
 //            _titleLabel.frame = CGRectMake(0, 70, 185, 30);
@@ -83,6 +84,7 @@ static float imageViewWidth = 50;
         case PlayerCenterTypeSpeedForward:
         {
             self.hidden= NO;
+            self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
 //            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
             _centerButton.frame = CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
 //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
@@ -98,6 +100,7 @@ static float imageViewWidth = 50;
         case PlayerCenterTypeSpeedBack:
         {
             self.hidden= NO;
+            self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
             _centerButton.frame=CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
 //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
 //            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
@@ -112,6 +115,7 @@ static float imageViewWidth = 50;
         case PlayerCenterTypeBright:
         {
             self.hidden= NO;
+            self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
             _centerButton.frame=CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
             //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
 //            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];
@@ -126,6 +130,7 @@ static float imageViewWidth = 50;
         case PlayerCenterTypeVolume:
         {
             self.hidden= NO;
+            self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
             _centerButton.frame=CGRectMake((self.frame.size.width-imageViewWidth)/2, 10, imageViewWidth, imageViewWidth);
             //            _titleLabel.frame = CGRectMake(0, 50, 185, 30);
 //            _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:20];

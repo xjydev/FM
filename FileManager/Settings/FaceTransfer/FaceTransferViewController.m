@@ -24,11 +24,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"选择传输文件";
+    UIBarButtonItem *rightBar = [[UIBarButtonItem alloc]initWithTitle:@"蓝牙" style:UIBarButtonItemStyleDone target:self action:@selector(rightBarButtonAction:)];
+    self.navigationItem.rightBarButtonItem = rightBar;
     _mainTableView.delegate = self;
     _mainTableView.dataSource = self;
 //   [self setAutomaticallyAdjustsScrollViewInsets:NO];
     _filesArray = [NSMutableArray arrayWithCapacity:0];
     [self reloadFilesArray];
+}
+- (void)rightBarButtonAction:(UIBarButtonItem *)bar {
+    
 }
 - (void)reloadFilesArray {
     NSError *error;
@@ -100,6 +105,18 @@
         return st.st_size;
     }
     return 0;
+}
+-(NSArray *)tableView:(UITableView* )tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewRowAction *blueRoWAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"蓝牙" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {//title可自已定义
+        
+        }];
+    UITableViewRowAction *wifiRoWAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"局域网" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {//title可自已定义
+        
+    }];
+    
+    return @[wifiRoWAction,blueRoWAction];//最后返回这俩个RowAction 的数组
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

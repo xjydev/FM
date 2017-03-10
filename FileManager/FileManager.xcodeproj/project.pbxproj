@@ -59,6 +59,7 @@
 		6C4FD6981E02B1F6000B96E6 /* XProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C4FD6971E02B1F6000B96E6 /* XProgressView.m */; };
 		6C560B671E56D49500CA92BE /* libUMessage_Sdk_1.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C560B651E56D49500CA92BE /* libUMessage_Sdk_1.4.0.a */; };
 		6C560B691E56D4AD00CA92BE /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C560B681E56D4AD00CA92BE /* UserNotifications.framework */; };
+		6C5849E51E7286F1004F3C16 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C5849E41E7286F1004F3C16 /* MultipeerConnectivity.framework */; };
 		6C64AE9E1E06AE80007F8DFD /* MoveFilesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C64AE9D1E06AE80007F8DFD /* MoveFilesView.m */; };
 		6C76D5561DE544510085AE3D /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C76D5551DE544510085AE3D /* ScanViewController.m */; };
 		6C76D5591DE545C40085AE3D /* QRCodeReaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C76D5581DE545C40085AE3D /* QRCodeReaderView.m */; };
@@ -202,6 +203,7 @@
 		6C560B651E56D49500CA92BE /* libUMessage_Sdk_1.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMessage_Sdk_1.4.0.a; sourceTree = "<group>"; };
 		6C560B661E56D49500CA92BE /* UMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMessage.h; sourceTree = "<group>"; };
 		6C560B681E56D4AD00CA92BE /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		6C5849E41E7286F1004F3C16 /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
 		6C64AE9C1E06AE80007F8DFD /* MoveFilesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveFilesView.h; sourceTree = "<group>"; };
 		6C64AE9D1E06AE80007F8DFD /* MoveFilesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveFilesView.m; sourceTree = "<group>"; };
 		6C76D5541DE544510085AE3D /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C5849E51E7286F1004F3C16 /* MultipeerConnectivity.framework in Frameworks */,
 				6C560B691E56D4AD00CA92BE /* UserNotifications.framework in Frameworks */,
 				6C3331C71DFAAB6D0067FC45 /* CoreData.framework in Frameworks */,
 				6C908AC51DEC195500E6FF11 /* UIKit.framework in Frameworks */,
@@ -578,6 +581,7 @@
 		6C4D91F91DDED1D700023AF8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6C5849E41E7286F1004F3C16 /* MultipeerConnectivity.framework */,
 				6C560B681E56D4AD00CA92BE /* UserNotifications.framework */,
 				6C3331C61DFAAB6D0067FC45 /* CoreData.framework */,
 				6C908AC41DEC195500E6FF11 /* UIKit.framework */,

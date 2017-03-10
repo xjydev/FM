@@ -55,7 +55,9 @@ static SafeView *_safeView = nil;
    
 }
 - (void)changeButtonAction:(UIButton *)button {
-    
+  [XTOOLS showAlertTitle:@"不支持找回" message:@"应用不包括用户注册，不存储用户信息，暂时不支持密码找回，后续会有解决办法，敬请谅解。" buttonTitles:@[@"知道了"] completionHandler:^(NSInteger num) {
+      
+  }];
 }
 - (void)cancleButtonAction:(UIButton *)button {
     [self removeFromSuperview];
@@ -139,7 +141,7 @@ static SafeView *_safeView = nil;
 }
 - (void)showSafeViewHandle:(ThroughPassWord)handle {
     [self setBottomButton];
-    [[UIApplication sharedApplication].keyWindow addSubview:self];
+    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self];
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
         self.alpha = 0;
         [UIView animateWithDuration:0.2 animations:^{

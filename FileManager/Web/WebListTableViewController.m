@@ -35,7 +35,7 @@
     [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusNotReachable) {
             
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接网络" message:@"应用只有在链接网络的情况下，才可以搜索和访问网页，是否检查应用设置？" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接网络" message:@"连接网络，才能搜索和访问网页，是否检查应用网络设置？" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 [self.navigationController popViewControllerAnimated:YES];
             }];
@@ -76,7 +76,12 @@
 }
 - (void)refreshPullUp:(UIRefreshControl *)refresh {
     [self getWebListData];
+    [self performSelector:@selector(endRefresh:) withObject:refresh afterDelay:0.2];
 }
+- (void)endRefresh:(UIRefreshControl *)control  {
+    [control endRefreshing];
+}
+
 - (void)getWebListData {
     _webArray = [NSMutableArray arrayWithArray:[[XManageCoreData manageCoreData]getAllWebUrl]];
     [self.tableView reloadData];

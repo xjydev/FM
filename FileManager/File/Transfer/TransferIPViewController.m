@@ -108,7 +108,7 @@
         
 
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接WIFI" message:@"设备未链接到局域网WIFI，是否查看网络设置，检查链接情况？" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接WIFI" message:@"未链接到局域网WIFI，是否检查应用网络设置？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             [self.navigationController popViewControllerAnimated:YES];
         }];

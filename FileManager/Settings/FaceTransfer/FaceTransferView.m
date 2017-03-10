@@ -5,13 +5,15 @@
 //  Created by xiaodev on Feb/21/17.
 //  Copyright © 2017 xiaodev. All rights reserved.
 //
-
+//优先蓝牙传输，其次socket局域网传输。
 #import "FaceTransferView.h"
 #import "TransferIPManager.h"
 #import "AppDelegate.h"
 #import "XTools.h"
+#import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 static FaceTransferView *backView = nil;
-@interface FaceTransferView ()<TransferIpManagerDelegate>
+@interface FaceTransferView ()<TransferIpManagerDelegate,CBCentralManagerDelegate>
 @property (nonatomic, strong)UIImageView    *QRcodeImageView;
 @property (nonatomic, strong)UILabel        *titleLabel;
 @property (nonatomic, strong)UILabel        *alertLabel;
@@ -147,5 +149,5 @@ static FaceTransferView *backView = nil;
     
     
 }
-
+#pragma mark --蓝牙
 @end

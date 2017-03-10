@@ -35,7 +35,7 @@
 @property (nonatomic, strong) UILabel *topTitleLabel;
 
 @property (nonatomic, strong) UIView *bottomBar;
-@property (nonatomic, strong) CALayer *bottomLayer;
+@property (nonatomic, strong) CAGradientLayer *bottomLayer;
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *pauseButton;
 @property (nonatomic, strong) UIButton *fullScreenButton;
