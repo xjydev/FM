@@ -7,7 +7,6 @@
 //
 
 #import "DownloadViewController.h"
-#import "VideoViewController.h"
 #import "XQuickLookController.h"
 #import <QuickLook/QuickLook.h>
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
@@ -95,7 +94,7 @@
     [_downloadingArray removeAllObjects];
     [_downloadedArray removeAllObjects];
     for (Download *model in array) {
-        if (model.progress>=1.0) {
+        if (model.progress.floatValue >=1.0) {
           [_downloadedArray addObject:[[DownloadCenterCellModel alloc]initWithDownloadModel:model]];
         }
         else
@@ -125,7 +124,7 @@
         _isEditing = YES;
         self.bottomView.hidden = NO;
         self.mainTableView.contentInset = UIEdgeInsetsMake(0, 0, 44, 0);
-        [_rightBarButton setTitle:@"取消"];
+        [_rightBarButton setTitle:NSLocalizedString(@"Cancel", nil)];
 //        for (UIButton *button in self.bottomView.subviews) {
 //            if ([button isKindOfClass:[UIButton class]]) {
 //                button.enabled = NO;
@@ -224,7 +223,7 @@
     {
         cell.downloadProgress.hidden = NO;
         cell.lookButton.hidden = NO;
-        cell.downloadProgress.progress = model.model.progress;
+        cell.downloadProgress.progress = model.model.progress.floatValue;
         if ([model.model.url isEqualToString:[DownLoadCenter defaultDownLoad].downLoadUrlStr]) {
             model.isDownloading = YES;
             _downloadingCell = cell;
@@ -328,7 +327,7 @@
         model = _downloadingArray[indexPath.row];
     }
     
-    UITableViewRowAction *deleteRoWAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {//title可自已定义
+    UITableViewRowAction *deleteRoWAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Delete", nil) handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {//title可自已定义
         
         
         
@@ -370,7 +369,7 @@
     if ([XTOOLS fileFormatWithPath:path] == FileTypeCompress) {
         
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"解压" message:@"是否解压此文件" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];
         UIAlertAction *unzipAction =[UIAlertAction actionWithTitle:@"解压" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -451,10 +450,10 @@
     }
     [mstr appendFormat:@"删除以上%d个文件",(int)self.zipArray.count];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"删除文件" message:mstr preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
     }];
-    UIAlertAction *unzipAction =[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *unzipAction =[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         for (DownloadCenterCellModel *model in self.zipArray) {
             [[XManageCoreData manageCoreData]deleteDownLoadModel:model.model];
             

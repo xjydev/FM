@@ -132,7 +132,17 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
 }
 
 #pragma mark - View Loading
-
+- (UILabel *)titleLabel {
+    if (!_titleLabel) {
+        _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds) - 120, 44)];
+        _titleLabel.numberOfLines = 2;
+        _titleLabel.font = [UIFont boldSystemFontOfSize:17];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        
+    }
+    
+    return  _titleLabel;
+}
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     
@@ -164,7 +174,7 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
     _toolbar.tintColor = [UIColor whiteColor];
 //    _toolbar.barTintColor = nil;
     [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsLandscapePhone];
+    [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsCompact];
     _toolbar.barStyle = UIBarStyleBlackTranslucent;
     _toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     
@@ -189,7 +199,7 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
         swipeGesture.direction = UISwipeGestureRecognizerDirectionDown | UISwipeGestureRecognizerDirectionUp;
         [self.view addGestureRecognizer:swipeGesture];
     }
-    
+    self.navigationItem.titleView = self.titleLabel;
 	// Super
     [super viewDidLoad];
 	
@@ -211,9 +221,9 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
         _doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", nil) style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
         // Set appearance
         [_doneButton setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-        [_doneButton setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsLandscapePhone];
+        [_doneButton setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsCompact];
         [_doneButton setBackgroundImage:nil forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
-        [_doneButton setBackgroundImage:nil forState:UIControlStateHighlighted barMetrics:UIBarMetricsLandscapePhone];
+        [_doneButton setBackgroundImage:nil forState:UIControlStateHighlighted barMetrics:UIBarMetricsCompact];
         [_doneButton setTitleTextAttributes:[NSDictionary dictionary] forState:UIControlStateNormal];
         [_doneButton setTitleTextAttributes:[NSDictionary dictionary] forState:UIControlStateHighlighted];
         self.navigationItem.rightBarButtonItem = _doneButton;
@@ -224,9 +234,9 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
         UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:backButtonTitle style:UIBarButtonItemStylePlain target:nil action:nil];
         // Appearance
         [newBackButton setBackButtonBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-        [newBackButton setBackButtonBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsLandscapePhone];
+        [newBackButton setBackButtonBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsCompact];
         [newBackButton setBackButtonBackgroundImage:nil forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
-        [newBackButton setBackButtonBackgroundImage:nil forState:UIControlStateHighlighted barMetrics:UIBarMetricsLandscapePhone];
+        [newBackButton setBackButtonBackgroundImage:nil forState:UIControlStateHighlighted barMetrics:UIBarMetricsCompact];
         [newBackButton setTitleTextAttributes:[NSDictionary dictionary] forState:UIControlStateNormal];
         [newBackButton setTitleTextAttributes:[NSDictionary dictionary] forState:UIControlStateHighlighted];
         _previousViewControllerBackButton = previousViewController.navigationItem.backBarButtonItem; // remember previous
@@ -296,17 +306,7 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
 }
 
 // Release any retained subviews of the main view.
-- (void)viewDidUnload {
-	_currentPageIndex = 0;
-    _pagingScrollView = nil;
-    _visiblePages = nil;
-    _recycledPages = nil;
-    _toolbar = nil;
-    _previousButton = nil;
-    _nextButton = nil;
-    _progressHUD = nil;
-    [super viewDidUnload];
-}
+
 
 - (BOOL)presentingViewControllerPrefersStatusBarHidden {
     UIViewController *presenting = self.presentingViewController;
@@ -549,13 +549,7 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
 
 #pragma mark - Rotation
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return YES;
-}
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
-}
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
@@ -1083,7 +1077,7 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
     NSUInteger numberOfPhotos = [self numberOfPhotos];
     if (_gridController) {
         if (_gridController.selectionMode) {
-            self.title = NSLocalizedString(@"Select Photos", nil);
+            self.titleLabel.text = NSLocalizedString(@"Select Photos", nil);
         } else {
             NSString *photosText;
             if (numberOfPhotos == 1) {
@@ -1091,16 +1085,16 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
             } else {
                 photosText = NSLocalizedString(@"photos", @"Used in the context: '3 photos'");
             }
-            self.title = [NSString stringWithFormat:@"%lu %@", (unsigned long)numberOfPhotos, photosText];
+            self.titleLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)numberOfPhotos, photosText];
         }
     } else if (numberOfPhotos > 1) {
-        if ([_delegate respondsToSelector:@selector(photoBrowser:titleForPhotoAtIndex:)]) {
-            self.title = [_delegate photoBrowser:self titleForPhotoAtIndex:_currentPageIndex];
+        if ([_delegate respondsToSelector:@selector(photoBrowser:attriTitleForPhotoAtIndex:)]) {
+            self.titleLabel.attributedText = [_delegate photoBrowser:self attriTitleForPhotoAtIndex:_currentPageIndex];
         } else {
-            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)(_currentPageIndex+1), (unsigned long)numberOfPhotos];
+            self.titleLabel.text = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)(_currentPageIndex+1), (unsigned long)numberOfPhotos];
         }
 	} else {
-		self.title = nil;
+		self.titleLabel.text = nil;
 	}
 	
 	// Buttons
@@ -1459,12 +1453,12 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
         [self.navigationController.navigationBar setAlpha:alpha];
         
         // Toolbar
-        _toolbar.frame = [self frameForToolbarAtOrientation:self.interfaceOrientation];
-        if (hidden) _toolbar.frame = CGRectOffset(_toolbar.frame, 0, animatonOffset);
-        _toolbar.alpha = alpha;
+        self->_toolbar.frame = [self frameForToolbarAtOrientation:self.interfaceOrientation];
+        if (hidden) self->_toolbar.frame = CGRectOffset(self->_toolbar.frame, 0, animatonOffset);
+        self->_toolbar.alpha = alpha;
 
         // Captions
-        for (MWZoomingScrollView *page in _visiblePages) {
+        for (MWZoomingScrollView *page in self->_visiblePages) {
             if (page.captionView) {
                 MWCaptionView *v = page.captionView;
                 // Pass any index, all we're interested in is the Y
@@ -1477,7 +1471,7 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
         }
         
         // Selected buttons
-        for (MWZoomingScrollView *page in _visiblePages) {
+        for (MWZoomingScrollView *page in self->_visiblePages) {
             if (page.selectedButton) {
                 UIButton *v = page.selectedButton;
                 CGRect newFrame = [self frameForSelectedButton:v atIndex:0];

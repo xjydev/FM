@@ -1,0 +1,105 @@
+
+/* Class = "UIButton"; normalTitle = "去除广告"; ObjectID = "358-Ti-Cja"; */
+"358-Ti-Cja.normalTitle" = "去除广告";
+
+/* Class = "UISearchBar"; placeholder = "搜索文件名称"; ObjectID = "6RC-Pr-C0w"; */
+"6RC-Pr-C0w.placeholder" = "搜索文件名称";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "7lh-ct-Af7"; */
+"7lh-ct-Af7.text" = "Label";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "94k-LA-ndB"; */
+"94k-LA-ndB.text" = "Title";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "AWj-Aq-gbK"; */
+"AWj-Aq-gbK.text" = "Label";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Dlm-7A-3p0"; */
+"Dlm-7A-3p0.text" = "Title";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "F73-Eh-OO7"; */
+"F73-Eh-OO7.text" = "Detail";
+
+/* Class = "UITextField"; placeholder = "请输入验证码"; ObjectID = "NFp-NJ-ydx"; */
+"NFp-NJ-ydx.placeholder" = "请输入验证码";
+
+/* Class = "UILabel"; text = "是否隐藏去广告中的“隐藏文件”按钮？按钮隐藏后点击按钮位置仍可以跳转到隐藏文件夹列表。"; ObjectID = "ORw-dF-cle"; */
+"ORw-dF-cle.text" = "是否隐藏去广告中的“隐藏文件”按钮？按钮隐藏后点击按钮位置仍可以跳转到隐藏文件夹列表。";
+
+/* Class = "UIButton"; normalTitle = "验证"; ObjectID = "PRY-8F-rq6"; */
+"PRY-8F-rq6.normalTitle" = "    验证    ";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "R70-Rx-0ka"; */
+"R70-Rx-0ka.text" = "Subtitle";
+
+/* Class = "UILabel"; text = "文档文档文档文档文档文档文档文档文档文档"; ObjectID = "S6A-mu-KN4"; */
+"S6A-mu-KN4.text" = "文档文档文档文档文档文档文档文档文档文档";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "TEl-dk-6fe"; */
+"TEl-dk-6fe.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "隐藏文件"; ObjectID = "V05-iI-vrF"; */
+"V05-iI-vrF.normalTitle" = "隐藏文件";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Wg3-pg-Dy8"; */
+"Wg3-pg-Dy8.text" = "Label";
+
+/* Class = "UILabel"; text = "取消"; ObjectID = "Y0z-Ga-hlP"; */
+"Y0z-Ga-hlP.text" = "取消";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "aLF-PC-qQh"; */
+"aLF-PC-qQh.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "获取申诉码"; ObjectID = "aOb-tr-5i9"; */
+"aOb-tr-5i9.normalTitle" = "  获取申诉码      ";
+
+/* Class = "UILabel"; text = "12元去除应用内的所有广告 获取更好用户体验"; ObjectID = "boc-NT-tdY"; */
+"boc-NT-tdY.text" = "12元永久去除应用内的所有广告 获取更好用户体验";
+
+/* Class = "UILabel"; text = "浏览记录"; ObjectID = "jrq-m4-AkC"; */
+"jrq-m4-AkC.text" = "浏览记录";
+
+/* Class = "UILabel"; text = "申诉码："; ObjectID = "kNF-CH-Uti"; */
+"kNF-CH-Uti.text" = "      申诉码：  ";
+
+/* Class = "UILabel"; text = "去除广告，获得更好用户体验"; ObjectID = "mIv-LI-8D5"; */
+"mIv-LI-8D5.text" = "永久去除广告，获得更好用户体验";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "obB-mf-8yT"; */
+"obB-mf-8yT.text" = "Label";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "owo-dN-sXN"; */
+"owo-dN-sXN.text" = "Title";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "qkN-Vp-XTz"; */
+"qkN-Vp-XTz.text" = "Subtitle";
+
+/* Class = "UIButton"; normalTitle = "屏蔽广告"; ObjectID = "rbv-Lm-PlZ"; */
+"rbv-Lm-PlZ.normalTitle" = "屏蔽广告";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "s77-47-SqR"; */
+"s77-47-SqR.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "tWB-Yw-FBa"; */
+"tWB-Yw-FBa.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "ueU-s7-G0F"; */
+"ueU-s7-G0F.text" = "Title";
+
+/* Class = "UIViewController"; title = "申诉"; ObjectID = "vE1-bk-vNX"; */
+"vE1-bk-vNX.title" = "申诉";
+
+/* Class = "UIButton"; normalTitle = "恢复购买"; ObjectID = "wD3-WU-8Im"; */
+"wD3-WU-8Im.normalTitle" = "恢复购买";
+
+/* Class = "UILabel"; text = "标记文件"; ObjectID = "xtF-5u-qyN"; */
+"xtF-5u-qyN.text" = "标记文件";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "yeU-bo-ir0"; */
+"yeU-bo-ir0.text" = "Title";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "yhk-Ml-JIe"; */
+"yhk-Ml-JIe.text" = "Label";
+
+/* Class = "UILabel"; text = "验证码"; ObjectID = "yng-ea-BZ9"; */
+"yng-ea-BZ9.text" = "      验证码  ";

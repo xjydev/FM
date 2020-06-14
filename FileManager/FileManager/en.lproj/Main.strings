@@ -1,0 +1,219 @@
+
+/* Class = "UIButton"; normalTitle = "在线观看"; ObjectID = "0C9-Ta-0df"; */
+"0C9-Ta-0df.normalTitle" = "Watch online";
+
+/* Class = "UIButton"; normalTitle = "取消"; ObjectID = "0F5-v8-G0m"; */
+"0F5-v8-G0m.normalTitle" = "cancel";
+
+/* Class = "UITabBarItem"; title = "文件"; ObjectID = "0Yz-aO-zFj"; */
+"0Yz-aO-zFj.title" = "File";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "23R-oO-vav"; */
+"23R-oO-vav.text" = "Label";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "33b-nj-RCg"; */
+"33b-nj-RCg.text" = "Detail";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "3N5-0Z-6vi"; */
+"3N5-0Z-6vi.normalTitle" = "Button";
+
+/* Class = "UINavigationItem"; title = "文件"; ObjectID = "3Pc-h9-777"; */
+"3Pc-h9-777.title" = "Files";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "4wc-rA-coO"; */
+"4wc-rA-coO.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "5Ab-bJ-Qcz"; */
+"5Ab-bJ-Qcz.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "7uL-3j-VtW"; */
+"7uL-3j-VtW.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "对电脑传输"; ObjectID = "8Ba-Vv-q94"; */
+"8Ba-Vv-q94.normalTitle" = "Computer transmission";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "8E9-zB-txW"; */
+"8E9-zB-txW.text" = "Detail";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "9gA-T4-QVO"; */
+"9gA-T4-QVO.text" = "Detail";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "AGT-cE-NuD"; */
+"AGT-cE-NuD.text" = "Detail";
+
+/* Class = "UIButton"; normalTitle = "6元去广告"; ObjectID = "BEV-Of-Nch"; */
+"BEV-Of-Nch.normalTitle" = "18￥ Block Ads";
+
+/* Class = "UILabel"; text = "WiFi"; ObjectID = "Dke-0b-J2o"; */
+"Dke-0b-J2o.text" = "WiFi";
+
+/* Class = "UITabBarItem"; title = "更多"; ObjectID = "EMH-fC-77A"; */
+"EMH-fC-77A.title" = "More";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "II7-Tp-2ob"; */
+"II7-Tp-2ob.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "重新命名"; ObjectID = "ItW-Qy-4pD"; */
+"ItW-Qy-4pD.normalTitle" = "Rename";
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "Kl5-3v-LzI"; */
+"Kl5-3v-LzI.text" = "00:00";
+
+/* Class = "UILabel"; text = "音频播放"; ObjectID = "LKb-TR-Lyk"; */
+"LKb-TR-Lyk.text" = "Audio";
+
+/* Class = "UIButton"; normalTitle = "二维码生成"; ObjectID = "MFo-8Z-wzI"; */
+"MFo-8Z-wzI.normalTitle" = "Qrcode";
+
+/* Class = "UIButton"; normalTitle = "手机间传输"; ObjectID = "Nlw-0J-N6v"; */
+"Nlw-0J-N6v.normalTitle" = "MobilePhone transfer";
+
+/* Class = "UIButton"; normalTitle = "预览"; ObjectID = "O2y-fY-C61"; */
+"O2y-fY-C61.normalTitle" = "Preview";
+
+/* Class = "UIButton"; normalTitle = "生成二维码"; ObjectID = "O3E-oW-HlM"; */
+"O3E-oW-HlM.normalTitle" = "QRcode";
+
+/* Class = "UILabel"; text = "音乐名称"; ObjectID = "O8J-Bg-Lab"; */
+"O8J-Bg-Lab.text" = "Music Name";
+
+/* Class = "UITabBarItem"; title = "网页"; ObjectID = "QSj-HX-MoZ"; */
+"QSj-HX-MoZ.title" = "Web";
+
+/* Class = "UIButton"; normalTitle = "加密"; ObjectID = "QgR-1h-krr"; */
+"QgR-1h-krr.normalTitle" = "Encryption";
+
+/* Class = "UIButton"; normalTitle = "格式转换"; ObjectID = "S91-Jd-gD7"; */
+"S91-Jd-gD7.normalTitle" = "Convert";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "Sn6-B0-Tqa"; */
+"Sn6-B0-Tqa.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "TFF-3K-luR"; */
+"TFF-3K-luR.text" = "Detail";
+
+/* Class = "UIButton"; normalTitle = "恢复购买"; ObjectID = "UZe-N1-kvS"; */
+"UZe-N1-kvS.normalTitle" = "Return to buy";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "WeV-qe-1tg"; */
+"WeV-qe-1tg.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "YXs-X4-IeO"; */
+"YXs-X4-IeO.text" = "Title";
+
+/* Class = "UISearchBar"; placeholder = "文件名称"; ObjectID = "ZuK-dW-feh"; */
+"ZuK-dW-feh.placeholder" = "File name";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "aAV-Uv-gHn"; */
+"aAV-Uv-gHn.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "aRe-Qb-vy2"; */
+"aRe-Qb-vy2.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "开始转换"; ObjectID = "bWZ-ka-Qzk"; */
+"bWZ-ka-Qzk.normalTitle" = "Start";
+
+/* Class = "UITextField"; text = "400(像素)"; ObjectID = "cgZ-gS-3ue"; */
+"cgZ-gS-3ue.text" = "400(Px)";
+
+/* Class = "UIButton"; normalTitle = "相册导入"; ObjectID = "ch9-vH-M8s"; */
+"ch9-vH-M8s.normalTitle" = "Photos";
+
+/* Class = "UISearchBar"; placeholder = "搜索文件名称"; ObjectID = "eiF-yQ-ccs"; */
+"eiF-yQ-ccs.placeholder" = "Search file name";
+
+/* Class = "UINavigationItem"; title = " "; ObjectID = "eso-Tj-qh8"; */
+"eso-Tj-qh8.title" = " ";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "fRb-V2-76x"; */
+"fRb-V2-76x.text" = "Subtitle";
+
+/* Class = "UIViewController"; title = "文件加密"; ObjectID = "fSX-1E-eod"; */
+"fSX-1E-eod.title" = "Encrypt";
+
+/* Class = "UILabel"; text = "二维码长宽："; ObjectID = "fzT-e3-ucZ"; */
+"fzT-e3-ucZ.text" = "二维码长宽：";
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "gyG-sY-rQm"; */
+"gyG-sY-rQm.text" = "00:00";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "h3B-km-Rbm"; */
+"h3B-km-Rbm.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "更多"; ObjectID = "haV-h4-qoh"; */
+"haV-h4-qoh.title" = "More";
+
+/* Class = "UILabel"; text = "已选择图片（0）"; ObjectID = "hzD-vL-Lcr"; */
+"hzD-vL-Lcr.text" = "Selected（0）";
+
+/* Class = "UIButton"; normalTitle = "面对面传输"; ObjectID = "kfJ-gq-xYB"; */
+"kfJ-gq-xYB.normalTitle" = "FaceTransfer";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "khQ-x1-9I9"; */
+"khQ-x1-9I9.text" = "Label";
+
+/* Class = "UITextView"; text = "输入文字内容"; ObjectID = "lbd-ZK-MqZ"; */
+"lbd-ZK-MqZ.text" = "Enter text content";
+
+/* Class = "UIViewController"; title = "增值功能"; ObjectID = "lhV-QQ-cMp"; */
+"lhV-QQ-cMp.title" = "Value-added features";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "n7q-y5-JJg"; */
+"n7q-y5-JJg.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "全选"; ObjectID = "nf2-fi-dg4"; */
+"nf2-fi-dg4.normalTitle" = "All";
+
+/* Class = "UIButton"; normalTitle = "18元文件加密"; ObjectID = "o3W-Kg-ZlP"; */
+"o3W-Kg-ZlP.normalTitle" = "18￥encryption";
+
+/* Class = "UILabel"; text = "在电脑浏览器地址栏中输入"; ObjectID = "oY4-am-rrK"; */
+"oY4-am-rrK.text" = "Enter in the computer browser address bar";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "p7V-Ls-RSf"; */
+"p7V-Ls-RSf.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "qeZ-14-g7I"; */
+"qeZ-14-g7I.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "确定"; ObjectID = "r1o-lU-vYw"; */
+"r1o-lU-vYw.normalTitle" = "Confirm";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "r2V-eH-QoV"; */
+"r2V-eH-QoV.text" = "Title";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "rKj-0e-Zba"; */
+"rKj-0e-Zba.text" = "Detail";
+
+/* Class = "UIButton"; normalTitle = "嵌入图片"; ObjectID = "rVp-hC-xx4"; */
+"rVp-hC-xx4.normalTitle" = "image";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "v5L-QQ-jVO"; */
+"v5L-QQ-jVO.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "全选"; ObjectID = "vFG-kJ-0R9"; */
+"vFG-kJ-0R9.normalTitle" = "All";
+
+/* Class = "UIViewController"; title = "加密设置"; ObjectID = "vaQ-bZ-S9h"; */
+"vaQ-bZ-S9h.title" = "Encryption Settings";
+
+/* Class = "UILabel"; text = "手机和电脑务必在同一WiFi内。\n传输过程中请不要关闭应用。"; ObjectID = "xXu-go-Btf"; */
+"xXu-go-Btf.text" = "phones and computers must be in the same WiFi.\n Do not close the application during the transmission.";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "ycP-yZ-ZmV"; */
+"ycP-yZ-ZmV.text" = "Label";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "zK8-Vp-7SI"; */
+"zK8-Vp-7SI.text" = "Title";
+
+/* Class = "UILabel"; text = "注意"; ObjectID = "zih-qm-gqB"; */
+"zih-qm-gqB.text" = "Notice";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "zop-RM-XWf"; */
+"zop-RM-XWf.text" = "Label";
+
+/* Class = "UISegmentedControl"; G1M-Bz-2PG.segmentTitles[0] = "First"; ObjectID = "3wc-fk-ZEj"; */
+"jSl-JY-Km7.segmentTitles[0]" = "Bookmarker";
+
+/* Class = "UISegmentedControl"; G1M-Bz-2PG.segmentTitles[1] = "Second"; ObjectID = "3wc-fk-ZEj"; */
+"jSl-JY-Km7.segmentTitles[1]" = "History";

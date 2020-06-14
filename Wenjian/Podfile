@@ -1,0 +1,27 @@
+platform :ios, '9.0'
+#source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
+#use_frameworks!
+project './Wenjian.xcodeproj'
+target 'Wenjian' do
+    
+    #GCDWebServer 添加了favicon。
+    pod 'GCDWebServer', '3.5.3'
+    pod 'GCDWebServer/WebUploader', '3.5.3'
+    pod 'GCDWebServer/WebDAV', '3.5.3'
+    pod 'AFNetworking'
+    pod 'SDWebImage'
+    pod 'MobileVLCKit'
+    pod 'RNCryptor-objc'
+    pod 'TZImagePickerController'
+    pod 'ZipArchive'
+    pod 'UMCCommon'
+    pod 'UMCAnalytics'
+    pod 'UMCPush'
+    pod 'UMCSecurityPlugins'
+    pod 'UMCShare/UI'
+    pod 'UMCShare/Social/WeChat'
+    pod 'UMCShare/Social/QQ'
+    pod 'UMCShare/Social/SMS'
+    pod 'UMCShare/Social/Email'
+    pod 'Google-Mobile-Ads-SDK'
+end

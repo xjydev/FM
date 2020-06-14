@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Video Set Controller-->
+        <scene sceneID="lgC-IK-u4K">
+            <objects>
+                <viewController storyboardIdentifier="VideoSetController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="irE-RQ-Szz" customClass="VideoSetController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FEs-DU-3Rc"/>
+                        <viewControllerLayoutGuide type="bottom" id="lQJ-7j-fuz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ah5-HW-NJ3">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IrK-ic-84m">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="9aL-dZ-EPf"/>
+                                    <constraint firstAttribute="height" constant="44" id="smd-Rk-CqX"/>
+                                </constraints>
+                                <state key="normal" image="cancelBack"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBP-aW-3Nq" customClass="XYButton">
+                                <rect key="frame" x="100" y="250" width="100" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="CW1-eK-hKv"/>
+                                    <constraint firstAttribute="height" constant="40" id="RL0-fg-Pl3"/>
+                                </constraints>
+                                <state key="normal" title="确定"/>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XQi-gP-7IU">
+                                <rect key="frame" x="5" y="45" width="290" height="204"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videosetcell1" id="S1H-9m-jLu">
+                                        <rect key="frame" x="0.0" y="28" width="290" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S1H-9m-jLu" id="5VM-bR-IY2">
+                                            <rect key="frame" x="0.0" y="0.0" width="290" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videosetcell2" id="4tu-e3-G12">
+                                        <rect key="frame" x="0.0" y="72" width="290" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4tu-e3-G12" id="eIg-BY-daq">
+                                            <rect key="frame" x="0.0" y="0.0" width="257" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="IrK-ic-84m" firstAttribute="top" secondItem="FEs-DU-3Rc" secondAttribute="bottom" id="Ecu-O8-0aP"/>
+                            <constraint firstItem="LBP-aW-3Nq" firstAttribute="top" secondItem="XQi-gP-7IU" secondAttribute="bottom" constant="1" id="GfL-9h-T8M"/>
+                            <constraint firstItem="lQJ-7j-fuz" firstAttribute="top" secondItem="LBP-aW-3Nq" secondAttribute="bottom" constant="10" id="Gip-NE-LSl"/>
+                            <constraint firstItem="XQi-gP-7IU" firstAttribute="top" secondItem="IrK-ic-84m" secondAttribute="bottom" constant="1" id="HUe-OZ-DHj"/>
+                            <constraint firstItem="LBP-aW-3Nq" firstAttribute="centerX" secondItem="Ah5-HW-NJ3" secondAttribute="centerX" id="aMa-dv-H9F"/>
+                            <constraint firstItem="IrK-ic-84m" firstAttribute="leading" secondItem="Ah5-HW-NJ3" secondAttribute="leading" id="fVX-5n-Biz"/>
+                            <constraint firstItem="XQi-gP-7IU" firstAttribute="leading" secondItem="Ah5-HW-NJ3" secondAttribute="leading" constant="5" id="fvc-JC-ZNY"/>
+                            <constraint firstAttribute="trailing" secondItem="XQi-gP-7IU" secondAttribute="trailing" constant="5" id="pey-LH-gp3"/>
+                        </constraints>
+                    </view>
+                    <size key="freeformSize" width="300" height="300"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lwx-kz-d2l" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-179.19999999999999" y="-140.32983508245877"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cancelBack" width="18" height="18"/>
+    </resources>
+</document>

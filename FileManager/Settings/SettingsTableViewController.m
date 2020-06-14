@@ -10,43 +10,80 @@
 #import "XTools.h"
 #import <MessageUI/MessageUI.h>
 #import <UShareUI/UShareUI.h>
-#import "UMMobClick/MobClick.h"
 #import "InfoDetailViewController.h"
 #import "GuideViewController.h"
-#import "FilesListController.h"
-@interface SettingsTableViewController ()<MFMailComposeViewControllerDelegate,UMSocialShareMenuViewDelegate>
+#import <CoreLocation/CoreLocation.h>
+#import <StoreKit/StoreKit.h>
+#import "FormatConverViewController.h"
+#import "FaceConnectController.h"
+#import <TZImagePickerController/TZImagePickerController.h>
+#import "RecordViewController.h"
+#import "PravicyViewController.h"
+@interface SettingsTableViewController ()<MFMailComposeViewControllerDelegate,UMSocialShareMenuViewDelegate,TZImagePickerControllerDelegate>
 {
     NSArray        *_tableArray;
     UIView         *_headerView;
+    BOOL      _nocommentShow;
+    BOOL      _nobuyShow;
+    
 }
+@property (nonatomic, assign)NSInteger nameNum;
+
 @end
 
 @implementation SettingsTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _tableArray = @[@[@{@"title":@"偏好设置",@"class":@"PreferencesTableViewController"}],
-  @[@{@"title":@"应用好评",@"class":@"1"},
-  @{@"title":@"分享好友",@"class":@"6"},
-  @{@"title":@"意见反馈",@"class":@"2"}],
-  @[@{@"title":@"设备信息",@"class":@"5"},
-  @{@"title":@"应用信息",@"class":@"3"},
-    @{@"title":@"应用介绍",@"class":@"AboutAppViewController"},
-    @{@"title":@"文件传输介绍",@"class":@"GuideViewController"}]];
-    //@{@"title":@"关于我",@"class":@""},@{@"title":@"鼓励",@"class":@""},
-    
-    
+    self.navigationController.tabBarItem.badgeValue = nil;
     self.tableView.tableFooterView = [[UIView alloc]init];
     
     UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
+    [self refreshPullUp:refresh];
     [refresh addTarget:self action:@selector(refreshPullUp:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refresh];
+   
+    
     
 }
+// @{@"title":NSLocalizedString(@"High praise", nil),@"class":@"1"},
 - (void)refreshPullUp:(UIRefreshControl *)control {
+    if ([kUSerD boolForKey:kSettingParvicy]) {
+        _tableArray = @[@[@{@"title":NSLocalizedString(@"Recents", nil),@"class":@"7"},
+  @{@"title":NSLocalizedString(@"Settings", nil),@"class":@"PreferencesTableViewController"},
+                 @{@"title":NSLocalizedString(@"Encrypted", nil),@"class":@"9"}],
+                        @[@{@"title":NSLocalizedString(@"Purchasing", nil),@"class":@"4"},
+                          @{@"title":NSLocalizedString(@"Share", nil),@"class":@"6"},
+                          @{@"title":NSLocalizedString(@"FeedBack", nil),@"class":@"2"},
+                          @{@"title":NSLocalizedString(@"Weibo", nil),@"class":@"8"},
+                         ],
+                        @[@{@"title":NSLocalizedString(@"About Device", nil),@"class":@"5"},
+                          @{@"title":NSLocalizedString(@"About App", nil),@"class":@"3"},
+                          @{@"title":NSLocalizedString(@"Introduce", nil),@"class":@"AboutAppViewController"},
+                          @{@"title":NSLocalizedString(@"Tansfer", nil),@"class":@"GuideViewController"}]];
+    }
+    else
+    {
+//  @{@"title":NSLocalizedString(@"High praise", nil),@"class":@"1"},
+        _tableArray = @[@[@{@"title":NSLocalizedString(@"Recents", nil),@"class":@"7"},
+  @{@"title":NSLocalizedString(@"Settings", nil),@"class":@"PreferencesTableViewController"}],
+                        @[@{@"title":NSLocalizedString(@"Purchasing", nil),@"class":@"4"},
+                          @{@"title":NSLocalizedString(@"Share", nil),@"class":@"6"},
+                          @{@"title":NSLocalizedString(@"FeedBack", nil),@"class":@"2"},
+                          @{@"title":NSLocalizedString(@"Weibo", nil),@"class":@"8"},
+                          @{@"title":NSLocalizedString(@"High praise", nil),@"class":@"1"},
+                          ],
+                        @[@{@"title":NSLocalizedString(@"About Device", nil),@"class":@"5"},
+                          @{@"title":NSLocalizedString(@"About App", nil),@"class":@"3"},
+                          @{@"title":NSLocalizedString(@"Introduce", nil),@"class":@"AboutAppViewController"},
+                          @{@"title":NSLocalizedString(@"Tansfer", nil),@"class":@"GuideViewController"}]];
+    }
+    
+    
     [self.tableView reloadData];
     [self performSelector:@selector(endRefresh:) withObject:control afterDelay:0.2];
 }
+
 - (void)endRefresh:(UIRefreshControl *)control  {
     [control endRefreshing];
 }
@@ -77,26 +114,72 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsCell" forIndexPath:indexPath];
     NSDictionary *dict =_tableArray[indexPath.section][indexPath.row];
-    cell.textLabel.text = dict[@"title"];
+    UILabel *label1= [cell.contentView viewWithTag:301];
+    UILabel *label2 = [cell.contentView viewWithTag:302];
+    UIView  *tagView = [cell.contentView viewWithTag:303];
+    label1.text = dict[@"title"];
     if ([dict[@"class"]integerValue] == 3) {
         NSString *version = [NSString stringWithFormat:@"V%@",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
-        cell.detailTextLabel.text = version;
+        label2.text = version;
+        tagView.hidden = YES;
+        
     }
     else
         if ([dict[@"class"]integerValue] == 5) {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@/%@",[XTOOLS storageSpaceStringWith:[XTOOLS freeStorageSpace]],[XTOOLS storageSpaceStringWith:[XTOOLS allStorageSpace]]];
+            label2.text = [NSString stringWithFormat:@"%@/%@",[XTOOLS storageSpaceStringWith:[XTOOLS freeStorageSpace]],[XTOOLS storageSpaceStringWith:[XTOOLS allStorageSpace]]];
+            tagView.hidden = YES;
         }
+    else
+        if ([dict[@"class"]integerValue] == 1) {//好评
+          label2.text = @"";
+            if (_nocommentShow) {
+                tagView.hidden = YES;
+            }
+            else
+            {
+               tagView.hidden = ([kUSerD integerForKey:@"appstorecomment"]>6);
+            }
+           
+        }
+    else
+        if ([dict[@"class"]integerValue] == 4) {//去广告
+           label2.text = @"";
+            if (_nobuyShow) {
+                tagView.hidden = YES;
+            }
+            else
+            {
+                if (![XTOOLS showAdview]||[kUSerD boolForKey:kENTRICY]) {
+                  tagView.hidden = YES;
+                }
+                else {
+                  tagView.hidden = NO;
+                }
+            }
+            
+        }
+    else
+    {
+       label2.text = @"";
+        tagView.hidden = YES;
+    }
        
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     NSDictionary *dict = _tableArray[indexPath.section][indexPath.row];
+    
     if ([dict[@"class"] integerValue] == 1) {
-        NSString *appleID = @"1184757517";
-        NSString *str = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@",appleID];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+        _nocommentShow = YES;
+        [XTOOLS umengClick:@"comment"];
+        NSString *str = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@?action=write-review",kAppleId];
+        [XTOOLS openURLStr:str];
+        [self performSelector:@selector(commented) withObject:nil afterDelay:10];
+        [self.tableView reloadData];
+        
     }
     else
         if ([dict[@"class"] integerValue] == 2) {
@@ -113,7 +196,9 @@
                 [self presentViewController:mailVC animated:YES completion:nil];
                 [mailVC setMessageBody:@"填写您想要反馈的问题……" isHTML:NO];
             }else{
-                [XTOOLS showMessage:@"此设备不支持邮件发送"];
+                [XTOOLS showAlertTitle:@"此设备不支持邮件发送" message:@"你可以用其他方式发送信息到邮箱“xiaodeve@163.com”，或者设置登录手机邮箱。" buttonTitles:@[@"确定"] completionHandler:^(NSInteger num) {
+                    
+                }];
                 NSLog(@"此设备不支持邮件发送");
             }
         }
@@ -124,6 +209,12 @@
                 info.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:info animated:YES];
             }
+        else
+            if ([dict[@"class"] integerValue] == 4) {//购买去广告
+                _nobuyShow = YES;
+                [self performSegueWithIdentifier:@"RewardViewController" sender:nil];
+                [self.tableView reloadData];
+            }
     else
         if ([dict[@"class"] integerValue] == 5) {//存储空间
             InfoDetailViewController *info = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoDetailViewController"];
@@ -132,14 +223,31 @@
             [self.navigationController pushViewController:info animated:YES];
         }
     else
-        
         if ([dict[@"class"] integerValue] == 6) {
             [self shareAppContent];
         }
     else
+        if ([dict[@"class"] integerValue] == 7) {
+            RecordViewController *VC = [RecordViewController allocFromStoryBoard];
+            VC.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:VC animated:YES];
+        }
+    else
+        if ([dict[@"class"] integerValue] == 8) {
+            [XTOOLS openURLStr:@"https://weibo.com/u/7170153013"];
+        }
+    else
+        if ([dict[@"class"] integerValue] == 9) {
+            UIStoryboard *mediaS = [UIStoryboard storyboardWithName:@"MediaSB" bundle:nil];
+            PravicyViewController *VC = [mediaS instantiateViewControllerWithIdentifier:@"PravicyViewController"];
+            VC.hidesBottomBarWhenPushed = YES;
+            VC.title =dict[@"title"];
+            [self.navigationController pushViewController:VC animated:YES];
+        }
+
+    else
         if ([dict[@"class"] integerValue] <= 0) {
             if (((NSString *)dict[@"class"]).length>0) {
-                
                 UIViewController *subSetViewController = [self.storyboard instantiateViewControllerWithIdentifier:dict[@"class"]];
                 subSetViewController.hidesBottomBarWhenPushed = YES;
                 subSetViewController.title = dict[@"title"];
@@ -162,8 +270,8 @@
     [UMSocialUIManager showShareMenuViewInWindowWithPlatformSelectionBlock:^(UMSocialPlatformType platformType, NSDictionary *userInfo) {
         // 根据获取的platformType确定所选平台进行下一步操作
        
-        NSString *title = @"悦览播放器-无广告、无内购、好用的视频音频播放器";
-        NSString *descr = @"悦览播放器-无广告、无内购、好用的视频音频播放器。支持所有的主流视频音频格式，支持无线局域网传输，iTunes数据线传输。https://itunes.apple.com/cn/app/id1184757517?mt=8";
+        NSString *title = @"悦览播放器-好用的视频音频播放器";
+        NSString *descr = @"悦览播放器-好用的视频音频播放器。支持所有的主流视频音频格式，支持无线局域网传输，iTunes数据线传输。https://itunes.apple.com/cn/app/id1184757517?mt=8";
         //创建分享消息对象
         UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
         messageObject.title = title;
@@ -227,6 +335,41 @@
     // 关闭邮件发送视图
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+//评论惊喜，如果十秒后用户不是活跃状态就说他在评论。
+- (void)commented {
+    
+    
+    if ([UIApplication sharedApplication].applicationState ==UIApplicationStateBackground) {
+        [XTOOLS umengClick:@"comover"];
+        [kUSerD setInteger:300 forKey:@"appstorecomment"];
+        [kUSerD synchronize];
+    }
+    else
+    {
+        [XTOOLS showAlertTitle:@"评论失败" message:@"也许是您评论的太短了，再重新评论个长的试试。" buttonTitles:@[@"算了",@"再试试"] completionHandler:^(NSInteger num) {
+            if (num == 1) {
+                NSString *appleID = kAppleId;
+                NSString *str = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@",appleID];
+                if (@available(iOS 10.0, *)) {
+                    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str] options:@{} completionHandler:^(BOOL success) {
+                        
+                    }];
+                } else {
+                    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+                }
+                //                 [kUSerD setInteger:-200 forKey:@"appstorecomment"];
+                [self performSelector:@selector(commented) withObject:nil afterDelay:10];
+               
+
+            }
+            else
+            {
+                [kUSerD setInteger:0 forKey:@"appstorecomment"];
+                [kUSerD synchronize];
+            }
+        }];
+    }
+}
 #pragma mark - UMSocialShareMenuViewDelegate
 - (void)UMSocialShareMenuViewDidAppear
 {
@@ -237,22 +380,10 @@
     [self.tableView reloadData];
     NSLog(@"UMSocialShareMenuViewDidDisappear");
 }
-//面对面传输按钮事件
-- (IBAction)faceTransferButtonAction:(id)sender {
-    
-    FilesListController *filesList = [self.storyboard instantiateViewControllerWithIdentifier:@"FilesListController"];
-    filesList.isSelected = YES;
-    filesList.fileType = FileTypeAudio|FileTypeVideo;
-    filesList.title = @"选择文件";
-    filesList.selectedPath = ^(NSString *path){
-//        _filePath = path;
-//        [_mainTableView reloadData];
-    };
-    [self.navigationController pushViewController:filesList animated:YES];
-}
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    
     [super viewWillAppear:animated];
     [MobClick beginLogPageView:@"Settings"];
 }
@@ -261,5 +392,141 @@
     [super viewWillDisappear:animated];
     [MobClick endLogPageView:@"Settings"];
 }
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+}
+- (IBAction)formatConvertButtonAction:(id)sender {
+    FormatConverViewController *VC = [FormatConverViewController allocFromStoryBoard];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (IBAction)photoImportButtonAction:(id)sender {
+//    PhotoImportViewController *VC = [PhotoImportViewController allocFromStoryBoard];
+//    [self.navigationController pushViewController:VC animated:YES];
+    NSInteger columnNum = kScreen_Width/80;
+   TZImagePickerController *pickerVC = [[TZImagePickerController alloc]initWithMaxImagesCount:10000 columnNumber:columnNum delegate:self pushPhotoPickerVc:YES];
+    pickerVC.isSelectOriginalPhoto = YES;
+    pickerVC.allowTakeVideo = YES;
+    pickerVC.allowTakePicture = YES;
+    [pickerVC setUiImagePickerControllerSettingBlock:^(UIImagePickerController *imagePickerController) {
+        imagePickerController.videoQuality = UIImagePickerControllerQualityTypeHigh;
+    }];
+    pickerVC.allowPickingMultipleVideo = YES;
+    pickerVC.sortAscendingByModificationDate = YES;
+    pickerVC.showSelectBtn = NO;
+    @weakify(self);
+    [pickerVC setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
+        @strongify(self);
+        [self importPhotoWithArray:assets];
+        
+    }];
+    
+    pickerVC.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:pickerVC animated:YES completion:^{
+        
+    }];
+}
+- (void)importPhotoWithArray:(NSArray *) arr {
+    [XTOOLS showLoading:@"导入中"];
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_async(group, queue, ^{
+        self.nameNum = [kUSerD integerForKey:@"userdNameNum"];
+        for (int i=0;i< arr.count;i++) {
+            @autoreleasepool {
+                PHAsset *phAsset = arr[i];;
+
+                if (phAsset.mediaType == PHAssetMediaTypeVideo) {
+                    PHVideoRequestOptions *options = [PHVideoRequestOptions new];
+                    options.networkAccessAllowed = YES;
+                    [[PHImageManager defaultManager] requestAVAssetForVideo:phAsset options:options resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
+
+                        if ([asset isKindOfClass:[AVURLAsset class]]) {
+                            NSURL *pathUrl = ((AVURLAsset *)asset).URL;
+                            //                        asset.availableChapterLocales
+                            NSString *name =[pathUrl.absoluteString lastPathComponent];
+                            if (!name) {
+                                self.nameNum ++;
+                                name =[NSString stringWithFormat:@"相册视频%d.mov",(int)self.nameNum];
+                            }
+                            int pa = 1;
+                            NSString *pName = name;
+                            while ([kFileM fileExistsAtPath:[KDocumentP stringByAppendingPathComponent:pName]]) {
+                                pName = [NSString stringWithFormat:@"%@(%d).%@",name.stringByDeletingPathExtension,pa,name.pathExtension];
+                                pa++;
+                            }
+                            name = pName;
+                            NSError *error;
+                            NSData *moveData = [NSData dataWithContentsOfURL:pathUrl];
+                            [moveData writeToFile:[KDocumentP stringByAppendingPathComponent:name] atomically:YES];
+                            moveData = nil;
+                            if(error){
+                                NSLog(@"error == %@",error);
+                            }
+                        } else {
+
+                        }
+                    }];
+                }
+                else {
+                    PHImageRequestOptions *options = [PHImageRequestOptions new];
+                    options.networkAccessAllowed = YES;
+                    options.resizeMode = PHImageRequestOptionsResizeModeFast;
+                    options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+                    options.synchronous = YES;
+                    options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+
+                    };
+
+                    [[PHImageManager defaultManager] requestImageForAsset:phAsset targetSize:CGSizeMake(phAsset.pixelWidth, phAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:options resultHandler:^(UIImage *result, NSDictionary *info) {
+                        NSData *imageData ;
+                        NSString *imageType;
+                        if (UIImagePNGRepresentation(result)) {
+                            imageData = UIImagePNGRepresentation(result);
+                            imageType = @".png";
+                        }
+                        else {
+                            imageData = UIImageJPEGRepresentation(result, 1.0);
+                            imageType = @".jpg";
+                        }
+                        self.nameNum++;
+                        NSString *imagePath = [NSString stringWithFormat:@"%@/相册%d%@",KDocumentP,(int)self.nameNum,imageType];
+                        [imageData writeToFile:imagePath  atomically:YES];
+                        imageData = nil;
+                    }];
+
+                }
+
+            }
+            [XTOOLS showLoading:[NSString stringWithFormat:@"%d/%d",i,(int)arr.count]];
+
+        }
+        //结束后就保存以前的相册名称序列，防止以后的重名，然后刷新。
+
+       
+        if (self.nameNum > 999999) {
+            self.nameNum = 0;
+        }
+        [kUSerD setInteger:self.nameNum forKey:@"userdNameNum"];
+        [kUSerD synchronize];
+    });
+    //完成后通知
+    dispatch_group_notify(group, queue, ^{
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            [XTOOLS hiddenLoading];
+            [XTOOLS showAlertTitle:@"完成" message:@"选择的资源已经导入到应用中，可以在文件列表中查看。" buttonTitles:@[@"知道了"] completionHandler:^(NSInteger num) {
+            }];
+        });
+    });
+}
+- (IBAction)faceTransferButtonAction:(id)sender {
+    FaceConnectController *VC = [FaceConnectController allocFromStoryBoard];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+
 
 @end

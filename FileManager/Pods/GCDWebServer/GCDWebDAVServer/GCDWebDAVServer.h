@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2012-2015, Pierre-Olivier Latour
+ Copyright (c) 2012-2019, Pierre-Olivier Latour
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,8 @@
  */
 
 #import "GCDWebServer.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class GCDWebDAVServer;
 
@@ -86,14 +88,14 @@
 /**
  *  Sets the delegate for the server.
  */
-@property(nonatomic, assign) id<GCDWebDAVServerDelegate> delegate;
+@property(nonatomic, weak, nullable) id<GCDWebDAVServerDelegate> delegate;
 
 /**
  *  Sets which files are allowed to be operated on depending on their extension.
  *
  *  The default value is nil i.e. all file extensions are allowed.
  */
-@property(nonatomic, copy) NSArray* allowedFileExtensions;
+@property(nonatomic, copy) NSArray<NSString*>* allowedFileExtensions;
 
 /**
  *  Sets if files and directories whose name start with a period are allowed to
@@ -154,3 +156,5 @@
 - (BOOL)shouldCreateDirectoryAtPath:(NSString*)path;
 
 @end
+
+NS_ASSUME_NONNULL_END

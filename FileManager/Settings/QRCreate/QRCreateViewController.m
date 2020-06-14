@@ -44,6 +44,21 @@
     
     _contextTextView.delegate = self;
     _widthField.delegate = self;
+    [XTOOLS showAlertTitle:@"更好用的应用" message:@"更专业，功能更强悍,的二维码生成，扫描工具" buttonTitles:@[NSLocalizedString(@"Cancel", nil),@"去看看"] completionHandler:^(NSInteger num) {
+        if (num == 1) {
+            NSString *appleID = @"1203565616";
+            NSString *str = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@",appleID];
+            if (@available(iOS 10.0, *)) {
+                [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str] options:@{} completionHandler:^(BOOL success) {
+                    
+                }];
+            } else {
+                [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+            }
+            [XTOOLS umengClick:@"gotoQrcreate"];
+//            gotoQrcreate
+        }
+    }];
 //    [self createCoreImage:@"1234"];
 }
 - (IBAction)selectedCenterImageButtonAction:(id)sender {
@@ -57,7 +72,7 @@
     MoveFilesView *fileView = [[MoveFilesView alloc]initWithFrame:self.view.bounds];
     fileView.isShow = YES;
     [fileView showWithFolderArray:filesArray withTitle:@"选择图片" backBlock:^(NSString *movePath,NSInteger selectedIndex) {
-        _centerImage = [UIImage imageWithContentsOfFile:movePath];
+        self->_centerImage = [UIImage imageWithContentsOfFile:movePath];
     }];
 
 }
@@ -167,7 +182,7 @@
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
-    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    UIAlertAction *action1 = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         
     }];
     
@@ -175,14 +190,14 @@
     UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"保存到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
         //保存到相册
-        UIImageWriteToSavedPhotosAlbum(_qRimage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+        UIImageWriteToSavedPhotosAlbum(self->_qRimage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
         
     }];
     UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"保存到主目录" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
         //保存文件夹
-        NSString *imagePath = [NSString stringWithFormat:@"%@/二维码%@.png",KDocumentP,[_contextTextView.text substringToIndex:5]];
-        if ([UIImagePNGRepresentation(_qRimage) writeToFile:imagePath atomically:YES]) {
+        NSString *imagePath = [NSString stringWithFormat:@"%@/二维码%@.png",KDocumentP,[self->_contextTextView.text substringToIndex:MIN(5,self->_contextTextView.text.length)]];
+        if ([UIImagePNGRepresentation(self->_qRimage) writeToFile:imagePath atomically:YES]) {
             [XTOOLS showMessage:@"保存成功"];
         }
         else
@@ -196,6 +211,11 @@
     [alert addAction:action1];
     [alert addAction:action2];
     [alert addAction:action3];
+    if (IsPad) {
+        alert.popoverPresentationController.sourceView = self.view;
+        alert.popoverPresentationController.sourceRect = CGRectMake(kScreen_Width/2,kScreen_Height/2,1.0,1.0);
+    }
+   
     
     [self presentViewController:alert animated:YES completion:nil];
     
@@ -213,7 +233,14 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [XTOOLS umengPageBegin:NSStringFromClass(self.class)];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    [XTOOLS umengPageEnd:NSStringFromClass(self.class)];
+}
 /*
 #pragma mark - Navigation
 

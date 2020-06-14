@@ -16,7 +16,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSHandlerRank</key>
-			<string>Owner</string>
+			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.plain-text</string>
@@ -41,7 +41,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.1</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -92,7 +92,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2.0.1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-2119163618927307~9904715277</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>wechat</string>
@@ -122,6 +124,25 @@
 		<string>mqzoneopensdkapi</string>
 		<string>mqqbrowser</string>
 		<string>mttbrowser</string>
+		<string>tim</string>
+		<string>timapi</string>
+		<string>timopensdkfriend</string>
+		<string>timwpa</string>
+		<string>timgamebindinggroup</string>
+		<string>timapiwallet</string>
+		<string>timOpensdkSSoLogin</string>
+		<string>wtlogintim</string>
+		<string>timopensdkgrouptribeshare</string>
+		<string>timopensdkapiV4</string>
+		<string>timgamebindinggroup</string>
+		<string>timopensdkdataline</string>
+		<string>wtlogintimV1</string>
+		<string>timapiV1</string>
+		<string>sinaweibohd</string>
+		<string>sinaweibo</string>
+		<string>sinaweibosso</string>
+		<string>weibosdk</string>
+		<string>weibosdk2.5</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -130,10 +151,25 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>应用需要获取蓝牙权限，用于连接其他蓝牙设备。</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>应用需要获取蓝牙权限，用于连接蓝牙设备。</string>
 	<key>NSCameraUsageDescription</key>
-	<string>应用需要访问您设备的照相机</string>
+	<string>需要获取相机访问权限，获取二维码图像中的网站连接、WiFi信息、和联系人信息。</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>应用需要使用您的FaceID用于解开应用</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>应用需要访问您的位置进行定位</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>需要获取相册导入权限才可以保存图片</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>应用需要访问您设备的相册</string>
+	<string>需要获取相册读取权限，才可以导入相册图片视频到本应用</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -149,6 +185,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<false/>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarTintParameters</key>
@@ -175,8 +213,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -191,6 +231,13 @@
 			<string>com.pkware.zip-archive</string>
 		</dict>
 		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.fzrong.jpg</string>
+				<string>public.image</string>
+				<string>public.movie</string>
+				<string>public.audio</string>
+			</array>
 			<key>UTTypeDescription</key>
 			<string>Ulearn Document File </string>
 			<key>UTTypeIdentifier</key>

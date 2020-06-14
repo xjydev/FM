@@ -11,9 +11,10 @@
 #import "SVWebViewController.h"
 #import "XTools.h"
 #import "UIColor+Hex.h"
+#import "UIView+xiao.h"
 #import "XManageCoreData.h"
 #import "WebCollector+CoreDataClass.h"
-#import "DownloadViewController.h"
+//#import "DownloadViewController.h"
 #import <AFNetworking/AFNetworking.h>
 @interface WebListTableViewController ()<UITextFieldDelegate,UISearchBarDelegate>
 {
@@ -22,6 +23,8 @@
     NSMutableArray   *_searchArray;
     UISearchController *_searchController;
     UISearchBar        *_searchBar;
+    UIBarButtonItem    *_rightBar;
+    UIBarButtonItem    *_leftBar;
 
 }
 @end
@@ -31,12 +34,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 //downLoad
+    
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusNotReachable) {
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"未连接网络" message:@"连接网络，才能搜索和访问网页，是否检查应用网络设置？" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 [self.navigationController popViewControllerAnimated:YES];
             }];
             UIAlertAction *sureAction =[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -55,13 +59,13 @@
     }];
 
     
-    UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
-    self.navigationItem.leftBarButtonItem = leftBarButton;
-    UIBarButtonItem *rightBarButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"downLoad"] style:UIBarButtonItemStyleDone target:self action:@selector(rightDownLoadButtonAction:)];
-    self.navigationItem.rightBarButtonItem = rightBarButton;
+    _leftBar = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStyleDone target:self action:@selector(leftScanButtonAction:)];
+    self.navigationItem.leftBarButtonItem = _leftBar;
+    _rightBar = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"downLoad"] style:UIBarButtonItemStyleDone target:self action:@selector(rightDownLoadButtonAction:)];
+    self.navigationItem.rightBarButtonItem = _rightBar;
     _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, kScreen_Width - 80, 40)];
     _searchBar.barTintColor = kNavCOLOR;
-    _searchBar.placeholder = @"网址/关键字";
+    _searchBar.placeholder = @"搜索或输入网址";
     [_searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     _searchBar.keyboardType = UIKeyboardTypeURL;
     _searchBar.returnKeyType = UIReturnKeySearch;
@@ -71,8 +75,8 @@
     UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
     [refresh addTarget:self action:@selector(refreshPullUp:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refresh];
-    [XTOOLS choose18year];
-        
+//    [XTOOLS choose18year];
+    
 }
 - (void)refreshPullUp:(UIRefreshControl *)refresh {
     [self getWebListData];
@@ -83,7 +87,14 @@
 }
 
 - (void)getWebListData {
-    _webArray = [NSMutableArray arrayWithArray:[[XManageCoreData manageCoreData]getAllWebUrl]];
+    _webArray = [NSMutableArray arrayWithArray:[[[[XManageCoreData manageCoreData]getAllWebUrl]reverseObjectEnumerator]allObjects]];
+    if (_webArray.count!=0) {
+        [self.tableView xRemoveNoData];
+    }
+    else
+    {
+        [self.tableView xNoDataThisViewTitle:@"无收藏网页" centerY:198];
+    }
     [self.tableView reloadData];
 }
 - (void)leftScanButtonAction:(UIBarButtonItem *)item {
@@ -91,12 +102,12 @@
     scan.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:scan animated:YES];
 }
-- (void)rightDownLoadButtonAction:(UIBarButtonItem *)item {
-    DownloadViewController *filesList = [self.storyboard instantiateViewControllerWithIdentifier:@"DownloadViewController"];
-    filesList.title = @"下载";
-    filesList.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:filesList animated:YES];
-}
+//- (void)rightDownLoadButtonAction:(UIBarButtonItem *)item {
+//    DownloadViewController *filesList = [self.storyboard instantiateViewControllerWithIdentifier:@"DownloadViewController"];
+//    filesList.title = @"下载";
+//    filesList.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:filesList animated:YES];
+//}
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
     return YES;
 }
@@ -132,6 +143,7 @@
     // Configure the cell...
     WebCollector *object = _webArray[indexPath.row];
     cell.textLabel.text = object.title;
+    [cell.imageView setImage:[UIImage imageNamed:@"collect"]];
     return cell;
 }
 
@@ -152,6 +164,9 @@
 
         if ([[XManageCoreData manageCoreData]deleteWeb:object]) {
             [_webArray removeObject:object];
+        }
+        if (_webArray.count == 0) {
+            [self.tableView xRemoveNoData];
         }
         [self.tableView reloadData];
         
@@ -174,14 +189,30 @@
         return;
     }
     [_searchBar resignFirstResponder];
+
+    //如果不是网址无法打开就百度搜索
      if (![[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:text]]) {
-         NSString *encodedString = (NSString *)
-         CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                   (CFStringRef)text,
-                                                                   NULL,
-                                                                   (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                   kCFStringEncodingUTF8));
-         text =[NSString stringWithFormat:@"https://www.baidu.com/s?wd=%@",encodedString];
+         if ([text hasSuffix:@".com"]||[text hasSuffix:@".cn"]||[text hasPrefix:@"www."]||[text hasSuffix:@".net"]) {
+             if ([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@",text]]]) {
+                 text = [NSString stringWithFormat:@"http://%@",text];
+             }
+             else
+                 if ([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@",text]]]) {
+                     text = [NSString stringWithFormat:@"https://%@",text];
+                 }
+  
+         }
+      else
+         {
+             NSString *encodedString = (NSString *)
+             CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                       (CFStringRef)text,
+                                                                       NULL,
+                                                                       (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                       kCFStringEncodingUTF8));
+             text =[NSString stringWithFormat:@"https://www.baidu.com/s?wd=%@",encodedString];
+         }
+         
      }
     [self pushWebDetailWithurl:text];
 }
@@ -201,6 +232,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 
     
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];

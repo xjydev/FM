@@ -42,7 +42,7 @@ static DownLoadCenter *_center = nil;
     else
     {
         self.downLoadUrlStr = url;
-        NSString *tmpPath = [NSString stringWithFormat:@"%@/%@",kCachesP,[XTOOLS md5Fromstr:self.downLoadUrlStr]];
+        NSString *tmpPath =[kCachesP stringByAppendingPathComponent:[XTOOLS md5Fromstr:self.downLoadUrlStr]];
         if ([kFileM fileExistsAtPath:tmpPath]) {
             self.resumeData = [NSData dataWithContentsOfFile:tmpPath];
         }
@@ -84,7 +84,8 @@ static DownLoadCenter *_center = nil;
     [self.task cancelByProducingResumeData:^(NSData *resumeData) {
         vc.resumeData = resumeData;
         vc.task = nil;
-        NSString *tmpPath = [NSString stringWithFormat:@"%@/%@",kCachesP,[XTOOLS md5Fromstr:self.downLoadUrlStr]];
+        NSString *tmpPath = [kCachesP stringByAppendingPathComponent:[XTOOLS md5Fromstr:self.downLoadUrlStr]];
+        
         [vc.resumeData writeToFile:tmpPath atomically:YES];
         [[XManageCoreData manageCoreData]saveDownloadUrl:self.downLoadUrlStr Progress:0 downLoadPath:nil];
     }];

@@ -11,16 +11,29 @@
 #import "XManageCoreData.h"
 #import <AVFoundation/AVFoundation.h>
 #import "VideoAudioPlayer.h"
-#import "UMMobClick/MobClick.h"
-#import <UMSocialCore/UMSocialCore.h>
-#import "GuideViewController.h"
-#import "UMessage.h"
+
+#import <UMCommon/UMCommon.h>
+#import <UMPush/UMessage.h>
+#import <UMShare/UMShare.h>
+#import <UMAnalytics/MobClick.h>
+
 #import <UserNotifications/UserNotifications.h>
+#import "XTabBarViewController.h"
+#import "XManageCoreData.h"
+
 #import "SafeView.h"
+#import <GoogleMobileAds/GoogleMobileAds.h>
+#import "NewVideoViewController.h"
+#include <arpa/inet.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import "WebViewController.h"
+
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
 {
     UIBackgroundTaskIdentifier  _bgTaskId;
+    BOOL             _isPlaying;//进入后台时，是否在播放。
 }
+
 @end
 static NSString * UmengKey = @"584a67462ae85b27b7000856";
 static NSString *weixinKey = @"wxf6cfb197efafda54";
@@ -29,144 +42,169 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    UMConfigInstance.appKey = UmengKey;
-    UMConfigInstance.channelId = @"App_Store";
-    [MobClick startWithConfigure:UMConfigInstance];
+    //直接把去广告给去掉，看看用户量。如果上不来就打开。
+//    [kUSerD setBool:YES forKey:KADBLOCK];
+//    [kUSerD synchronize];
+    NSLog(@"status ==%@",@([UIApplication sharedApplication].statusBarFrame.size.height));
+    [UMConfigure setLogEnabled:YES];
+    [UMConfigure initWithAppkey:UmengKey channel:@"App Store"];
+    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:weixinKey appSecret:@"ba38b1018ef912004f5fca36b0949564" redirectURL:@"https://itunes.apple.com/cn/app/id1184757517?mt=8"];
+   [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1105820767"  appSecret:@"F5vIUKEdcZdHT9L1" redirectURL:@"https://itunes.apple.com/cn/app/id1184757517?mt=8"];
     
-   [[UMSocialManager defaultManager] setUmSocialAppkey:UmengKey];
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:weixinKey appSecret:@"ba38b1018ef912004f5fca36b0949564" redirectURL:@"http://xiaodev.cn/UlearnPlayer/"];
-   [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1105820767"  appSecret:@"F5vIUKEdcZdHT9L1" redirectURL:@"http://xiaodev.cn/UlearnPlayer/"];
-    //推送
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-    [UMessage startWithAppkey:UmengKey launchOptions:launchOptions httpsenable:YES ];
-    if (IOSSystemVersion>=10.0) {
-        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-        center.delegate=self;
-        UNAuthorizationOptions types10=UNAuthorizationOptionBadge|  UNAuthorizationOptionAlert|UNAuthorizationOptionSound;
-        [center requestAuthorizationWithOptions:types10     completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            if (granted) {
-                //点击允许
-                //这里可以添加一些自己的逻辑
-            } else {
-                //点击不允许
-                //这里可以添加一些自己的逻辑
-            }
-        }];
-    }
+    UMessageRegisterEntity * entity = [[UMessageRegisterEntity alloc] init];
+    //type是对推送的几个参数的选择，可以选择一个或者多个。默认是三个全部打开，即：声音，弹窗，角标
+    entity.types = UMessageAuthorizationOptionBadge|UMessageAuthorizationOptionSound|UMessageAuthorizationOptionAlert;
+    [UNUserNotificationCenter currentNotificationCenter].delegate=self;
+    [UMessage registerForRemoteNotificationsWithLaunchOptions:launchOptions Entity:entity     completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if (granted) {
+        }else{
+        }
+    }];
     
+    [GADMobileAds.sharedInstance startWithCompletionHandler:nil];
 
-    if (![kUSerD objectForKey:@"kversion"]) {
-        GuideViewController *guide = [[GuideViewController alloc]init];
-        guide.hiddenNav = YES;
-         UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:guide];
-        self.window.rootViewController = nav;
-        [kUSerD setObject:APP_CURRENT_VERSION forKey:@"kversion"];
-    }
-    //开启调试日志
-   [UMessage setLogEnabled:YES];
-    
     return YES;
 }
 #pragma mark -- 推送
-
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler{
-    
-    [UIApplication sharedApplication].applicationIconBadgeNumber+=1;
-    
-    NSDictionary * userInfo = notification.request.content.userInfo;
-//    NSLog(@"push === %@",userInfo);
-//    aps =     {
-//        URL = http;
-//        alert =         {
-//            body = urlllllllll;
-//            subtitle = fubiaoti;
-//            title = zhubiaoti;
-//        };
-//        "mutable-content" = 1;
-//        sound = default;
-//    };
-//    d = us69331148800672501311;
-//    p = 0;
-    [self pushUrlWith:userInfo];
-    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-        //应用处于前台时的远程推送接受
-        //关闭友盟自带的弹出框
-        [UMessage setAutoAlert:NO];
-        //必须加这句代码
+//iOS10以下使用这两个方法接收通知
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+//    [UMessage setAutoAlert:YES];
+    if([[[UIDevice currentDevice] systemVersion]intValue] < 10){
         [UMessage didReceiveRemoteNotification:userInfo];
-        
-    }else{
-        //应用处于前台时的本地推送接受
     }
-    //当应用处于前台时提示设置，需要哪个可以设置哪一个
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+//iOS10新增：处理前台收到通知的代理方法
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler{
+    NSDictionary * userInfo = notification.request.content.userInfo;
+    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        NSLog(@"push 2 == %@",userInfo);
+        //应用处于前台时的远程推送接受
+        //必须加这句代码
+//        [UMessage didReceiveRemoteNotification:userInfo];
+        [self pushUserInfo:userInfo];
+    }else{
+        [self pushUserInfo:userInfo];
+        NSLog(@"push 1 == %@",userInfo);
+    }
     completionHandler(UNNotificationPresentationOptionSound|UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionAlert);
 }
 
 //iOS10新增：处理后台点击通知的代理方法
--(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler{
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler{
     NSDictionary * userInfo = response.notification.request.content.userInfo;
-    
-    [self pushUrlWith:userInfo];
     if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         //应用处于后台时的远程推送接受
         //必须加这句代码
-        [UMessage didReceiveRemoteNotification:userInfo];
-        
+//        [UMessage didReceiveRemoteNotification:userInfo];
+        [self pushUserInfo:userInfo];
     }else{
+        NSLog(@"push == %@",userInfo);
+        [self pushUserInfo:userInfo];
         //应用处于后台时的本地推送接受
     }
-    
 }
-- (void)pushUrlWith:(NSDictionary *)userInfo {//推送对网址的处理
-    if ([[userInfo objectForKey:@"aps"]objectForKey:@"URL"]) {
-        NSString *title = [[[userInfo objectForKey:@"aps"]objectForKey:@"alert"]objectForKey:@"title"];
-        NSString *url =[[userInfo objectForKey:@"aps"]objectForKey:@"URL"];
-        if ([[XManageCoreData manageCoreData] saveWebTitle:title url:url]) {
-            [UMessage setAlias:@"18up1" type:kUMessageAliasTypeSina response:^(id responseObject, NSError *error) {
+- (void)pushUserInfo:(NSDictionary *)userInfo {
+    NSString *url = [userInfo objectForKey:@"url"];
+    NSString *title = [userInfo objectForKey:@"title"];
+    [[XManageCoreData manageCoreData] saveWebTitle:title url:url];
+    [XTOOLS showAlertTitle:title message:@"可以在“网页”-“收藏”中查看" buttonTitles:@[@"取消",@"查看"] completionHandler:^(NSInteger num) {
+        if (num == 1) {
+            WebViewController *web = [[WebViewController alloc]init];
+            web.hidesBottomBarWhenPushed = YES;
+            web.urlStr = url;
+            UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+            if ([rootVC isKindOfClass:[XTabBarViewController class]]) {
+                XTabBarViewController *tab = (XTabBarViewController *)rootVC;
+                UINavigationController *nav = tab.selectedViewController;
+                [nav pushViewController:web animated:YES];
+            }
+            else if ([rootVC isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *nav = (UINavigationController *)rootVC;
+              [nav pushViewController:web animated:YES];
+            } 
+            [XTOOLS umengClick:@"notiflook"];
+        }
+        else {
+            [XTOOLS umengClick:@"notifcancel"];
+        }
+    }];
+}
+- (void)application:(UIApplication *)application
+didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    if (![deviceToken isKindOfClass:[NSData class]]) return;
+    const unsigned *tokenBytes = (const unsigned *)[deviceToken bytes];
+    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    NSLog(@"deviceToken:%@",hexToken);
+}
+#pragma mark -- 跨引用打开
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+//    [XTOOLS showAlertTitle:@"文件已拷贝到此应用中" message:@"请在Index文件夹中查看，Index是系统生产文件夹应用无权删除" buttonTitles:@[@"知道了"] completionHandler:^(NSInteger num) {
+//
+//    }];
+    if ([url.absoluteString hasPrefix:@"file://"]) {
+        NSString *rePath =[[url.absoluteString stringByRemovingPercentEncoding] stringByRemovingPercentEncoding];
+
+        NSString *toPath  = [KDocumentP stringByAppendingPathComponent:rePath.lastPathComponent];
+        NSLog(@"pat == %@ \ntopath == %@",url.absoluteString,toPath);
+        NSError *error = nil;
+      BOOL is = [kFileM copyItemAtURL:url toURL:[NSURL fileURLWithPath:toPath] error:&error];
+        if (is) {
+            [XTOOLS playFileWithPath:toPath OrigionalWiewController:self.window.rootViewController];
+            //            [XTOOLS showMessage:@"已拷贝到应用中"];
+            [XTOOLS showAlertTitle:@"已拷贝到应用中" message:@"可以在应用中寻找，打开浏览。" buttonTitles:@[@"确定"] completionHandler:^(NSInteger num) {
+
             }];
         }
-    }
-}
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
-
-{
-    [application registerForRemoteNotifications];
-    
-}
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-    // 1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
-    NSLog(@"device token==%@",[[NSString alloc]initWithData:deviceToken encoding:NSUTF8StringEncoding]);
-    [UMessage registerDeviceToken:deviceToken];
-}
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    NSLog(@"regsiter fail ==%@",error);
-}
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    NSLog(@"url===%@",url);
-    if ([url.absoluteString hasPrefix:@"file://"]) {
-        NSMutableString *path =[NSMutableString stringWithString: url.absoluteString];
-        [path replaceOccurrencesOfString:@"file://" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, path.length)];
-        NSLog(@"path ==%@",path);
-        NSString *toPath = [NSString stringWithFormat:@"%@/%@",KDocumentP,path.lastPathComponent];
-        if ([kFileM copyItemAtPath:path toPath:toPath error:nil]) {
-            [XTOOLS playFileWithPath:toPath OrigionalWiewController:self.window.rootViewController];
-            [XTOOLS showMessage:@"已拷贝到应用中"];
+        else {
+          NSLog(@"copy ==%@",error);
         }
     }
     return YES;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
-    if (![VideoAudioPlayer defaultPlayer].isVideo) {
-        [[XManageCoreData manageCoreData]saveContext];
-        
-        //开启后台处理多媒体事件
-        //    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-        _bgTaskId=[AppDelegate backgroundPlayerID:_bgTaskId];
+//进入前台,变的活跃
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    if ([kUSerD objectForKey:KPassWord]) {//如果有密码就不播放了。
+        return;
     }
-   
+    if ([VideoAudioPlayer defaultPlayer].isVideo&&_isPlaying) {//如果是视频，并且进入后台时是播放状态就播放。
+        _isPlaying = NO;
+        [[VideoAudioPlayer defaultPlayer] play];
+        if ([VideoAudioPlayer defaultPlayer].backTime >0) {
+            [[VideoAudioPlayer defaultPlayer] jumpBackward:[VideoAudioPlayer defaultPlayer].backTime];
+            [VideoAudioPlayer defaultPlayer].backTime = 0;
+        }
+    }
+}
+//进入后台
+- (void)applicationWillResignActive:(UIApplication *)application {
+    if ([VideoAudioPlayer defaultPlayer].currentPath) {//如果有播放就做暂停或者继续播放的操作
+        if (![VideoAudioPlayer defaultPlayer].isVideo) {
+            //设置并激活音频会话类别
+            AVAudioSession *session=[AVAudioSession sharedInstance];
+            [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+            [session setActive:YES error:nil];
+            //允许应用程序接收远程控制
+            [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+            _bgTaskId=[AppDelegate backgroundPlayerID:_bgTaskId];
+        }
+        else
+        {
+            if ([VideoAudioPlayer defaultPlayer].isPlaying) {
+                _isPlaying = YES;
+                [[VideoAudioPlayer defaultPlayer] pause];
+                [VideoAudioPlayer defaultPlayer].backTime = 3;
+            }
+            
+        }
+    }
 }
 //实现一下backgroundPlayerID:这个方法:
 +(UIBackgroundTaskIdentifier)backgroundPlayerID:(UIBackgroundTaskIdentifier)backTaskId
@@ -193,17 +231,15 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
     
 }
 
-
 - (void)applicationWillEnterForeground:(UIApplication *)application {
    
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
 }
 
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-   
-}
+/**
+ 显示安全锁界面
+ */
 - (void)showSafeView {
     if ([kUSerD objectForKey:KPassWord]) {
         [SafeView defaultSafeView].type = PassWordTypeDefault;
@@ -211,53 +247,6 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
             
         }];
 
-    }
-}
-//远程操作播放进度，
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    if (event.type == UIEventTypeRemoteControl&&![VideoAudioPlayer defaultPlayer].isVideo) {
-        switch (event.subtype) {
-            case UIEventSubtypeRemoteControlPlay:
-            {
-                [[VideoAudioPlayer defaultPlayer]play];
-            }
-                break;
-            case UIEventSubtypeRemoteControlPause:
-            {
-                [[VideoAudioPlayer defaultPlayer]pause];
-            }
-                break;
-            case UIEventSubtypeRemoteControlStop:
-            {
-                [[VideoAudioPlayer defaultPlayer]stop];
-            }
-                break;
-            case UIEventSubtypeRemoteControlTogglePlayPause:
-            {
-                if ([VideoAudioPlayer defaultPlayer].isPlaying) {
-                    [[VideoAudioPlayer defaultPlayer]pause];
-                }
-                else
-                {
-                    [[VideoAudioPlayer defaultPlayer]play];
-                }
-            }
-                break;
-            case UIEventSubtypeRemoteControlNextTrack:
-            {
-                [VideoAudioPlayer defaultPlayer].index+=1;
-            }
-                break;
-            case UIEventSubtypeRemoteControlPreviousTrack:
-            {
-                 [VideoAudioPlayer defaultPlayer].index -=1;
-            }
-                break;
-           
-                
-            default:
-                break;
-        }
     }
 }
 
@@ -268,9 +257,14 @@ static NSString *weixinKey = @"wxf6cfb197efafda54";
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-    //可以转屏的方向
-//    NSLog(@"a == %@",@(XTOOLS.orientationMask));
-    return XTOOLS.orientationMask;
+    //如果是iPad都支持转屏，如果是iPhone只有播放界面支持转屏。
+    
+    if (IsPad||[window.rootViewController.presentedViewController isKindOfClass:[NewVideoViewController class]]) {
+        
+            return UIInterfaceOrientationMaskAll;
+    }
+
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

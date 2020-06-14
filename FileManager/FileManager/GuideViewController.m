@@ -11,7 +11,7 @@
 #import "UIColor+Hex.h"
 #import "AppDelegate.h"
 #import "XTabBarViewController.h"
-#import <MWPhotoBrowser/MWPhotoBrowser.h>
+#import "XDPhotoBrowerViewController.h"
 @interface GuideViewController ()
 {
     UIScrollView *_mainScrollView;
@@ -22,7 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = kDarkCOLOR(0xffffff);
     CGFloat width = self.view.frame.size.width;
     CGFloat height = self.view.frame.size.height;
     _mainScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, width, height)];
@@ -61,9 +61,9 @@
    
 }
 - (void)imageButtonAction:(UIButton *)button {
-    MWPhoto *photo = [MWPhoto photoWithImage:button.imageView.image];
-    MWPhotoBrowser *brow = [[MWPhotoBrowser alloc]initWithPhotos:@[photo]];
-    [self.navigationController pushViewController:brow animated:NO];
+    XDPhotoBrowerViewController *photo = [[XDPhotoBrowerViewController alloc]init];
+    photo.imagesArray = @[button.imageView.image];
+    [self.navigationController pushViewController:photo animated:NO];
  
 }
 - (void)begainButtonAction {

@@ -1,22 +1,32 @@
-platform :ios, '8.0'
-use_frameworks!
+platform :ios, '9.0'
 
+#source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
+
+#use_frameworks!
+project './FileManager.xcodeproj'
 target 'FileManager' do
     
-    pod 'MWPhotoBrowser', '~> 2.1.2'
-    pod 'ZipArchive', '~> 1.4.0'
     #GCDWebServer 添加了favicon。
-    pod 'GCDWebServer', '~> 3.3.3'
-    pod 'GCDWebServer/WebUploader', '~> 3.3.3'
-    pod 'GCDWebServer/WebDAV', '~> 3.3.3'
-    pod 'AFNetworking', '~> 3.1.0'
-    pod 'UMengAnalytics-NO-IDFA'
-    pod 'CocoaAsyncSocket', '~> 7.5.1'
-    
-    pod 'UMengUShare/UI'
-    pod 'UMengUShare/Social/WeChat'
-    pod 'UMengUShare/Social/QQ'
-    pod 'UMengUShare/Social/SMS'
-    pod 'UMengUShare/Social/Email'
+    pod 'GCDWebServer', '3.5.3'
+    pod 'GCDWebServer/WebUploader', '3.5.3'
+    pod 'GCDWebServer/WebDAV', ' 3.5.3'
+    pod 'AFNetworking'
+    pod 'SDWebImage'
+    pod 'MobileVLCKit'
+    pod 'RNCryptor-objc'
+    pod 'TZImagePickerController'
+    pod 'ZipArchive'
+    pod 'UMCCommon'
+    pod 'UMCAnalytics'
+    pod 'UMCPush'
+    pod 'UMCSecurityPlugins'
+    pod 'UMCShare/UI'
+    pod 'UMCShare/Social/WeChat'
+    pod 'UMCShare/Social/QQ'
+    pod 'UMCShare/Social/SMS'
+    pod 'UMCShare/Social/Email'
+    pod 'Google-Mobile-Ads-SDK'
+
     
 end
+

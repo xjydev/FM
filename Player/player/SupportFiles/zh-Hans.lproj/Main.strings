@@ -1,0 +1,33 @@
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Dlm-7A-3p0"; */
+"Dlm-7A-3p0.text" = "Title";
+
+/* Class = "UILabel"; text = "详情"; ObjectID = "ERf-k0-vi1"; */
+"ERf-k0-vi1.text" = "详情";
+
+/* Class = "UIButton"; normalTitle = "更多记录"; ObjectID = "GBD-mp-YWt"; */
+"GBD-mp-YWt.normalTitle" = "更多记录";
+
+/* Class = "UILabel"; text = "详情"; ObjectID = "MLI-ON-Sxw"; */
+"MLI-ON-Sxw.text" = "详情";
+
+/* Class = "UILabel"; text = "文件传输"; ObjectID = "Y3A-n4-sYG"; */
+"Y3A-n4-sYG.text" = "文件传输";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "aLF-PC-qQh"; */
+"aLF-PC-qQh.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "aw4-I8-rNa"; */
+"aw4-I8-rNa.text" = "Title";
+
+/* Class = "UILabel"; text = "文件传输详情"; ObjectID = "sof-lL-vmC"; */
+"sof-lL-vmC.text" = "文件传输详情";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "tL9-dX-e1x"; */
+"tL9-dX-e1x.text" = "Subtitle";
+
+/* Class = "UILabel"; text = "名称"; ObjectID = "uIM-pl-egj"; */
+"uIM-pl-egj.text" = "名称";
+
+/* Class = "UILabel"; text = "名称"; ObjectID = "vWp-p2-DDy"; */
+"vWp-p2-DDy.text" = "名称";

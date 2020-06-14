@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  FileManager
+
+  Created by xiaodev on Oct/14/17.
+  Copyright © 2017 xiaodev. All rights reserved.
+*/
+CFBundleDisplayName = "Ulearn player";

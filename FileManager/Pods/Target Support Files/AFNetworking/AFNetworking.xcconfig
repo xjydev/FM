@@ -1,9 +1,9 @@
-CONFIGURATION_BUILD_DIR = $PODS_CONFIGURATION_BUILD_DIR/AFNetworking
+CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/UMengAnalytics-NO-IDFA" "${PODS_ROOT}/Headers/Public/UMengUShare"
-OTHER_LDFLAGS = -framework "CoreGraphics" -framework "MobileCoreServices" -framework "Security" -framework "SystemConfiguration"
-PODS_BUILD_DIR = $BUILD_DIR
-PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/AFNetworking" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/GCDWebServer" "${PODS_ROOT}/Headers/Public/Google-Mobile-Ads-SDK" "${PODS_ROOT}/Headers/Public/GoogleAppMeasurement" "${PODS_ROOT}/Headers/Public/GoogleUtilities" "${PODS_ROOT}/Headers/Public/MobileVLCKit" "${PODS_ROOT}/Headers/Public/PromisesObjC" "${PODS_ROOT}/Headers/Public/RNCryptor-objc" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/TZImagePickerController" "${PODS_ROOT}/Headers/Public/UMCAnalytics" "${PODS_ROOT}/Headers/Public/UMCCommon" "${PODS_ROOT}/Headers/Public/UMCPush" "${PODS_ROOT}/Headers/Public/UMCSecurityPlugins" "${PODS_ROOT}/Headers/Public/UMCShare" "${PODS_ROOT}/Headers/Public/ZipArchive" "${PODS_ROOT}/Headers/Public/nanopb"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}
-PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.${PRODUCT_NAME:rfc1034identifier}
+PODS_TARGET_SRCROOT = ${PODS_ROOT}/AFNetworking
+PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.${PRODUCT_NAME:rfc1034identifier} com.alamofire.AFNetworking
 SKIP_INSTALL = YES

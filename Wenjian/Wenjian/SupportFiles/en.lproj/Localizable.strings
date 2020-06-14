@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  Wenjian
+
+  Created by XiaoDev on 2019/5/26.
+  Copyright © 2019 XiaoDev. All rights reserved.
+*/
+"All Files" = "All Files";
+"Video" = "All Video";
+"Audio" = "All Audio";
+"Image" = "All Image";
+"Documents" = "All Documents";
+"Recent Play" = "Recent Play";
+"My Files" = "My Files";
+"Delete" = "Delete";
+"Cancel" = "Cancel";
+"Confirm" = "Confirm";
+"Search" = "Search";
+"Rename" = "Rename";
+"Search or enter the url" = "Search or enter the url";
+"Input" = "Input";
+"Clear" = "Clear";
+"Error" = "Error";
+"NOdocument" = "NO document";
+"NOpictures" = "NO pictures";
+"NOvideo" = "NO video";
+"NOaudio" = "NO audio";
+"NOfiles" = "NO files";

@@ -1,0 +1,44 @@
+/* 
+  Localizable.strings
+  FileManager
+
+  Created by xiaodev on Oct/14/17.
+  Copyright © 2017 xiaodev. All rights reserved.
+*/
+"All Files" = "所有文件";
+"Video" = "所有视频";
+"Audio" = "所有音频";
+"Image" = "所有图片";
+"Documents" = "所有文档";
+"Recent Play" = "最近播放";
+"My Files" = "我的文件";
+"Delete" = "删除";
+"Cancel" = "取消";
+"Confirm" = "确定";
+"Search" = "搜索";
+"Rename" = "修改名称";
+"Search or enter the url" = "搜索或输入网址";
+"Input" = "请输入内容";
+"Clear" = "清空";
+"Error" = "发生错误";
+
+//我的
+"Recents" = "播放记录";
+"Settings" = "偏好设置";
+"Encrypted" = "文件加密";
+"Purchasing" = "增值功能";
+"Share" = "分享好友";
+"FeedBack" = "意见反馈";
+"Weibo" = "关注微博";
+"High praise" = "给个好评";
+"About Device" = "设备信息";
+"About App" = "应用信息";
+"Introduce" = "应用介绍";
+"Tansfer" = "导入指南";
+//no
+"NOdocument" = "还没有文档";
+"NOpictures" = "还没有图片";
+"NOvideo" = "还没有视频";
+"NOaudio" = "还没有音频";
+"NOfiles" = "还没有文件";
+

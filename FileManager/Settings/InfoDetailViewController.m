@@ -4,13 +4,13 @@
 //
 //  Created by xiaodev on Feb/7/17.
 //  Copyright © 2017 xiaodev. All rights reserved.
-//
+// 
 
 #import "InfoDetailViewController.h"
 #import "XTools.h"
+#import <SDWebImage/SDImageCache.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#include "sys/stat.h"
 //infodetailcell
 @interface InfoDetailViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
@@ -23,6 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = kDarkCOLOR(0xffffff);
     _mainTableView.delegate = self;
     _mainTableView.dataSource = self;
     _mainTableView.tableFooterView = [[UIView alloc]init];
@@ -51,7 +52,7 @@
                    @[@{@"title":@"应用版本",@"detail":APP_CURRENT_VERSION},
                    @{@"title":@"应用作者",@"detail":@"JingYuan Xiao"},
                    @{@"title":@"应用声明",@"detail":@"如果涉及侵权行为，请联系作者"},
-                   @{@"title":@"联系方式",@"detail":@"xiaodeve@163.com"}],
+                   @{@"title":@"联系方式",@"detail":@"xiaodeve@163.com"},@{@"title":@"QQ沟通群",@"detail":@"143800046"}],
                    @[@{@"title":@"存储文件(可删除)",@"detail":[XTOOLS storageSpaceStringWith:[self folderSizeAtPath:KDocumentP]]},
                      @{@"title":@"应用缓存(可清除)",@"detail":[XTOOLS storageSpaceStringWith:([self folderSizeAtPath:kCachesP]+[self folderSizeAtPath:kTmpP])]}],
                    ];
@@ -59,12 +60,12 @@
 }
 - (void)reloadDeviceInformationDetail {
     UIDevice *device = [UIDevice currentDevice];
-    
+    device.batteryMonitoringEnabled = YES;
     NSString *batterStr = @"--";
     switch (device.batteryState) {
         case UIDeviceBatteryStateUnplugged:
         {
-            batterStr = [NSString stringWithFormat:@"未充电 %.f%%",device.batteryLevel*100];
+            batterStr = [NSString stringWithFormat:@" %.f%%",device.batteryLevel*100];
         }
             break;
         case UIDeviceBatteryStateCharging:
@@ -83,6 +84,7 @@
         default:
             break;
     }
+    NSLog(@"battery===%@==%.2f",@(device.batteryState),device.batteryLevel);
     CGRect rect = [[UIScreen mainScreen] bounds];
     CGFloat scale = [[UIScreen mainScreen] scale];
     CGFloat width = rect.size.width * scale;
@@ -128,7 +130,13 @@
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 2&&self.type == InfoDetailTypeApp) {
+     NSDictionary *dict = _mainArray[indexPath.section][indexPath.row];
+    if ([dict[@"title"] isEqualToString:@"QQ沟通群"]) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        [pasteboard setString:@"143800046"];
+        [XTOOLS showMessage:@"QQ号复制成功"];
+    }
+    else if (indexPath.section == 2&&self.type == InfoDetailTypeApp) {
         NSDictionary *dict = _mainArray[indexPath.section][indexPath.row];
         NSString *title = @"删除存储的文件";
         NSString *detail = @"您将删除应用内存储的全部文件，如果删除将无法恢复，是否继续删除？";
@@ -137,12 +145,12 @@
         }
         else
             if ([dict[@"title"] isEqualToString:@"应用缓存(可清除)"]) {
-               title = @"清楚缓存";
-                detail = @"您将清楚应用内的缓存，如果清除一些文件可能需要重新加载，是否继续清除？";
+               title = @"清除缓存";
+                detail = @"您将清除应用内的缓存，如果清除一些文件可能需要重新加载，是否继续清除？";
             }
         
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:detail preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *cancleAction =[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];
         UIAlertAction *unzipAction =[UIAlertAction actionWithTitle:@"继续" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -152,7 +160,8 @@
                 NSArray *array=[kFileM contentsOfDirectoryAtPath:KDocumentP error:nil];
                 
                 for (int i=0; i<array.count; i++) {
-                    [kFileM removeItemAtPath:[NSString stringWithFormat:@"%@/%@",KDocumentP,[array objectAtIndex:i]] error:nil];
+                    [kFileM removeItemAtPath:[KDocumentP stringByAppendingPathComponent:[array objectAtIndex:i]] error:nil];
+//                    [NSString stringWithFormat:@"%@/%@",KDocumentP,[array objectAtIndex:i]]
                 }
                 [XTOOLS hiddenLoading];
                 [self reloadAppInformationDetail];
@@ -165,14 +174,19 @@
                     NSArray *array=[kFileM contentsOfDirectoryAtPath:kCachesP error:nil];
                     
                     for (int i=0; i<array.count; i++) {
-                        [kFileM removeItemAtPath:[NSString stringWithFormat:@"%@/%@",kCachesP,[array objectAtIndex:i]] error:nil];
+                        [kFileM removeItemAtPath:[kCachesP stringByAppendingPathComponent:[array objectAtIndex:i]] error:nil];
+//                        NSString stringWithFormat:@"%@/%@",kCachesP,[array objectAtIndex:i]
                     }
                     
                     NSArray *array1=[kFileM contentsOfDirectoryAtPath:kTmpP error:nil];
                     
                     for (int i=0; i<array1.count; i++) {
-                        [kFileM removeItemAtPath:[NSString stringWithFormat:@"%@/%@",kTmpP,[array objectAtIndex:i]] error:nil];
+                        [kFileM removeItemAtPath:[kTmpP stringByAppendingPathComponent:[array1 objectAtIndex:i]] error:nil];
+//                        [NSString stringWithFormat:@"%@/%@",kTmpP,[array1 objectAtIndex:i]]
                     }
+                    [[SDImageCache sharedImageCache]clearDiskOnCompletion:^{
+                        
+                    }];
                     [XTOOLS hiddenLoading];
                     [self reloadAppInformationDetail];
                     [XTOOLS showMessage:@"清除完毕"];
@@ -225,8 +239,23 @@
     if ([platform isEqualToString:@"iPhone8,2"]) return @"iPhone6sPlus";
     if ([platform isEqualToString:@"iPhone8,3"]) return @"iPhoneSE";
     if ([platform isEqualToString:@"iPhone8,4"]) return @"iPhoneSE";
-    if ([platform isEqualToString:@"iPhone9,1"]) return @"iPhone7";
-    if ([platform isEqualToString:@"iPhone9,2"]) return @"iPhone7Plus";
+    if ([platform isEqualToString:@"iPhone9,1"])    return @"国行、日版、港行iPhone 7";
+    if ([platform isEqualToString:@"iPhone9,2"])    return @"港行、国行iPhone 7 Plus";
+    if ([platform isEqualToString:@"iPhone9,3"])    return @"美版、台版iPhone 7";
+    if ([platform isEqualToString:@"iPhone9,4"])    return @"美版、台版iPhone 7 Plus";
+    if ([platform isEqualToString:@"iPhone10,1"])   return @"国行(A1863)、日行(A1906)iPhone 8";
+    if ([platform isEqualToString:@"iPhone10,4"])   return @"美版(Global/A1905)iPhone 8";
+    if ([platform isEqualToString:@"iPhone10,2"])   return @"国行(A1864)、日行(A1898)iPhone 8 Plus";
+    if ([platform isEqualToString:@"iPhone10,5"])   return @"美版(Global/A1897)iPhone 8 Plus";
+    if ([platform isEqualToString:@"iPhone10,3"])   return @"国行(A1865)、日行(A1902)iPhone X";
+    if ([platform isEqualToString:@"iPhone10,6"])   return @"美版(Global/A1901)iPhone X";
+    if ([platform isEqualToString:@"iPhone11,2"])   return @"iPhone XS";
+    if ([platform isEqualToString:@"iPhone11,4"])   return @"iPhone XS Max";
+    if ([platform isEqualToString:@"iPhone11,6"])   return @"iPhone XS Max";
+    if ([platform isEqualToString:@"iPhone11,8"])   return @"iPhone XR";
+    if ([platform isEqualToString:@"iPhone12,1"])   return @"iPhone 11";
+    if ([platform isEqualToString:@"iPhone12,3"])   return @"iPhone 11 Pro";
+    if ([platform isEqualToString:@"iPhone12,5"])   return @"iPhone 11 Pro Max";
     //iPod Touch
     if ([platform isEqualToString:@"iPod1,1"]) return @"iPodTouch";
     if ([platform isEqualToString:@"iPod2,1"]) return @"iPodTouch2G";
@@ -246,6 +275,10 @@
     if ([platform isEqualToString:@"iPad3,4"]) return @"iPad4";
     if ([platform isEqualToString:@"iPad3,5"]) return @"iPad4";
     if ([platform isEqualToString:@"iPad3,6"]) return @"iPad4";
+    if ([platform isEqualToString:@"iPad7,5"]) return @"iPad6";
+    if ([platform isEqualToString:@"iPad7,6"]) return @"iPad6";
+    if ([platform isEqualToString:@"iPad7,11"]) return @"iPad7";
+    if ([platform isEqualToString:@"iPad7,12"]) return @"iPad7";
     //iPad Air
     if ([platform isEqualToString:@"iPad4,1"]) return @"iPadAir";
     if ([platform isEqualToString:@"iPad4,2"]) return @"iPadAir";
@@ -263,8 +296,18 @@
     if ([platform isEqualToString:@"iPad4,8"]) return @"iPadmini3";
     if ([platform isEqualToString:@"iPad4,9"]) return @"iPadmini3";
     if ([platform isEqualToString:@"iPad5,1"]) return @"iPadmini4";
-    if ([platform isEqualToString:@"iPad5,2"]) return @"iPadmini4"; 
-    if ([platform isEqualToString:@"i386"]) return @"iPhoneSimulator"; 
+    if ([platform isEqualToString:@"iPad5,2"]) return @"iPadmini4";
+    if ([platform isEqualToString:@"iPad6,3"])      return @"iPadPro 9.7";
+    if ([platform isEqualToString:@"iPad6,4"])      return @"iPadPro 9.7";
+    if ([platform isEqualToString:@"iPad6,7"])      return @"iPadPro 12.9";
+    if ([platform isEqualToString:@"iPad6,8"])      return @"iPadPro 12.9";
+    if ([platform isEqualToString:@"iPad6,11"])    return @"iPad 5 (WiFi)";
+    if ([platform isEqualToString:@"iPad6,12"])    return @"iPad 5 (Cellular)";
+    if ([platform isEqualToString:@"iPad7,1"])     return @"iPadPro 12.9 inch 2nd gen (WiFi)";
+    if ([platform isEqualToString:@"iPad7,2"])     return @"iPadPro 12.9 inch 2nd gen (Cellular)";
+    if ([platform isEqualToString:@"iPad7,3"])     return @"iPadPro 10.5 inch (WiFi)";
+    if ([platform isEqualToString:@"iPad7,4"])     return @"iPadPro 10.5 inch (Cellular)";
+    if ([platform isEqualToString:@"i386"]) return @"iPhoneSimulator";
     if ([platform isEqualToString:@"x86_64"]) return @"iPhoneSimulator"; 
     return platform; 
 }
@@ -276,16 +319,27 @@
     long long folderSize = 0;
     while ((fileName = [childFilesEnumerator nextObject]) != nil){
         NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
-        folderSize += [self fileSizeAtPath:fileAbsolutePath];
+        folderSize += [XTOOLS fileSizeAtPath:fileAbsolutePath];
     }
     return folderSize;
 }
-- (long long) fileSizeAtPath:(NSString*) filePath{
-    struct stat st;
-    if(lstat([filePath cStringUsingEncoding:NSUTF8StringEncoding], &st) == 0){
-        return st.st_size;
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if ([XTOOLS showAdview]) {
+        UIView *adView = [XTOOLS bannerAdViewRootViewController:self];
+        adView.center = CGPointMake(kScreen_Width/2, kScreen_Height - 25);
+        [self.view addSubview:adView];
+        _mainTableView.frame = CGRectMake(0, 0, kScreen_Width, kScreen_Height-50);
     }
-    return 0;
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [XTOOLS umengPageBegin:NSStringFromClass(self.class)];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    [XTOOLS umengPageEnd:NSStringFromClass(self.class)];
 }
 /*
 #pragma mark - Navigation
